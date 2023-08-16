@@ -11,7 +11,8 @@ declare(strict_types=1);
  */
 namespace App\Exception\Handler;
 
-use Hyperf\Contract\StdoutLoggerInterface;
+use App\Constants\SystemCode;
+use App\Lib\Log\Log;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
@@ -19,15 +20,25 @@ use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
 {
-    public function __construct(protected StdoutLoggerInterface $logger)
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
-    }
+        $errorInfo = sprintf(
+            '发生系统异常:%s;行号为:[%s]; 文件为:[%s]; Trace为:[%s]',
+            $throwable->getMessage(),
+            $throwable->getLine(),
+            $throwable->getFile(),
+            $throwable->getTraceAsString()
+        );
+        Log::error($errorInfo);
 
-    public function handle(Throwable $throwable, ResponseInterface $response)
-    {
-        $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
-        $this->logger->error($throwable->getTraceAsString());
-        return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withStatus(500)
+            ->withBody(new SwooleStream(json_encode([
+                'code' => SystemCode::SYSTEM_ERROR,
+                'msg' => SystemCode::getMessage(SystemCode::SYSTEM_ERROR),
+                'status' => false,
+                'data' => [],
+            ], JSON_UNESCAPED_UNICODE)));
     }
 
     public function isValid(Throwable $throwable): bool
