@@ -11,5 +11,7 @@ declare(strict_types=1);
  */
 return [
     'http' => [
+        // 跨域中间件
+        App\Middleware\CorsMiddleware::class,
     ],
 ];
