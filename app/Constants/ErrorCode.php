@@ -21,4 +21,9 @@ class ErrorCode extends AbstractConstants
      * @Message("Server Error！")
      */
     public const SERVER_ERROR = 500;
+
+    /**
+     * @Message("验证码错误")
+     */
+    public const CAPTCHA_ERROR = 50001;
 }

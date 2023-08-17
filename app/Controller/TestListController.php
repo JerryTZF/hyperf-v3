@@ -11,7 +11,9 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Constants\ErrorCode;
 use App\Lib\Image\Barcode;
+use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -49,6 +51,30 @@ class TestListController extends AbstractController
     public function saveBarcode(): array
     {
         (new Barcode())->move('barcode.png', '测试内容');
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'captcha/stream')]
+    public function captcha(): MessageInterface|ResponseInterface
+    {
+        $clientCode = '187.091.123,111';
+        $captchaString = (new Captcha())->getStream($clientCode);
+        return $this->response->withHeader('Content-Type', 'image/png')
+            ->withBody(new SwooleStream($captchaString));
+    }
+
+    #[GetMapping(path: 'captcha/verify')]
+    public function verify(): array
+    {
+        $clientCode = '187.091.123,111';
+        $captcha = $this->request->input('captcha', 'xxxx');
+        $isPass = (new Captcha())->verify($captcha, $clientCode);
+        if (! $isPass) {
+            return $this->result->setErrorInfo(
+                ErrorCode::CAPTCHA_ERROR,
+                ErrorCode::getMessage(ErrorCode::CAPTCHA_ERROR)
+            )->getResult();
+        }
         return $this->result->getResult();
     }
 }

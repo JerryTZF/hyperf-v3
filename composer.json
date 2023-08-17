@@ -15,6 +15,7 @@
         "php": ">=8.0",
         "ext-iconv": "*",
         "endroid/qr-code": "^4.8",
+        "gregwar/captcha": "1.*",
         "hyperf/async-queue": "~3.0.0",
         "hyperf/cache": "~3.0.0",
         "hyperf/command": "~3.0.0",
