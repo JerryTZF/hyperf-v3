@@ -46,4 +46,9 @@ class SystemCode extends AbstractConstants
      * @Message("数据验证失败，原因如下：%s")
      */
     public const VALIDATOR_ERR = 9906;
+
+    /**
+     * @Message("获取锁超时")
+     */
+    public const LOCK_WAIT_TIMEOUT = 9907;
 }

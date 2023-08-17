@@ -15,6 +15,7 @@ use App\Constants\ErrorCode;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
+use App\Lib\Lock\RedisLock;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -76,5 +77,18 @@ class TestListController extends AbstractController
             )->getResult();
         }
         return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'lock')]
+    public function redisLockAsync(): array
+    {
+        // 不同的业务场景需要不同的实例(不可make获取该对象)
+        $lock = new RedisLock('testLock', 3, 3, 'redisLockAsync');
+        $result = $lock->lockFunc(function () {
+            sleep(1); // 模拟业务耗时
+            return ['a' => 'A'];
+        });
+
+        return $this->result->setData($result)->getResult();
     }
 }

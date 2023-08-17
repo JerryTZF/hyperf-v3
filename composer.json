@@ -29,7 +29,10 @@
         "hyperf/logger": "~3.0.0",
         "hyperf/memory": "~3.0.0",
         "hyperf/process": "~3.0.0",
+        "hyperf/rate-limit": "^3.0",
         "hyperf/redis": "~3.0.0",
+        "hyperf/validation": "^3.0",
+        "lysice/hyperf-redis-lock": "^2.1",
         "picqer/php-barcode-generator": "^2.3"
     },
     "require-dev": {

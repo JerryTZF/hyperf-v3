@@ -15,7 +15,7 @@ use Hyperf\Context\ApplicationContext;
 
 class Redis
 {
-    public static function getRedis(): \Hyperf\Redis\Redis
+    public static function getRedisInstance(): \Hyperf\Redis\Redis
     {
         return ApplicationContext::getContainer()->get(\Hyperf\Redis\Redis::class);
     }

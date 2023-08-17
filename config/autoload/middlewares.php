@@ -13,5 +13,7 @@ return [
     'http' => [
         // 跨域中间件
         App\Middleware\CorsMiddleware::class,
+        // 验证器中间件(官方)
+        Hyperf\Validation\Middleware\ValidationMiddleware::class,
     ],
 ];

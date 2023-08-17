@@ -32,7 +32,7 @@ class Captcha
         // 获取验证码内容
         $phrase = $builder->getPhrase();
         // 写入Redis,以便验证
-        $redis = Redis::getRedis();
+        $redis = Redis::getRedisInstance();
         $redis->del($clientUniqueCode);
         $redis->set($clientUniqueCode, $phrase, ['NX', 'EX' => 300]);
 
@@ -44,7 +44,7 @@ class Captcha
      */
     public function verify(string $captcha, string $clientUniqueCode): bool
     {
-        $redis = Redis::getRedis();
+        $redis = Redis::getRedisInstance();
         $cachedCaptcha = $redis->get($clientUniqueCode);
         if ($cachedCaptcha === $captcha) {
             $redis->del($clientUniqueCode);
