@@ -1,0 +1,10 @@
+version: "3.5"
+
+services:
+  hyperf:
+    build: .
+    container_name: hyperf-server
+    ports:
+      - "9501:9501"
+    volumes:
+      - ./:/opt/www
