@@ -3799,16 +3799,16 @@
         },
         {
             "name": "hyperf/validation",
-            "version": "v3.0.28",
+            "version": "v3.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/validation.git",
-                "reference": "c1aa358eabf24148487602005e49565bbf02979b"
+                "reference": "a35fe9b755942a803331bdc79547642caabc7e05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/validation/zipball/c1aa358eabf24148487602005e49565bbf02979b",
-                "reference": "c1aa358eabf24148487602005e49565bbf02979b",
+                "url": "https://api.github.com/repos/hyperf/validation/zipball/a35fe9b755942a803331bdc79547642caabc7e05",
+                "reference": "a35fe9b755942a803331bdc79547642caabc7e05",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3861,9 +3861,9 @@
             ],
             "support": {
                 "issues": "https://github.com/hyperf/validation/issues",
-                "source": "https://github.com/hyperf/validation/tree/v3.0.28"
+                "source": "https://github.com/hyperf/validation/tree/v3.0.33"
             },
-            "time": "2023-07-03T04:37:00+00:00"
+            "time": "2023-08-10T07:43:04+00:00"
         },
         {
             "name": "laminas/laminas-mime",
@@ -9899,5 +9899,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
