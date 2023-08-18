@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
@@ -79,12 +80,27 @@ class TestListController extends AbstractController
         return $this->result->getResult();
     }
 
-    #[GetMapping(path: 'lock')]
+    #[GetMapping(path: 'lock/sync')]
+    public function redisLockSync(): array
+    {
+        // 不同的业务场景需要不同的实例(不可make获取该对象)
+        $lock = new RedisLock('testLock', 5, 3, 'redisLockSync');
+        // 非阻塞: 获取不到直接返回false, 不等待持有者释放锁
+        $result = $lock->lockSync(function () {
+            sleep(1); // 模拟业务耗时
+            return ['a' => 'A'];
+        });
+
+        return $this->result->setData($result)->getResult();
+    }
+
+    #[GetMapping(path: 'lock/async')]
     public function redisLockAsync(): array
     {
         // 不同的业务场景需要不同的实例(不可make获取该对象)
-        $lock = new RedisLock('testLock', 3, 3, 'redisLockAsync');
-        $result = $lock->lockFunc(function () {
+        $lock = new RedisLock('testLock_', 5, 3, 'redisLockAsync');
+        // 阻塞式: 获取不到会以每200ms的频率依次尝试再次获取, 直至3秒后超时, 抛出异常
+        $result = $lock->lockAsync(function () {
             sleep(1); // 模拟业务耗时
             return ['a' => 'A'];
         });

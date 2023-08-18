@@ -9,9 +9,11 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Lock;
 
 use App\Lib\Redis\Redis;
+use Lysice\HyperfRedisLock\LockTimeoutException;
 
 class RedisLock
 {
@@ -36,12 +38,26 @@ class RedisLock
      */
     private int $blockSeconds;
 
+    /**
+     * 锁实例.
+     */
+    private \Lysice\HyperfRedisLock\RedisLock $lock;
+
     public function __construct(string $lockName, int $lockingSeconds, int $blockSeconds = 3, $owner = null)
     {
         $this->blockSeconds = $blockSeconds;
         $this->lockName = $lockName;
         $this->lockingSeconds = $lockingSeconds;
         $this->owner = $owner;
+
+        $redisInstance = Redis::getRedisInstance();
+        // who(不同的客户端) 持有 what(不同业务场景) 样子的锁
+        $this->lock = new \Lysice\HyperfRedisLock\RedisLock(
+            $redisInstance, // Redis实例
+            $this->lockName, // 锁名称
+            $this->lockingSeconds, // 该锁生效的持续时间上限
+            $this->owner ?? null // 谁持有该锁
+        );
     }
 
     /**
@@ -49,31 +65,17 @@ class RedisLock
      * @param callable $func 需锁定的闭包
      * @return mixed bool:false 获取锁失败; mixed: 闭包返回的结果
      */
-    public function lockFunc(callable $func): mixed
+    public function lockSync(callable $func): mixed
     {
-        $redisInstance = Redis::getRedisInstance();
-        $lock = new \Lysice\HyperfRedisLock\RedisLock(
-            $redisInstance,
-            $this->lockName,
-            $this->lockingSeconds,
-            $this->owner ?? null
-        );
-        return $lock->get($func);
+        return $this->lock->get($func);
     }
 
     /**
      * 阻塞形式锁定.
-     * @throws \Lysice\HyperfRedisLock\LockTimeoutException
+     * @throws LockTimeoutException
      */
-    public function lockFuncWaitTimeout(callable $func): mixed
+    public function lockAsync(callable $func): mixed
     {
-        $redisInstance = Redis::getRedisInstance();
-        $lock = new \Lysice\HyperfRedisLock\RedisLock(
-            $redisInstance,
-            $this->lockName,
-            $this->lockingSeconds,
-            $this->owner ?? null
-        );
-        return $lock->block($this->blockSeconds, $func);
+        return $this->lock->block($this->blockSeconds, $func);
     }
 }
