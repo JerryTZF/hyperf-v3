@@ -16,11 +16,16 @@ use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Model\Goods;
+use App\Model\Orders;
+use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\Stringable\Str;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 #[Controller(prefix: 'test')]
 class TestListController extends AbstractController
@@ -105,5 +110,43 @@ class TestListController extends AbstractController
         });
 
         return $this->result->setData($result)->getResult();
+    }
+
+    #[GetMapping(path: 'pessimism/write/lock')]
+    public function pessimismWriteLock(): array
+    {
+        $gid = $this->request->input('gid', 1);
+        $num = $this->request->input('num', 1);
+        try {
+            Db::beginTransaction();
+            /** @var Goods $goodInfo */
+            //  $goodInfo = Goods::where(['id' => $gid])->sharedLock()->firstOrFail();
+            $goodInfo = Goods::where(['id' => $gid])->lockForUpdate()->firstOrFail();
+            sleep(5); // 模拟长事务
+            if ($goodInfo->stock > 0 && $goodInfo->stock >= $num) {
+                (new Orders([
+                    'gid' => $goodInfo->id,
+                    'order_id' => Str::random() . uniqid(),
+                    'number' => $num,
+                    'money' => $goodInfo->price * $num,
+                    'customer' => 'Jerry',
+                ]))->save();
+
+                $goodInfo->stock = $goodInfo->stock - $num;
+                $goodInfo->save();
+
+                Db::commit();
+                return $this->result->getResult();
+            }
+
+            Db::rollBack();
+            return $this->result->setErrorInfo(
+                ErrorCode::STOCK_ERR,
+                ErrorCode::getMessage(ErrorCode::STOCK_ERR, [$goodInfo->name])
+            )->getResult();
+        } catch (Throwable $e) {
+            Db::rollBack();
+            return $this->result->setErrorInfo($e->getCode(), $e->getMessage())->getResult();
+        }
     }
 }

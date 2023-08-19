@@ -12,16 +12,17 @@ declare(strict_types=1);
 namespace App\Model;
 
 /**
- * Class Goods.
+ * Class Orders.
  * @property int $id
- * @property string $name
- * @property float $price
- * @property int $stock
- * @property string $brand
+ * @property int $gid
+ * @property string $order_id
+ * @property int $number
+ * @property float $money
+ * @property string $customer
  * @property string $create_time
  * @property string $update_time
  */
-class Goods extends Model
+class Orders extends Model
 {
     public const CREATED_AT = 'create_time';
 
@@ -30,7 +31,7 @@ class Goods extends Model
     /**
      * 表名称.
      */
-    protected ?string $table = 'goods';
+    protected ?string $table = 'orders';
 
     /**
      * 允许被批量赋值的字段集合(黑名单).
@@ -42,9 +43,10 @@ class Goods extends Model
      */
     protected array $casts = [
         'id' => 'integer',
+        'gid' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
-        'price' => 'decimal:2',
+        'money' => 'decimal:2',
     ];
 
     /**

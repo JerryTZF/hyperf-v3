@@ -26,4 +26,9 @@ class ErrorCode extends AbstractConstants
      * @Message("验证码错误")
      */
     public const CAPTCHA_ERROR = 50001;
+
+    /**
+     * @Message("%s 库存不足")
+     */
+    public const STOCK_ERR = 50002;
 }
