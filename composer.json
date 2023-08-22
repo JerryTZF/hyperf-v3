@@ -33,6 +33,7 @@
         "hyperf/redis": "~3.0.0",
         "hyperf/validation": "^3.0",
         "lysice/hyperf-redis-lock": "^2.1",
+        "phpoffice/phpspreadsheet": "^1.28",
         "picqer/php-barcode-generator": "^2.3"
     },
     "require-dev": {

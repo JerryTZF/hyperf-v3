@@ -31,4 +31,9 @@ class ErrorCode extends AbstractConstants
      * @Message("%s 库存不足")
      */
     public const STOCK_ERR = 50002;
+
+    /**
+     * @Message("太多人抢购，请稍后再试")
+     */
+    public const STOCK_BUSY = 50003;
 }

@@ -18,6 +18,7 @@ namespace App\Model;
  * @property float $price
  * @property int $stock
  * @property string $brand
+ * @property int $version
  * @property string $create_time
  * @property string $update_time
  */
@@ -42,6 +43,7 @@ class Goods extends Model
      */
     protected array $casts = [
         'id' => 'integer',
+        'version' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
         'price' => 'decimal:2',

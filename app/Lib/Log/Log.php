@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Logger\LoggerFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,6 +30,11 @@ use Psr\Log\LoggerInterface;
  */
 class Log
 {
+    /**
+     * 静态调用.
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public static function __callStatic(string $level, array $args = []): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -49,6 +56,7 @@ class Log
 
     /**
      * 获取Logger实例.
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
     public static function get(string $channel = ''): LoggerInterface
     {
@@ -57,6 +65,7 @@ class Log
 
     /**
      * CLI 日志实例.
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
     public static function stdout(): StdoutLoggerInterface
     {

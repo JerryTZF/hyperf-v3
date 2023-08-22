@@ -149,4 +149,82 @@ class TestListController extends AbstractController
             return $this->result->setErrorInfo($e->getCode(), $e->getMessage())->getResult();
         }
     }
+
+    #[GetMapping(path: 'cas/mysql')]
+    public function casWithDatabase(): array
+    {
+        $gid = $this->request->input('gid', 1);
+        $num = $this->request->input('num', 1);
+        /** @var Goods $goodInfo */
+        $goodInfo = Goods::where(['id' => $gid])->firstOrFail();
+        if ($goodInfo->stock <= 0 || $goodInfo->stock < $num) {
+            return $this->result->setErrorInfo(
+                ErrorCode::STOCK_ERR,
+                ErrorCode::getMessage(ErrorCode::STOCK_ERR, [$goodInfo->name])
+            )->getResult();
+        }
+
+        $where = ['id' => $gid, 'version' => $goodInfo->version]; // old version
+        $update = ['stock' => $goodInfo->stock - 1, 'version' => $goodInfo->version + 1]; // new version
+        $effectRows = Goods::where($where)->update($update);
+        if ($effectRows == 0) {
+            return $this->result->setErrorInfo(
+                ErrorCode::STOCK_BUSY,
+                ErrorCode::getMessage(ErrorCode::STOCK_BUSY)
+            )->getResult();
+        }
+
+        (new Orders([
+            'gid' => $goodInfo->id,
+            'order_id' => Str::random() . uniqid(),
+            'number' => $num,
+            'money' => $goodInfo->price * $num,
+            'customer' => 'Jerry',
+        ]))->save();
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'cas/rotation')]
+    public function casWithRotation(): array
+    {
+        $gid = $this->request->input('gid', 1);
+        $num = $this->request->input('num', 1);
+        $rotationTimes = 1000;
+        while ($rotationTimes > 0) {
+            /** @var Goods $goodInfo */
+            $goodInfo = Goods::where(['id' => $gid])->firstOrFail();
+            // 库存不足
+            if ($goodInfo->stock <= 0 || $goodInfo->stock < $num) {
+                return $this->result->setErrorInfo(
+                    ErrorCode::STOCK_ERR,
+                    ErrorCode::getMessage(ErrorCode::STOCK_ERR, [$goodInfo->name])
+                )->getResult();
+            }
+            $where = ['id' => $gid, 'version' => $goodInfo->version]; // old version
+            $update = ['stock' => $goodInfo->stock - 1, 'version' => $goodInfo->version + 1]; // new version
+            $effectRows = Goods::where($where)->update($update);
+            if ($effectRows == 0) {
+                --$rotationTimes;
+                continue;
+            }
+
+            (new Orders([
+                'gid' => $goodInfo->id,
+                'order_id' => Str::random() . uniqid(),
+                'number' => $num,
+                'money' => $goodInfo->price * $num,
+                'customer' => 'Jerry',
+            ]))->save();
+            break;
+        }
+
+        if ($rotationTimes <= 0) {
+            return $this->result->setErrorInfo(
+                ErrorCode::STOCK_BUSY,
+                ErrorCode::getMessage(ErrorCode::STOCK_BUSY)
+            )->getResult();
+        }
+
+        return $this->result->getResult();
+    }
 }
