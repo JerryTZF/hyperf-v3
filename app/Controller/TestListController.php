@@ -12,10 +12,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
+use App\Job\CreateOrderJob;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
 use App\Model\Orders;
 use Hyperf\DbConnection\Db;
@@ -222,6 +224,26 @@ class TestListController extends AbstractController
             return $this->result->setErrorInfo(
                 ErrorCode::STOCK_BUSY,
                 ErrorCode::getMessage(ErrorCode::STOCK_BUSY)
+            )->getResult();
+        }
+
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'lock/queue')]
+    public function redisQueueLock(): array
+    {
+        $queueParams = [
+            'gid' => $this->request->input('gid', 1),
+            'num' => $this->request->input('num', 1),
+        ];
+        $client = '121.1.21.331' . uniqid();
+        $queueInstance = RedisQueueFactory::getQueueInstance('limit-queue');
+        $isPushSuccess = $queueInstance->push(new CreateOrderJob($client, $queueParams));
+        if (! $isPushSuccess) {
+            return $this->result->setErrorInfo(
+                ErrorCode::QUEUE_PUSH_ERR,
+                ErrorCode::getMessage(ErrorCode::QUEUE_PUSH_ERR, [CreateOrderJob::class])
             )->getResult();
         }
 

@@ -36,4 +36,9 @@ class ErrorCode extends AbstractConstants
      * @Message("太多人抢购，请稍后再试")
      */
     public const STOCK_BUSY = 50003;
+
+    /**
+     * @Message("% 消息投递失败")
+     */
+    public const QUEUE_PUSH_ERR = 50004;
 }
