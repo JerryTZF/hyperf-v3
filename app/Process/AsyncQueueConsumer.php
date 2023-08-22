@@ -14,7 +14,13 @@ namespace App\Process;
 use Hyperf\AsyncQueue\Process\ConsumerProcess;
 use Hyperf\Process\Annotation\Process;
 
-#[Process]
+#[Process(
+    nums: 4, // 消费者进程数
+    name: 'AsyncQueueConsumer', // 队列名称
+    redirectStdinStdout: false, // 重定向自定义进程的标准输入和输出
+    enableCoroutine: true, // 是否启用协程
+)]
 class AsyncQueueConsumer extends ConsumerProcess
 {
+    protected string $queue = 'redis-queue';
 }
