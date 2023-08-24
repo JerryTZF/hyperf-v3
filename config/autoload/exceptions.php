@@ -22,6 +22,8 @@ return [
             App\Exception\Handler\RateLimitExceptionHandler::class,
             // redis锁组件异常处理器
             App\Exception\Handler\LockTimeoutExceptionHandler::class,
+            // phpoffice 包异常捕获
+            App\Exception\Handler\OfficeExceptionHandler::class,
             // 全局(框架)异常处理
             App\Exception\Handler\AppExceptionHandler::class,
             // 全局HTTP异常处理

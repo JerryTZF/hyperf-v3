@@ -17,6 +17,7 @@ use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
 use App\Model\Orders;
@@ -248,5 +249,42 @@ class TestListController extends AbstractController
         }
 
         return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'office/excel/download')]
+    public function downloadExcel(): ResponseInterface
+    {
+        $lock = new RedisLock('export_excel', 3, 3, 'downloadExcel');
+        // 制作过程中因为是对对象操作，所以不应该并行操作同一对象,也减少内存使用
+        return $lock->lockAsync(function () {
+            $excelHandler = new ExportExcelHandler();
+            $excelHandler->setHeaders([
+                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
+            ]);
+            Orders::query()->orderBy('id', 'DESC')
+                ->chunk(20, function ($records) use ($excelHandler) {
+                    $excelHandler->setData($records->toArray());
+                });
+            return $excelHandler->saveToBrowser('测试导出');
+        });
+    }
+
+    #[GetMapping(path: 'office/excel/save')]
+    public function saveExcel(): array
+    {
+        $lock = new RedisLock('save_excel', 3, 3, 'saveExcel');
+        // 制作过程中因为是对对象操作，所以不应该并行操作同一对象,也减少内存使用
+        $file = $lock->lockAsync(function () {
+            $excelHandler = new ExportExcelHandler();
+            $excelHandler->setHeaders([
+                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
+            ]);
+            Orders::query()->orderBy('id', 'DESC')
+                ->chunk(20, function ($records) use ($excelHandler) {
+                    $excelHandler->setData($records->toArray());
+                });
+            return $excelHandler->saveToLocal('测试导出');
+        });
+        return $this->result->setData(['file_path' => $file])->getResult();
     }
 }

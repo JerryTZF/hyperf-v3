@@ -51,4 +51,9 @@ class SystemCode extends AbstractConstants
      * @Message("获取锁超时")
      */
     public const LOCK_WAIT_TIMEOUT = 9907;
+
+    /**
+     * @Message("office 制作错误")
+     */
+    public const OFFICE_ERR = 9908;
 }
