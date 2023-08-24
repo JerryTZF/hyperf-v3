@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
@@ -17,6 +18,7 @@ use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
@@ -284,6 +286,41 @@ class TestListController extends AbstractController
                     $excelHandler->setData($records->toArray());
                 });
             return $excelHandler->saveToLocal('测试导出');
+        });
+        return $this->result->setData(['file_path' => $file])->getResult();
+    }
+
+    #[GetMapping(path: 'office/csv/download')]
+    public function downloadCsv()
+    {
+        $lock = new RedisLock('export_csv', 3, 3, 'downloadCsv');
+        return $lock->lockAsync(function () {
+            $csvHandler = new ExportCsvHandler();
+            $csvHandler->setHeaders([
+                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
+            ]);
+            Orders::query()->orderBy('id', 'DESC')
+                ->chunk(20, function ($records) use ($csvHandler) {
+                    $csvHandler->setData($records->toArray());
+                });
+            return $csvHandler->saveToBrowser('CSV测试导出');
+        });
+    }
+
+    #[GetMapping(path: 'office/csv/save')]
+    public function saveCsv(): array
+    {
+        $lock = new RedisLock('save_csv', 3, 3, 'saveCsv');
+        $file = $lock->lockAsync(function () {
+            $csvHandler = new ExportCsvHandler();
+            $csvHandler->setHeaders([
+                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
+            ]);
+            Orders::query()->orderBy('id', 'DESC')
+                ->chunk(20, function ($records) use ($csvHandler) {
+                    $csvHandler->setData($records->toArray());
+                });
+            return $csvHandler->saveToLocal('Csv测试导出');
         });
         return $this->result->setData(['file_path' => $file])->getResult();
     }
