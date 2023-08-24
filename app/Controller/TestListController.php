@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
-use App\Lib\Encrypt\AES;
+use App\Lib\Encrypt\Aes;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
@@ -330,22 +330,22 @@ class TestListController extends AbstractController
     public function aes(): array
     {
         // ecb 加密解密
-        $data = ['key' => 'AES', 'msg' => '待加密数据'];
+        $data = ['key' => 'Aes', 'msg' => '待加密数据'];
         $key = 'KOQ19sd3_1kaseq/';
         $iv = 'hello world';
-        $ecbEncryptHex = AES::ecbEncryptHex($data, $key, 'AES-128-ECB');
-        $ecbDecryptHex = AES::ecbDecryptHex($ecbEncryptHex, $key, 'AES-128-ECB');
+        $ecbEncryptHex = Aes::ecbEncryptHex($data, $key, 'Aes-128-ECB');
+        $ecbDecryptHex = Aes::ecbDecryptHex($ecbEncryptHex, $key, 'Aes-128-ECB');
         var_dump($ecbDecryptHex);
-        $ecbEncryptBase64 = AES::ecbEncryptBase64($data, $key, 'AES-128-ECB');
-        $ecbDecryptBase64 = AES::ecbDecryptBase64($ecbEncryptBase64, $key, 'AES-128-ECB');
+        $ecbEncryptBase64 = Aes::ecbEncryptBase64($data, $key, 'Aes-128-ECB');
+        $ecbDecryptBase64 = Aes::ecbDecryptBase64($ecbEncryptBase64, $key, 'Aes-128-ECB');
         var_dump($ecbDecryptBase64);
 
         // cbc 加解密
-        $cbcEncryptHex = AES::cbcEncryptHex($data, $key, $iv, 'AES-128-CBC');
-        $cbcDecryptHex = AES::cbcDecryptHex($cbcEncryptHex, $key, $iv, 'AES-128-CBC');
+        $cbcEncryptHex = Aes::cbcEncryptHex($data, $key, $iv, 'Aes-128-CBC');
+        $cbcDecryptHex = Aes::cbcDecryptHex($cbcEncryptHex, $key, $iv, 'Aes-128-CBC');
         var_dump($cbcDecryptHex);
-        $cbcEncryptBase64 = AES::cbcEncryptBase64($data, $key, $iv, 'AES-128-CBC');
-        $cbcDecryptBase64 = AES::cbcDecryptBase64($cbcEncryptBase64, $key, $iv, 'AES-128-CBC');
+        $cbcEncryptBase64 = Aes::cbcEncryptBase64($data, $key, $iv, 'Aes-128-CBC');
+        $cbcDecryptBase64 = Aes::cbcDecryptBase64($cbcEncryptBase64, $key, $iv, 'Aes-128-CBC');
         var_dump($cbcDecryptBase64);
 
         return $this->result->getResult();
