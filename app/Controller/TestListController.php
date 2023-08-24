@@ -9,15 +9,16 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
+use App\Lib\Encrypt\AES;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Lib\Log\Log;
 use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
@@ -323,5 +324,30 @@ class TestListController extends AbstractController
             return $csvHandler->saveToLocal('Csv测试导出');
         });
         return $this->result->setData(['file_path' => $file])->getResult();
+    }
+
+    #[GetMapping(path: 'aes')]
+    public function aes(): array
+    {
+        // ecb 加密解密
+        $data = ['key' => 'AES', 'msg' => '待加密数据'];
+        $key = 'KOQ19sd3_1kaseq/';
+        $iv = 'hello world';
+        $ecbEncryptHex = AES::ecbEncryptHex($data, $key, 'AES-128-ECB');
+        $ecbDecryptHex = AES::ecbDecryptHex($ecbEncryptHex, $key, 'AES-128-ECB');
+        var_dump($ecbDecryptHex);
+        $ecbEncryptBase64 = AES::ecbEncryptBase64($data, $key, 'AES-128-ECB');
+        $ecbDecryptBase64 = AES::ecbDecryptBase64($ecbEncryptBase64, $key, 'AES-128-ECB');
+        var_dump($ecbDecryptBase64);
+
+        // cbc 加解密
+        $cbcEncryptHex = AES::cbcEncryptHex($data, $key, $iv, 'AES-128-CBC');
+        $cbcDecryptHex = AES::cbcDecryptHex($cbcEncryptHex, $key, $iv, 'AES-128-CBC');
+        var_dump($cbcDecryptHex);
+        $cbcEncryptBase64 = AES::cbcEncryptBase64($data, $key, $iv, 'AES-128-CBC');
+        $cbcDecryptBase64 = AES::cbcDecryptBase64($cbcEncryptBase64, $key, $iv, 'AES-128-CBC');
+        var_dump($cbcDecryptBase64);
+
+        return $this->result->getResult();
     }
 }
