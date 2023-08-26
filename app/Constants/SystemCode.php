@@ -56,4 +56,9 @@ class SystemCode extends AbstractConstants
      * @Message("office 制作错误")
      */
     public const OFFICE_ERR = 9908;
+
+    /**
+     * @Message("PHPSeclib错误：%s")
+     */
+    public const PHPSECLIB_ERR = 9907;
 }

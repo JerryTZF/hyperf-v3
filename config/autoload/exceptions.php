@@ -24,6 +24,8 @@ return [
             App\Exception\Handler\LockTimeoutExceptionHandler::class,
             // phpoffice 包异常捕获
             App\Exception\Handler\OfficeExceptionHandler::class,
+            // PHPSeclib 包异常捕获
+            App\Exception\Handler\PHPSeclibExceptionHandler::class,
             // 全局(框架)异常处理
             App\Exception\Handler\AppExceptionHandler::class,
             // 全局HTTP异常处理

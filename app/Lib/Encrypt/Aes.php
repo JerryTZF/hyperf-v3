@@ -18,7 +18,7 @@ class Aes
      * @param array|string $data 待加密的数据
      * @param string $key 秘钥
      */
-    public static function ecbEncryptHex(array|string $data, string $key, string $cipher = 'Aes-128-ECB'): string
+    public static function ecbEncryptHex(array|string $data, string $key, string $cipher = 'AES-128-ECB'): string
     {
         $data = is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data;
         $padding = OPENSSL_RAW_DATA;
@@ -28,7 +28,7 @@ class Aes
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
      */
-    public static function ecbDecryptHex(string $encryptData, string $key, string $cipher = 'Aes-128-ECB'): string|array
+    public static function ecbDecryptHex(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): string|array
     {
         $padding = OPENSSL_RAW_DATA;
         $decrypt = openssl_decrypt(hex2bin($encryptData), $cipher, $key, $padding);
@@ -38,7 +38,7 @@ class Aes
     /**
      * ecb方式加密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
      */
-    public static function ecbEncryptBase64(array|string $data, string $key, string $cipher = 'Aes-128-ECB'): string
+    public static function ecbEncryptBase64(array|string $data, string $key, string $cipher = 'AES-128-ECB'): string
     {
         $data = is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data;
         $padding = OPENSSL_RAW_DATA;
@@ -48,7 +48,7 @@ class Aes
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
      */
-    public static function ecbDecryptBase64(string $encryptData, string $key, string $cipher = 'Aes-128-ECB'): string|array
+    public static function ecbDecryptBase64(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): string|array
     {
         $padding = OPENSSL_RAW_DATA;
         $decrypt = openssl_decrypt(base64_decode($encryptData), $cipher, $key, $padding);
@@ -58,7 +58,7 @@ class Aes
     /**
      * CBC方式加密(PKCS7Padding 填充方式).
      */
-    public static function cbcEncryptHex(array|string $data, string $key, string $iv, string $cipher = 'Aes-128-CBC'): string
+    public static function cbcEncryptHex(array|string $data, string $key, string $iv, string $cipher = 'AES-128-CBC'): string
     {
         $data = is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data;
         $padding = OPENSSL_RAW_DATA;
@@ -69,7 +69,7 @@ class Aes
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
      */
-    public static function cbcDecryptHex(string $encryptData, string $key, string $iv, string $cipher = 'Aes-128-CBC'): string|array
+    public static function cbcDecryptHex(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): string|array
     {
         $padding = OPENSSL_RAW_DATA;
         $iv = md5($iv, true); // 注意别的语言是否是这种方式固定16位长度!!!
@@ -80,7 +80,7 @@ class Aes
     /**
      * CBC方式加密(PKCS7Padding 填充方式).
      */
-    public static function cbcEncryptBase64(array|string $data, string $key, string $iv, string $cipher = 'Aes-128-CBC'): string
+    public static function cbcEncryptBase64(array|string $data, string $key, string $iv, string $cipher = 'AES-128-CBC'): string
     {
         $data = is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data;
         $padding = OPENSSL_RAW_DATA;
@@ -91,7 +91,7 @@ class Aes
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
      */
-    public static function cbcDecryptBase64(string $encryptData, string $key, string $iv, string $cipher = 'Aes-128-CBC'): string|array
+    public static function cbcDecryptBase64(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): string|array
     {
         $padding = OPENSSL_RAW_DATA;
         $iv = md5($iv, true); // 注意别的语言是否是这种方式固定16位长度!!!

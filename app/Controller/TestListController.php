@@ -14,11 +14,11 @@ namespace App\Controller;
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
 use App\Lib\Encrypt\Aes;
+use App\Lib\Encrypt\AesWithPHPSeclib;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
-use App\Lib\Log\Log;
 use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
@@ -335,18 +335,39 @@ class TestListController extends AbstractController
         $iv = 'hello world';
         $ecbEncryptHex = Aes::ecbEncryptHex($data, $key, 'Aes-128-ECB');
         $ecbDecryptHex = Aes::ecbDecryptHex($ecbEncryptHex, $key, 'Aes-128-ECB');
-        var_dump($ecbDecryptHex);
+        var_dump($ecbEncryptHex, $ecbDecryptHex);
         $ecbEncryptBase64 = Aes::ecbEncryptBase64($data, $key, 'Aes-128-ECB');
         $ecbDecryptBase64 = Aes::ecbDecryptBase64($ecbEncryptBase64, $key, 'Aes-128-ECB');
-        var_dump($ecbDecryptBase64);
+        var_dump($ecbEncryptBase64, $ecbDecryptBase64);
 
         // cbc 加解密
         $cbcEncryptHex = Aes::cbcEncryptHex($data, $key, $iv, 'Aes-128-CBC');
         $cbcDecryptHex = Aes::cbcDecryptHex($cbcEncryptHex, $key, $iv, 'Aes-128-CBC');
-        var_dump($cbcDecryptHex);
+        var_dump($cbcEncryptHex, $cbcDecryptHex);
         $cbcEncryptBase64 = Aes::cbcEncryptBase64($data, $key, $iv, 'Aes-128-CBC');
         $cbcDecryptBase64 = Aes::cbcDecryptBase64($cbcEncryptBase64, $key, $iv, 'Aes-128-CBC');
-        var_dump($cbcDecryptBase64);
+        var_dump($cbcEncryptBase64, $cbcDecryptBase64);
+
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'seclib/aes')]
+    public function seclibAes(): array
+    {
+        $constructEcb = [
+            'ecb', 128, 'KOQ19sd3_1kaseq/', [],
+        ];
+        $constructCbc = [
+            'cbc', 128, 'KOQ19sd3_1kaseq/', ['iv' => 'hello world'],
+        ];
+        $data = ['key' => 'Aes', 'msg' => '待加密数据'];
+        $aesInstance = new AesWithPHPSeclib(...$constructCbc);
+        $ecbEncryptHex = $aesInstance->encryptHex($data);
+        $ecbDecryptHex = $aesInstance->decryptHex($ecbEncryptHex);
+        var_dump($ecbEncryptHex, $ecbDecryptHex);
+        $ecbEncryptBase64 = $aesInstance->encryptBase64($data);
+        $ecbDecryptBase64 = $aesInstance->decryptBase64($ecbEncryptBase64);
+        var_dump($ecbEncryptBase64, $ecbDecryptBase64);
 
         return $this->result->getResult();
     }
