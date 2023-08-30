@@ -15,6 +15,7 @@ use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
 use App\Lib\Encrypt\Aes;
 use App\Lib\Encrypt\AesWithPHPSeclib;
+use App\Lib\Encrypt\RsaWithPHPSeclib;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
@@ -370,5 +371,29 @@ class TestListController extends AbstractController
         var_dump($ecbEncryptBase64, $ecbDecryptBase64);
 
         return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'seclib/rsa')]
+    public function seclibRsa(): array
+    {
+        // 默认属性, 具体参考封装类
+        $rsaInstance = new RsaWithPHPSeclib();
+
+        // 公钥加密
+        $encryptData = $rsaInstance->publicKeyEncrypt('hello world');
+        // 私钥解密
+        $decryptData = $rsaInstance->privateKeyDecrypt($encryptData);
+
+        // 私钥加签
+        $signature = $rsaInstance->privateKeySign('hello world');
+        // 公钥验签
+        $verifyResult = $rsaInstance->publicKeyVerifySign('hello world', $signature);
+
+        return $this->result->setData([
+            'public_key_to_encrypt_data' => $encryptData,
+            'private_key_to_decrypt_data' => $decryptData,
+            'private_key_to_sign_data' => $signature,
+            'public_key_to_verify_sign' => $verifyResult,
+        ])->getResult();
     }
 }

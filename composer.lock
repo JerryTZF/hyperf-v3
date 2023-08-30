@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db18548f48a2bad1db320239e523e3b2",
+    "content-hash": "a272ffdd50597761f22f8e4ec61c59da",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -68,16 +68,16 @@
         },
         {
             "name": "dasprid/enum",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DASPRiD/Enum.git",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f"
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
+                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/6faf451159fb8ba4126b925ed2d78acfce0dc016",
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -118,9 +118,9 @@
             ],
             "support": {
                 "issues": "https://github.com/DASPRiD/Enum/issues",
-                "source": "https://github.com/DASPRiD/Enum/tree/1.0.4"
+                "source": "https://github.com/DASPRiD/Enum/tree/1.0.5"
             },
-            "time": "2023-03-01T18:44:03+00:00"
+            "time": "2023-08-25T16:18:39+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -844,16 +844,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.7.0",
+            "version": "7.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "fb7566caccf22d74d1ab270de3551f72a58399f5"
+                "reference": "085b026db54d4b5012f727c80c9958e8b8cbc454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fb7566caccf22d74d1ab270de3551f72a58399f5",
-                "reference": "fb7566caccf22d74d1ab270de3551f72a58399f5",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/085b026db54d4b5012f727c80c9958e8b8cbc454",
+                "reference": "085b026db54d4b5012f727c80c9958e8b8cbc454",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -956,7 +956,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.7.0"
+                "source": "https://github.com/guzzle/guzzle/tree/7.7.1"
             },
             "funding": [
                 {
@@ -972,7 +972,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-21T14:04:53+00:00"
+            "time": "2023-08-27T10:02:06+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1445,16 +1445,16 @@
         },
         {
             "name": "hyperf/collection",
-            "version": "v3.0.29",
+            "version": "v3.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/collection.git",
-                "reference": "c2e3f919f8c445da69e0e0c10920c6fc0754b9ad"
+                "reference": "0126536ab2634b6f446bcdd24ee4f4448951390b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/collection/zipball/c2e3f919f8c445da69e0e0c10920c6fc0754b9ad",
-                "reference": "c2e3f919f8c445da69e0e0c10920c6fc0754b9ad",
+                "url": "https://api.github.com/repos/hyperf/collection/zipball/0126536ab2634b6f446bcdd24ee4f4448951390b",
+                "reference": "0126536ab2634b6f446bcdd24ee4f4448951390b",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1500,7 +1500,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-07-14T03:41:52+00:00"
+            "time": "2023-08-18T03:42:33+00:00"
         },
         {
             "name": "hyperf/command",
@@ -1689,16 +1689,16 @@
         },
         {
             "name": "hyperf/constants",
-            "version": "v3.0.18",
+            "version": "v3.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/constants.git",
-                "reference": "71eadfcf6495eb4945a2416569649e39a89a55e3"
+                "reference": "47412c7bbb334d8c3269a398066832f88e6dbfb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/constants/zipball/71eadfcf6495eb4945a2416569649e39a89a55e3",
-                "reference": "71eadfcf6495eb4945a2416569649e39a89a55e3",
+                "url": "https://api.github.com/repos/hyperf/constants/zipball/47412c7bbb334d8c3269a398066832f88e6dbfb8",
+                "reference": "47412c7bbb334d8c3269a398066832f88e6dbfb8",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1747,20 +1747,20 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-04-26T03:02:31+00:00"
+            "time": "2023-08-23T15:57:06+00:00"
         },
         {
             "name": "hyperf/context",
-            "version": "v3.0.18",
+            "version": "v3.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/context.git",
-                "reference": "8cff8cc1c70c1a8c390a13b97986ddd5e47fa2ec"
+                "reference": "ec0290f65356749545968a05f95df947970ddb9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/context/zipball/8cff8cc1c70c1a8c390a13b97986ddd5e47fa2ec",
-                "reference": "8cff8cc1c70c1a8c390a13b97986ddd5e47fa2ec",
+                "url": "https://api.github.com/repos/hyperf/context/zipball/ec0290f65356749545968a05f95df947970ddb9a",
+                "reference": "ec0290f65356749545968a05f95df947970ddb9a",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1802,7 +1802,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-04-26T03:02:31+00:00"
+            "time": "2023-08-20T15:07:17+00:00"
         },
         {
             "name": "hyperf/contract",
@@ -1914,16 +1914,16 @@
         },
         {
             "name": "hyperf/coroutine",
-            "version": "v3.0.16",
+            "version": "v3.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/coroutine.git",
-                "reference": "4944ce69d5f35407e5dbcf7e9991f1db3366f254"
+                "reference": "0cad1ddb1d233b02b16ebfb26d0cc5c863b0e5dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/coroutine/zipball/4944ce69d5f35407e5dbcf7e9991f1db3366f254",
-                "reference": "4944ce69d5f35407e5dbcf7e9991f1db3366f254",
+                "url": "https://api.github.com/repos/hyperf/coroutine/zipball/0cad1ddb1d233b02b16ebfb26d0cc5c863b0e5dd",
+                "reference": "0cad1ddb1d233b02b16ebfb26d0cc5c863b0e5dd",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1970,7 +1970,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-04-12T05:34:25+00:00"
+            "time": "2023-08-17T06:16:35+00:00"
         },
         {
             "name": "hyperf/database",
@@ -2041,16 +2041,16 @@
         },
         {
             "name": "hyperf/db-connection",
-            "version": "v3.0.18",
+            "version": "v3.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/db-connection.git",
-                "reference": "e4264bbaaa4b2f6a02096400ee05e4289b6a5509"
+                "reference": "609325db39debbfb8df24e16e1bad299a0d12d55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/db-connection/zipball/e4264bbaaa4b2f6a02096400ee05e4289b6a5509",
-                "reference": "e4264bbaaa4b2f6a02096400ee05e4289b6a5509",
+                "url": "https://api.github.com/repos/hyperf/db-connection/zipball/609325db39debbfb8df24e16e1bad299a0d12d55",
+                "reference": "609325db39debbfb8df24e16e1bad299a0d12d55",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2102,20 +2102,20 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-04-26T03:02:31+00:00"
+            "time": "2023-06-07T02:28:52+00:00"
         },
         {
             "name": "hyperf/di",
-            "version": "v3.0.24",
+            "version": "v3.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/di.git",
-                "reference": "4fa46897ffe0e1f2d1260a65a1e25dadaacbdcd2"
+                "reference": "bd5bf72af5f9261c2352b56d1a2ce677c1c0e304"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/di/zipball/4fa46897ffe0e1f2d1260a65a1e25dadaacbdcd2",
-                "reference": "4fa46897ffe0e1f2d1260a65a1e25dadaacbdcd2",
+                "url": "https://api.github.com/repos/hyperf/di/zipball/bd5bf72af5f9261c2352b56d1a2ce677c1c0e304",
+                "reference": "bd5bf72af5f9261c2352b56d1a2ce677c1c0e304",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2173,7 +2173,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-06-05T07:53:17+00:00"
+            "time": "2023-08-15T07:08:10+00:00"
         },
         {
             "name": "hyperf/dispatcher",
@@ -2700,16 +2700,16 @@
         },
         {
             "name": "hyperf/http-server",
-            "version": "v3.0.24",
+            "version": "v3.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/http-server.git",
-                "reference": "d8a3256a6b32879b6d7bfd308cc1dca9d8d27de1"
+                "reference": "28483f48af1691caad61191a3d1487d9a8f65a86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/http-server/zipball/d8a3256a6b32879b6d7bfd308cc1dca9d8d27de1",
-                "reference": "d8a3256a6b32879b6d7bfd308cc1dca9d8d27de1",
+                "url": "https://api.github.com/repos/hyperf/http-server/zipball/28483f48af1691caad61191a3d1487d9a8f65a86",
+                "reference": "28483f48af1691caad61191a3d1487d9a8f65a86",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2772,7 +2772,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-06-06T12:33:49+00:00"
+            "time": "2023-08-25T10:12:34+00:00"
         },
         {
             "name": "hyperf/logger",
@@ -3395,16 +3395,16 @@
         },
         {
             "name": "hyperf/server",
-            "version": "v3.0.24",
+            "version": "v3.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/server.git",
-                "reference": "0a2bfa37355631a0f0484bfd08d815ad858d279c"
+                "reference": "b5a453f195da60368b84355a7cdfbf09257f08cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/server/zipball/0a2bfa37355631a0f0484bfd08d815ad858d279c",
-                "reference": "0a2bfa37355631a0f0484bfd08d815ad858d279c",
+                "url": "https://api.github.com/repos/hyperf/server/zipball/b5a453f195da60368b84355a7cdfbf09257f08cd",
+                "reference": "b5a453f195da60368b84355a7cdfbf09257f08cd",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3461,7 +3461,69 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-06-07T05:27:29+00:00"
+            "time": "2023-08-25T07:31:42+00:00"
+        },
+        {
+            "name": "hyperf/signal",
+            "version": "v3.0.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hyperf/signal.git",
+                "reference": "fe6ac446310bdc040424ad29269ee454a18945ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hyperf/signal/zipball/fe6ac446310bdc040424ad29269ee454a18945ba",
+                "reference": "fe6ac446310bdc040424ad29269ee454a18945ba",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "hyperf/contract": "~3.0.0",
+                "hyperf/engine": "^1.3|^2.0",
+                "hyperf/support": "~3.0.0",
+                "hyperf/utils": "~3.0.0",
+                "php": ">=7.2",
+                "psr/container": "^1.0|^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                },
+                "hyperf": {
+                    "config": "Hyperf\\Signal\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Signal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A signal library for Hyperf.",
+            "homepage": "https://hyperf.io",
+            "keywords": [
+                "hyperf",
+                "php",
+                "signal",
+                "swoole"
+            ],
+            "support": {
+                "docs": "https://hyperf.wiki",
+                "issues": "https://github.com/hyperf/hyperf/issues",
+                "pull-request": "https://github.com/hyperf/hyperf/pulls",
+                "source": "https://github.com/hyperf/hyperf"
+            },
+            "time": "2023-04-26T03:02:31+00:00"
         },
         {
             "name": "hyperf/stringable",
@@ -3531,16 +3593,16 @@
         },
         {
             "name": "hyperf/support",
-            "version": "v3.0.24",
+            "version": "v3.0.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/support.git",
-                "reference": "576838e7185bf8eb749920a3285b399cb9c3a24b"
+                "reference": "e777fd424d1a19340bb2c6f8527d59efea905f5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/support/zipball/576838e7185bf8eb749920a3285b399cb9c3a24b",
-                "reference": "576838e7185bf8eb749920a3285b399cb9c3a24b",
+                "url": "https://api.github.com/repos/hyperf/support/zipball/e777fd424d1a19340bb2c6f8527d59efea905f5d",
+                "reference": "e777fd424d1a19340bb2c6f8527d59efea905f5d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3593,7 +3655,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-06-08T06:55:09+00:00"
+            "time": "2023-08-24T02:11:28+00:00"
         },
         {
             "name": "hyperf/tappable",
@@ -3931,6 +3993,54 @@
                 "source": "https://github.com/hyperf/validation/tree/v3.0.33"
             },
             "time": "2023-08-10T07:43:04+00:00"
+        },
+        {
+            "name": "jetbrains/phpstorm-attributes",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JetBrains/phpstorm-attributes.git",
+                "reference": "a7a83ae5df4dd3c0875484483de19de8edf60a9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-attributes/zipball/a7a83ae5df4dd3c0875484483de19de8edf60a9f",
+                "reference": "a7a83ae5df4dd3c0875484483de19de8edf60a9f",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JetBrains\\PhpStorm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "JetBrains",
+                    "homepage": "https://www.jetbrains.com"
+                }
+            ],
+            "description": "PhpStorm specific attributes",
+            "keywords": [
+                "attributes",
+                "jetbrains",
+                "phpstorm"
+            ],
+            "support": {
+                "issues": "https://youtrack.jetbrains.com/newIssue?project=WI",
+                "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.0"
+            },
+            "time": "2020-11-17T11:09:47+00:00"
         },
         {
             "name": "laminas/laminas-mime",
@@ -8231,16 +8341,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.28",
+            "version": "1.10.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "e4545b55904ebef470423d3ddddb74fa7325497a"
+                "reference": "c0eb159b598e2b637cbd52840e3d08f28d25dd47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e4545b55904ebef470423d3ddddb74fa7325497a",
-                "reference": "e4545b55904ebef470423d3ddddb74fa7325497a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c0eb159b598e2b637cbd52840e3d08f28d25dd47",
+                "reference": "c0eb159b598e2b637cbd52840e3d08f28d25dd47",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -8295,7 +8405,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-08T12:33:42+00:00"
+            "time": "2023-08-24T14:26:09+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
