@@ -55,7 +55,7 @@ class Result
      * @param mixed $errorInfo
      * @return $this
      */
-    public function setErrorInfo($errorCode, $errorInfo): Result
+    public function setErrorInfo(int $errorCode, string $errorInfo): Result
     {
         $isExist = Context::has($this->key);
         if ($isExist) {
@@ -73,10 +73,9 @@ class Result
 
     /**
      * 设置数据.
-     * @param mixed $data
      * @return $this
      */
-    public function setData($data): Result
+    public function setData(string|array $data): Result
     {
         $isExist = Context::has($this->key);
         if ($isExist) {
@@ -92,11 +91,9 @@ class Result
 
     /**
      * 添加额外Key-Value.
-     * @param mixed $key
-     * @param mixed $values
      * @return $this
      */
-    public function addKey($key, $values): Result
+    public function addKey(string $key, string|array $values): Result
     {
         $isExist = Context::has($this->key);
         if ($isExist) {

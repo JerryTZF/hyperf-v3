@@ -111,7 +111,6 @@ class RsaWithPHPSeclib
     {
         $privateKey = $this->buildPrivateKey('encrypt');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
-
         return base64_encode($privateKey->getPublicKey()->encrypt($message));
     }
 
@@ -132,7 +131,6 @@ class RsaWithPHPSeclib
     {
         $privateKey = $this->buildPrivateKey('signature');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
-
         return base64_encode($privateKey->sign($message));
     }
 

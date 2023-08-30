@@ -11,6 +11,10 @@ declare(strict_types=1);
  */
 namespace App\Lib\Encrypt;
 
+/**
+ * Class Rsa.
+ * @see https://phpseclib.com/docs/php
+ */
 class Rsa
 {
 }

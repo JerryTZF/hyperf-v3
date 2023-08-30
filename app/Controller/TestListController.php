@@ -9,12 +9,14 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
 use App\Lib\Encrypt\Aes;
 use App\Lib\Encrypt\AesWithPHPSeclib;
+use App\Lib\Encrypt\Rc4WithPHPSecLib;
 use App\Lib\Encrypt\RsaWithPHPSeclib;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
@@ -394,6 +396,26 @@ class TestListController extends AbstractController
             'private_key_to_decrypt_data' => $decryptData,
             'private_key_to_sign_data' => $signature,
             'public_key_to_verify_sign' => $verifyResult,
+        ])->getResult();
+    }
+
+    #[GetMapping(path: 'rc4')]
+    public function rc4(): array
+    {
+        $rc4Instance = new Rc4WithPHPSecLib('hello world');
+        $body = ['a' => 'A'];
+
+        $encrypt = $rc4Instance->encrypt($body);
+        $decrypt = $rc4Instance->decrypt($encrypt);
+
+        $encrypt_ = $rc4Instance->encryptNative($body);
+        $decrypt_ = $rc4Instance->decryptNative($encrypt_);
+
+        return $this->result->setData([
+            'encrypt' => $encrypt,
+            'decrypt' => $decrypt,
+            'encrypt_' => $encrypt_,
+            'decrypt_' => $decrypt_,
         ])->getResult();
     }
 }
