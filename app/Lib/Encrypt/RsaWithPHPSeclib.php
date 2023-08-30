@@ -109,18 +109,7 @@ class RsaWithPHPSeclib
      */
     public function publicKeyEncrypt(string|array $message): string
     {
-        /** @var PrivateKey $privateKey */
-        $privateKey = RSA::loadPrivateKey(file_get_contents($this->path . 'private.pem'));
-        // 加密填充方式
-        $privateKey = in_array($this->encryptPadding, $this->availableEncryptPadding) ?
-            $privateKey->withPadding($this->encryptPadding) : $privateKey->withPadding(RSA::ENCRYPTION_PKCS1);
-        // HASH方式
-        $privateKey = in_array($this->hash, $this->availableHash) ?
-            $privateKey->withHash($this->hash) : $privateKey->withHash('sha256');
-        // MGF HASH方式(只有padding为RSA::ENCRYPTION_OAEP可用)
-        $privateKey = in_array($this->mgfHash, $this->availableHash) ?
-            $privateKey->withMGFHash($this->mgfHash) : $privateKey->withHash('sha256');
-
+        $privateKey = $this->buildPrivateKey('encrypt');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
 
         return base64_encode($privateKey->getPublicKey()->encrypt($message));
@@ -131,18 +120,7 @@ class RsaWithPHPSeclib
      */
     public function privateKeyDecrypt(string $encryptText): array|string
     {
-        /** @var PrivateKey|RSA $privateKey */
-        $privateKey = RSA::loadPrivateKey(file_get_contents($this->path . 'private.pem'));
-        // 加密填充方式
-        $privateKey = in_array($this->encryptPadding, $this->availableEncryptPadding) ?
-            $privateKey->withPadding($this->encryptPadding) : $privateKey->withPadding(RSA::ENCRYPTION_PKCS1);
-        // HASH方式
-        $privateKey = in_array($this->hash, $this->availableHash) ?
-            $privateKey->withHash($this->hash) : $privateKey->withHash('sha256');
-        // MGF HASH方式(只有padding为RSA::ENCRYPTION_OAEP可用)
-        $privateKey = in_array($this->mgfHash, $this->availableHash) ?
-            $privateKey->withMGFHash($this->mgfHash) : $privateKey->withHash('sha256');
-
+        $privateKey = $this->buildPrivateKey('encrypt');
         $decryptData = $privateKey->decrypt(base64_decode($encryptText));
         return json_decode($decryptData, true) ?? $decryptData;
     }
@@ -152,17 +130,7 @@ class RsaWithPHPSeclib
      */
     public function privateKeySign(string|array $message): string
     {
-        /** @var PrivateKey|RSA $privateKey */
-        $privateKey = RSA::loadPrivateKey(file_get_contents($this->path . 'private.pem'));
-        // 加签填充方式
-        $privateKey = in_array($this->signaturePadding, $this->availableSignaturePadding) ?
-            $privateKey->withPadding($this->signaturePadding) : $privateKey->withPadding(RSA::SIGNATURE_PKCS1);
-        // HASH方式
-        $privateKey = in_array($this->hash, $this->availableHash) ?
-            $privateKey->withHash($this->hash) : $privateKey->withHash('sha256');
-        $privateKey = in_array($this->mgfHash, $this->availableHash) ?
-            $privateKey->withMGFHash($this->mgfHash) : $privateKey->withHash('sha256');
-
+        $privateKey = $this->buildPrivateKey('signature');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
 
         return base64_encode($privateKey->sign($message));
@@ -173,17 +141,7 @@ class RsaWithPHPSeclib
      */
     public function publicKeyVerifySign(string|array $message, string $signature): bool
     {
-        /** @var PrivateKey|RSA $privateKey */
-        $privateKey = RSA::loadPrivateKey(file_get_contents($this->path . 'private.pem'));
-        // 加签填充方式
-        $privateKey = in_array($this->signaturePadding, $this->availableSignaturePadding) ?
-            $privateKey->withPadding($this->signaturePadding) : $privateKey->withPadding(RSA::SIGNATURE_PKCS1);
-        // HASH方式
-        $privateKey = in_array($this->hash, $this->availableHash) ?
-            $privateKey->withHash($this->hash) : $privateKey->withHash('sha256');
-        $privateKey = in_array($this->mgfHash, $this->availableHash) ?
-            $privateKey->withMGFHash($this->mgfHash) : $privateKey->withHash('sha256');
-
+        $privateKey = $this->buildPrivateKey('signature');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
         return $privateKey->getPublicKey()->verify($message, base64_decode($signature));
     }
@@ -201,5 +159,30 @@ class RsaWithPHPSeclib
             file_put_contents($privateKey, $this->privateKey->toString($this->keyFormat));
             file_put_contents($publicKey, $this->privateKey->getPublicKey()->toString($this->keyFormat));
         }
+    }
+
+    /**
+     * 构建不同场景下的合法私钥.
+     */
+    private function buildPrivateKey(string $mode = 'encrypt'): PrivateKey|RSA
+    {
+        /** @var PrivateKey|RSA $privateKey */
+        $privateKey = RSA::loadPrivateKey(file_get_contents($this->path . 'private.pem'));
+        if ($mode === 'encrypt') {
+            // 加签填充方式
+            $privateKey = in_array($this->signaturePadding, $this->availableSignaturePadding) ?
+                $privateKey->withPadding($this->signaturePadding) : $privateKey->withPadding(RSA::SIGNATURE_PKCS1);
+        } else {
+            // 加密填充方式
+            $privateKey = in_array($this->encryptPadding, $this->availableEncryptPadding) ?
+                $privateKey->withPadding($this->encryptPadding) : $privateKey->withPadding(RSA::ENCRYPTION_PKCS1);
+        }
+
+        // HASH方式
+        $privateKey = in_array($this->hash, $this->availableHash) ?
+            $privateKey->withHash($this->hash) : $privateKey->withHash('sha256');
+        // MGF HASH方式(只有padding为RSA::ENCRYPTION_OAEP可用)
+        return in_array($this->mgfHash, $this->availableHash) ?
+            $privateKey->withMGFHash($this->mgfHash) : $privateKey->withHash('sha256');
     }
 }

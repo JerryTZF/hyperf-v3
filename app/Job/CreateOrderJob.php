@@ -23,6 +23,9 @@ class CreateOrderJob extends AbstractJob
         parent::__construct($uniqueId, $params);
     }
 
+    /**
+     * 并行为1的队列模拟原子执行.
+     */
     public function handle()
     {
         [$gid, $num] = [$this->params['gid'], $this->params['num']];

@@ -16,7 +16,9 @@ use Hyperf\Context\Context;
 // 协程结果集封装,支持链式调用,可以灵活的拼接出你想要的结果格式
 class Result
 {
-    // 标准结果集
+    /**
+     * 标准结果集.
+     */
     public const RESULT = [
         'code' => 200,
         'msg' => 'ok',
@@ -24,23 +26,35 @@ class Result
         'data' => [],
     ];
 
-    // 上下文key
+    /**
+     * 上下文key, 其他上下文请勿使用该key.
+     */
     private string $key = 'ResponseResult';
 
-    // 获取标准的返回格式
+    /**
+     * 获取标准的返回格式.
+     */
     public function getResult(): array
     {
         return Context::getOrSet($this->key, self::RESULT);
     }
 
-    // 重置返回结果对象
+    /**
+     * 重置返回结果对象.
+     * @return $this
+     */
     public function resetResult(): Result
     {
         Context::set($this->key, self::RESULT);
         return $this;
     }
 
-    // 设置错误码和错误信息
+    /**
+     * 设置错误码和错误信息.
+     * @param mixed $errorCode
+     * @param mixed $errorInfo
+     * @return $this
+     */
     public function setErrorInfo($errorCode, $errorInfo): Result
     {
         $isExist = Context::has($this->key);
@@ -57,7 +71,11 @@ class Result
         return $this;
     }
 
-    // 设置数据
+    /**
+     * 设置数据.
+     * @param mixed $data
+     * @return $this
+     */
     public function setData($data): Result
     {
         $isExist = Context::has($this->key);
@@ -72,7 +90,12 @@ class Result
         return $this;
     }
 
-    // 添加额外Key-Value
+    /**
+     * 添加额外Key-Value.
+     * @param mixed $key
+     * @param mixed $values
+     * @return $this
+     */
     public function addKey($key, $values): Result
     {
         $isExist = Context::has($this->key);
