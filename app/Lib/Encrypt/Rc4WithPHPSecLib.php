@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Lib\Encrypt;
 
 use phpseclib3\Crypt\RC4;
@@ -35,6 +34,7 @@ class Rc4WithPHPSecLib
         $this->RC4 = new RC4();
 
         $this->RC4->setKey($this->key);
+        // TODO $RC4 还有一些设置IV等, 这里不作展开 :)
     }
 
     /**

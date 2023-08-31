@@ -11,27 +11,15 @@ declare(strict_types=1);
  */
 namespace App\Listener;
 
+use App\Lib\Log\Log;
 use Hyperf\Collection\Arr;
 use Hyperf\Database\Events\QueryExecuted;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
-use Hyperf\Logger\LoggerFactory;
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
 #[Listener]
 class DbQueryExecutedListener implements ListenerInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->logger = $container->get(LoggerFactory::class)->get('sql');
-    }
-
     public function listen(): array
     {
         return [
@@ -39,9 +27,6 @@ class DbQueryExecutedListener implements ListenerInterface
         ];
     }
 
-    /**
-     * @param QueryExecuted $event
-     */
     public function process(object $event): void
     {
         if ($event instanceof QueryExecuted) {
@@ -59,7 +44,11 @@ class DbQueryExecutedListener implements ListenerInterface
                 }
             }
 
-            $this->logger->info(sprintf('[%s] %s', $event->time, $sql));
+            // 大于500毫秒记录日志
+            if ($event->time > 500) {
+                $logMessage = sprintf('[%s毫秒] %s', $event->time, $sql);
+                Log::warning($logMessage);
+            }
         }
     }
 }

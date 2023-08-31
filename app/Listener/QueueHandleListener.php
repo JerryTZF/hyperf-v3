@@ -11,34 +11,32 @@ declare(strict_types=1);
  */
 namespace App\Listener;
 
+use App\Lib\Log\Log;
 use Hyperf\AsyncQueue\AnnotationJob;
 use Hyperf\AsyncQueue\Event\AfterHandle;
 use Hyperf\AsyncQueue\Event\BeforeHandle;
 use Hyperf\AsyncQueue\Event\Event;
 use Hyperf\AsyncQueue\Event\FailedHandle;
+use Hyperf\AsyncQueue\Event\QueueLength;
 use Hyperf\AsyncQueue\Event\RetryHandle;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
-use Hyperf\Logger\LoggerFactory;
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
 #[Listener]
 class QueueHandleListener implements ListenerInterface
 {
-    protected LoggerInterface $logger;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->logger = $container->get(LoggerFactory::class)->get('queue');
-    }
-
     public function listen(): array
     {
         return [
+            // 队列长度信息事件 (系统底层有监听器, 这里不再二次处理)
+            // QueueLength::class,
+            // 消息消费后事件
             AfterHandle::class,
+            // 消息消费前事件
             BeforeHandle::class,
+            // 消息消费失败事件
             FailedHandle::class,
+            // 消息重试事件
             RetryHandle::class,
         ];
     }
@@ -55,18 +53,20 @@ class QueueHandleListener implements ListenerInterface
 
             switch (true) {
                 case $event instanceof BeforeHandle:
-                    $this->logger->info(sprintf('[%s] Processing %s.', $date, $jobClass));
+                    Log::stdout()->info(sprintf('[%s] Processing %s.', $date, $jobClass));
                     break;
                 case $event instanceof AfterHandle:
-                    $this->logger->info(sprintf('[%s] Processed %s.', $date, $jobClass));
+                    Log::stdout()->info(sprintf('[%s] Processed %s.', $date, $jobClass));
                     break;
                 case $event instanceof FailedHandle:
-                    $this->logger->error(sprintf('[%s] Failed %s.', $date, $jobClass));
-                    $this->logger->error((string) $event->getThrowable());
+                    Log::error(sprintf('[%s] Failed %s.', $date, $jobClass));
+                    Log::error((string) $event->getThrowable());
                     break;
                 case $event instanceof RetryHandle:
-                    $this->logger->warning(sprintf('[%s] Retried %s.', $date, $jobClass));
+                    Log::warning(sprintf('[%s] Retried %s.', $date, $jobClass));
                     break;
+                default:
+                    Log::warning('未知事件');
             }
         }
     }
