@@ -29,7 +29,7 @@ class SchedulerErrorListener implements ListenerInterface
     public function process(object $event): void
     {
         if ($event instanceof FailToExecute) {
-            $info = sprintf('[定时任务异常监听器][任务:%s][错误:%s]', $event->crontab->getName(), $event->throwable->getMessage());
+            $info = sprintf('任务:%s; 错误:%s', $event->crontab->getName(), $event->throwable->getMessage());
             Log::error($info);
         }
     }
