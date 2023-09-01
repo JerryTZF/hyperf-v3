@@ -16,11 +16,11 @@ use Hyperf\Process\Annotation\Process;
 
 #[Process(
     nums: 1, // 消费者进程数
-    name: 'LimitQueueConsumer', // 队列名称
+    name: 'LimitQueueConsumerProcess', // 队列名称
     redirectStdinStdout: false, // 重定向自定义进程的标准输入和输出
     enableCoroutine: true, // 是否启用协程
 )]
-class LimitQueueConsumer extends ConsumerProcess
+class LimitQueueConsumerProcess extends ConsumerProcess
 {
     protected string $queue = 'limit-queue';
 }

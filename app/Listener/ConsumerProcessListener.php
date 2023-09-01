@@ -32,7 +32,7 @@ class ConsumerProcessListener implements ListenerInterface
     {
         switch (true) {
             case $event instanceof AfterProcessHandle:
-                Log::warning(sprintf('[自定义进程停止][进程:%s][第 %s 个进程]', $event->process->name, $event->index));
+                Log::stdout()->warning(sprintf('[自定义进程停止][进程:%s][第 %s 个进程]', $event->process->name, $event->index));
                 break;
             case $event instanceof BeforeProcessHandle:
                 Log::stdout()->info(sprintf('[自定义进程启动][进程:%s][第 %s 个进程]', $event->process->name, $event->index));

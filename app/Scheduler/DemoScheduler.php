@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace App\Scheduler;
 
+use App\Exception\SchedulerException;
 use App\Lib\Log\Log;
 use Carbon\Carbon;
 use Hyperf\Crontab\Annotation\Crontab;
+use Throwable;
 
 #[Crontab(
     rule: '\/10 * * * * *',
@@ -28,12 +30,17 @@ class DemoScheduler
 {
     public function execute(): void
     {
-        $a = 1 / 0;
-        Log::stdout()->info(Carbon::now()->toDateTimeString());
+        try {
+            Log::stdout()->info(Carbon::now()->toDateTimeString());
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
+        } finally {
+            Log::stdout()->info('DemoScheduler 执行完成');
+        }
     }
 
     public function isEnable(): bool
     {
-        return \Hyperf\Support\env('APP_ENV', 'dev') === 'dev';
+        return \Hyperf\Support\env('APP_ENV', 'dev') === 'pro';
     }
 }
