@@ -423,8 +423,8 @@ class TestListController extends AbstractController
     public function test(): array
     {
         $a = new FileSystem();
-        $a->read('ig/20210430171345.png');
-
+        $b = $a->getFileMetaData('img/20210430171345.png');
+        var_dump($b);
         return $this->result->getResult();
     }
 }
