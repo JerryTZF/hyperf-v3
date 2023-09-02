@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Process;
 
 use App\Lib\Log\Log;
@@ -50,6 +49,6 @@ class ConsumerProcess extends AbstractProcess
     // 是否随着服务一起启动
     public function isEnable($server): bool
     {
-        return \Hyperf\Support\env('APP_ENV', 'dev') === 'dev';
+        return \Hyperf\Support\env('APP_ENV', 'dev') === 'pro';
     }
 }

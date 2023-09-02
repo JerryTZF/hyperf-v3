@@ -61,4 +61,9 @@ class SystemCode extends AbstractConstants
      * @Message("PHPSeclib错误：%s")
      */
     public const PHPSECLIB_ERR = 9907;
+
+    /**
+     * @Message("文件系统底层异常：%s")
+     */
+    public const FILE_SYSTEM_ERR = 9908;
 }

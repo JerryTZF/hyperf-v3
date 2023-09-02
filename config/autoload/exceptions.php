@@ -16,6 +16,8 @@ return [
             App\Exception\Handler\BusinessExceptionHandler::class,
             // 验证器类型错误处理
             App\Exception\Handler\ValidationExceptionHandler::class,
+            // 文件系统异常捕获
+            App\Exception\Handler\FileSystemExceptionHandler::class,
             // 数据库未找到数据异常处理
             App\Exception\Handler\ModelNotFoundExceptionHandler::class,
             // 限流异常处理器

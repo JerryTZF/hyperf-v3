@@ -17,6 +17,7 @@ use App\Lib\Encrypt\Aes;
 use App\Lib\Encrypt\AesWithPHPSeclib;
 use App\Lib\Encrypt\Rc4WithPHPSecLib;
 use App\Lib\Encrypt\RsaWithPHPSeclib;
+use App\Lib\File\FileSystem;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
@@ -416,5 +417,14 @@ class TestListController extends AbstractController
             'encrypt_' => $encrypt_,
             'decrypt_' => $decrypt_,
         ])->getResult();
+    }
+
+    #[GetMapping(path: 'file')]
+    public function test(): array
+    {
+        $a = new FileSystem();
+        $a->read('ig/20210430171345.png');
+
+        return $this->result->getResult();
     }
 }
