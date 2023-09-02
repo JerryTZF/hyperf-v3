@@ -420,11 +420,8 @@ class TestListController extends AbstractController
     }
 
     #[GetMapping(path: 'file')]
-    public function test(): array
+    public function file(): ResponseInterface
     {
-        $a = new FileSystem();
-        $b = $a->getFileMetaData('img/20210430171345.png');
-        var_dump($b);
-        return $this->result->getResult();
+        return (new FileSystem())->download('/img/20210430171345.png');
     }
 }

@@ -13,10 +13,13 @@ namespace App\Lib\File;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Filesystem\FilesystemFactory;
+use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\HttpServer\Response;
 use JetBrains\PhpStorm\ArrayShape;
 use League\Flysystem\FilesystemException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 
 // 底层API请参考: https://flysystem.thephpleague.com/docs/usage/filesystem-api/
 // 异常已经在框架注册, 无需处理
@@ -47,6 +50,21 @@ class FileSystem
     {
         return $withStream ? $this->fileInstance->readStream($filename) :
             $this->fileInstance->read($filename);
+    }
+
+    /**
+     * 下载文件.
+     * @throws FilesystemException
+     */
+    public function download(string $filename): ResponseInterface
+    {
+        $file = basename($filename);
+        $response = new Response();
+        return $response->withHeader('content-description', 'File Transfer')
+            ->withHeader('content-type', $this->fileInstance->mimeType($filename))
+            ->withHeader('content-disposition', "attachment; filename={$file}")
+            ->withHeader('content-transfer-encoding', 'binary')
+            ->withBody(new SwooleStream((string) $this->fileInstance->read($filename)));
     }
 
     /**
