@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
+use App\Lib\Cache\Cache;
 use App\Lib\Encrypt\Aes;
 use App\Lib\Encrypt\AesWithPHPSeclib;
 use App\Lib\Encrypt\Rc4WithPHPSecLib;
@@ -22,11 +23,13 @@ use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Lib\Lock\RedisLock;
+use App\Lib\Log\Log;
 use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
 use App\Model\Orders;
+use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -423,5 +426,53 @@ class TestListController extends AbstractController
     public function file(): ResponseInterface
     {
         return (new FileSystem())->download('/img/20210430171345.png');
+    }
+
+    #[GetMapping(path: 'simple/cache')]
+    public function simpleCache(): array
+    {
+        try {
+            $cache = Cache::getInstance();
+            // 一般对于缓存,Key里面会加入一些变量,那么可以将Key写入枚举类
+            $key = sprintf('%s:%s', 'YOUR_APPID', 'USER_ID');
+            // 一次写入单个缓存
+            $cache->set($key, ['a' => 'b'], 300);
+            // 读取单个缓存
+            $cacheData = $cache->get($key, '');
+            // 一次写入多个缓存(具有原子性)
+            $cache->setMultiple(['key1' => 'value1', 'key2' => 'value2'], 300);
+            // 一次读取多个缓存
+            $multipleData = $cache->getMultiple(['key1', 'key2'], []);
+
+            // 清除所有的key
+            $cache->clear();
+        } catch (Throwable $e) {
+            return $this->result->setErrorInfo($e->getCode(), $e->getMessage())->getResult();
+        }
+
+        return $this->result->setData([
+            'single' => $cacheData,
+            'multiple' => $multipleData,
+        ])->getResult();
+    }
+
+    #[GetMapping(path: 'inject/cache')]
+    #[Cacheable(prefix: 'test_api', value: '#{param1}_#{param2}', ttl: 600, listener: 'UPDATE_TEST')]
+    public function getFromCache(string $param1 = 'hello', string $param2 = 'world'): array
+    {
+        Log::stdout()->info("I'm Running...");
+        return $this->result->setData(['param1' => $param1, 'param2' => $param2])->getResult();
+    }
+
+    #[GetMapping(path: 'flush/cache')]
+    public function flushCache(): array
+    {
+        // 在指定时机刷新监听 'UPDATE_TEST' 时间的缓存.
+        (new Cache())->flush('UPDATE_TEST', [
+            'param1' => 'hello',
+            'param2' => 'world',
+        ]);
+
+        return $this->result->getResult();
     }
 }
