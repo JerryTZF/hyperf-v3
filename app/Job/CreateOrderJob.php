@@ -15,9 +15,11 @@ use App\Lib\Log\Log;
 use App\Model\Goods;
 use App\Model\Orders;
 use Hyperf\Stringable\Str;
+use JetBrains\PhpStorm\Pure;
 
 class CreateOrderJob extends AbstractJob
 {
+    #[Pure]
     public function __construct(string $uniqueId, array $params)
     {
         parent::__construct($uniqueId, $params);
