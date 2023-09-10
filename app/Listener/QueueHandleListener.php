@@ -53,17 +53,20 @@ class QueueHandleListener implements ListenerInterface
 
             switch (true) {
                 case $event instanceof BeforeHandle:
-                    Log::stdout()->info(sprintf('[%s] Processing %s.', $date, $jobClass));
+                    Log::stdout()->info(sprintf('[%s] %s 正在消费.', $date, $jobClass));
                     break;
                 case $event instanceof AfterHandle:
-                    Log::stdout()->info(sprintf('[%s] Processed %s.', $date, $jobClass));
+                    Log::stdout()->info(sprintf('[%s] %s 消费完成.', $date, $jobClass));
                     break;
                 case $event instanceof FailedHandle:
-                    Log::error(sprintf('[%s] Failed %s.', $date, $jobClass));
-                    Log::error((string) $event->getThrowable());
+                    $msg = sprintf('[%s] %s 消费失败. 异常信息: %s', $date, $jobClass, $event->getMessage());
+                    Log::stdout()->error($msg);
+                    Log::error($msg);
                     break;
                 case $event instanceof RetryHandle:
-                    Log::warning(sprintf('[%s] Retried %s.', $date, $jobClass));
+                    $msg = sprintf('[%s] %s 正在重试.', $date, $jobClass);
+                    Log::stdout()->warning($msg);
+                    Log::warning($msg);
                     break;
                 default:
                     Log::warning('未知事件');

@@ -9,10 +9,12 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Job\CreateOrderJob;
+use App\Job\DemoJob;
 use App\Lib\Cache\Cache;
 use App\Lib\Encrypt\Aes;
 use App\Lib\Encrypt\AesWithPHPSeclib;
@@ -30,6 +32,7 @@ use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
 use App\Model\Orders;
 use Hyperf\Cache\Annotation\Cacheable;
+use Hyperf\Coroutine\Coroutine;
 use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -472,6 +475,32 @@ class TestListController extends AbstractController
             'param1' => 'hello',
             'param2' => 'world',
         ]);
+
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'queue/stop')]
+    public function queueStop(): array
+    {
+        $factory = RedisQueueFactory::getQueueInstance('redis-queue');
+        for ($i = 2; --$i;) {
+            Coroutine::create(function () use ($factory, $i) {
+                $factory->push(new DemoJob((string) $i, []));
+            });
+        }
+
+        return $this->result->getResult();
+    }
+
+    #[GetMapping(path: 'queue/safe_push')]
+    public function safePushMessage(): array
+    {
+        for ($i = 10; --$i;) {
+            Coroutine::create(function () use ($i) {
+                $job = new DemoJob((string) $i, []);
+                RedisQueueFactory::safePush($job, 'redis-queue', 0);
+            });
+        }
 
         return $this->result->getResult();
     }
