@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "103ab314862a0abb0d42ca444ed33edb",
+    "content-hash": "98cd388d28dace73fca71a7aeae8b917",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -832,16 +832,16 @@
         },
         {
             "name": "gregwar/captcha",
-            "version": "v1.1.9",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/Captcha.git",
-                "reference": "4bb668e6b40e3205a020ca5ee4ca8cff8b8780c5"
+                "reference": "6e5b61b66ac89885b505153f4ef9a74ffa5b3074"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/4bb668e6b40e3205a020ca5ee4ca8cff8b8780c5",
-                "reference": "4bb668e6b40e3205a020ca5ee4ca8cff8b8780c5",
+                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/6e5b61b66ac89885b505153f4ef9a74ffa5b3074",
+                "reference": "6e5b61b66ac89885b505153f4ef9a74ffa5b3074",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -859,7 +859,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^6.4"
             },
-            "type": "captcha",
+            "type": "library",
             "autoload": {
                 "psr-4": {
                     "Gregwar\\": "src/Gregwar"
@@ -889,9 +889,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Gregwar/Captcha/issues",
-                "source": "https://github.com/Gregwar/Captcha/tree/master"
+                "source": "https://github.com/Gregwar/Captcha/tree/v1.2.0"
             },
-            "time": "2020-03-24T14:39:05+00:00"
+            "time": "2023-03-24T22:12:41+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2816,16 +2816,16 @@
         },
         {
             "name": "hyperf/guzzle",
-            "version": "v3.0.17",
+            "version": "v3.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/guzzle.git",
-                "reference": "58de5f381139d5adda1c459a64dd42e52157e996"
+                "reference": "7791900eed289bd6584e2e52d2ec02b47f85740c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/guzzle/zipball/58de5f381139d5adda1c459a64dd42e52157e996",
-                "reference": "58de5f381139d5adda1c459a64dd42e52157e996",
+                "url": "https://api.github.com/repos/hyperf/guzzle/zipball/7791900eed289bd6584e2e52d2ec02b47f85740c",
+                "reference": "7791900eed289bd6584e2e52d2ec02b47f85740c",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2838,7 +2838,7 @@
                 "guzzlehttp/guzzle": "^6.3|^7.0",
                 "php": ">=8.0",
                 "psr/container": "^1.0|^2.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0|^2.0"
             },
             "suggest": {
                 "ext-curl": "Required for CURL handler support",
@@ -2871,9 +2871,9 @@
             ],
             "support": {
                 "issues": "https://github.com/hyperf/guzzle/issues",
-                "source": "https://github.com/hyperf/guzzle/tree/v3.0.17"
+                "source": "https://github.com/hyperf/guzzle/tree/v3.0.24"
             },
-            "time": "2023-04-19T05:41:29+00:00"
+            "time": "2023-06-04T02:14:26+00:00"
         },
         {
             "name": "hyperf/http-message",
@@ -3435,16 +3435,16 @@
         },
         {
             "name": "hyperf/rate-limit",
-            "version": "v3.0.18",
+            "version": "v3.0.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/rate-limit.git",
-                "reference": "d25758760c96b62518be1ae1d7707de96c5b0bb0"
+                "reference": "74a31d3795ebf7b5b0cc43f0cac1eb8a4f6a1c3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/rate-limit/zipball/d25758760c96b62518be1ae1d7707de96c5b0bb0",
-                "reference": "d25758760c96b62518be1ae1d7707de96c5b0bb0",
+                "url": "https://api.github.com/repos/hyperf/rate-limit/zipball/74a31d3795ebf7b5b0cc43f0cac1eb8a4f6a1c3b",
+                "reference": "74a31d3795ebf7b5b0cc43f0cac1eb8a4f6a1c3b",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3500,7 +3500,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-04-26T03:02:31+00:00"
+            "time": "2023-05-05T01:15:00+00:00"
         },
         {
             "name": "hyperf/redis",

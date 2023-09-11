@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
@@ -21,6 +20,7 @@ use App\Lib\Encrypt\AesWithPHPSeclib;
 use App\Lib\Encrypt\Rc4WithPHPSecLib;
 use App\Lib\Encrypt\RsaWithPHPSeclib;
 use App\Lib\File\FileSystem;
+use App\Lib\GuzzleHttp\GuzzleFactory;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
@@ -504,4 +504,13 @@ class TestListController extends AbstractController
 
         return $this->result->getResult();
     }
+
+    #[GetMapping(path: 'guzzle/test')]
+    public function guzzle(): array
+    {
+        $client = GuzzleFactory::getCoroutineGuzzleClient();
+        var_dump($client->get('http://www.baidu.com')->getBody()->getContents());
+        return $this->result->getResult();
+    }
+
 }

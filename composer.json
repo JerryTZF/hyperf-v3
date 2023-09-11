@@ -28,7 +28,7 @@
         "hyperf/filesystem": "^3.0",
         "hyperf/flysystem-oss": "^1.2",
         "hyperf/framework": "~3.0.0",
-        "hyperf/guzzle": "~3.0.0",
+        "hyperf/guzzle": "^3.0",
         "hyperf/http-server": "~3.0.0",
         "hyperf/logger": "~3.0.0",
         "hyperf/memory": "~3.0.0",
