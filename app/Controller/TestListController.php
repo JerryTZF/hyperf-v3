@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
@@ -37,6 +38,7 @@ use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\RateLimit\Annotation\RateLimit;
 use Hyperf\Stringable\Str;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -513,4 +515,14 @@ class TestListController extends AbstractController
         return $this->result->getResult();
     }
 
+    #[GetMapping(path: 'rate/limit')]
+    #[RateLimit(create: 10, consume: 5, capacity: 50)]
+    public function rateLimit(): array
+    {
+        return $this->result->setData([
+            'QPS' => 5,
+            'CREATE TOKEN PER SECOND' => 10,
+            'CAPACITY' => 50,
+        ])->getResult();
+    }
 }
