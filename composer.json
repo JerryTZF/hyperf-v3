@@ -44,6 +44,7 @@
         "picqer/php-barcode-generator": "^2.3"
     },
     "require-dev": {
+        "filp/whoops": "^2.15",
         "friendsofphp/php-cs-fixer": "^3.0",
         "hyperf/devtool": "~3.0.0",
         "hyperf/testing": "~3.0.0",

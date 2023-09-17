@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 use Hyperf\Server\Event;
-use Hyperf\Server\Server;
+use Hyperf\Server\ServerInterface;
 use Swoole\Constant;
 
 return [
@@ -18,7 +18,7 @@ return [
     'servers' => [
         [
             'name' => 'http',
-            'type' => Server::SERVER_HTTP,
+            'type' => ServerInterface::SERVER_HTTP,
             'host' => '0.0.0.0',
             'port' => 9501,
             'sock_type' => SWOOLE_SOCK_TCP,
@@ -34,10 +34,9 @@ return [
         Constant::OPTION_OPEN_TCP_NODELAY => true,
         Constant::OPTION_MAX_COROUTINE => 100000,
         Constant::OPTION_OPEN_HTTP2_PROTOCOL => true,
-        Constant::OPTION_MAX_REQUEST => 100000,
+        Constant::OPTION_MAX_REQUEST => 0,
         Constant::OPTION_SOCKET_BUFFER_SIZE => 2 * 1024 * 1024,
         Constant::OPTION_BUFFER_OUTPUT_SIZE => 2 * 1024 * 1024,
-        Constant::OPTION_RELOAD_ASYNC => true,
     ],
     'callbacks' => [
         Event::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],
