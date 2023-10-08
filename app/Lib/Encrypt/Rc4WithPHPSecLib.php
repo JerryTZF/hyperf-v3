@@ -82,7 +82,7 @@ class Rc4WithPHPSecLib
         $keyMap[] = '';
         $box[] = '';
         $pwdLength = strlen($key);
-        $data_length = strlen($data);
+        $dataLength = strlen($data);
         for ($i = 0; $i < 256; ++$i) {
             $keyMap[$i] = ord($key[$i % $pwdLength]);
             $box[$i] = $i;
@@ -93,7 +93,7 @@ class Rc4WithPHPSecLib
             $box[$i] = $box[$j];
             $box[$j] = $tmp;
         }
-        for ($a = $j = $i = 0; $i < $data_length; ++$i) {
+        for ($a = $j = $i = 0; $i < $dataLength; ++$i) {
             $a = ($a + 1) % 256;
             $j = ($j + $box[$a]) % 256;
             $tmp = $box[$a];

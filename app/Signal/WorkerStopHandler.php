@@ -47,7 +47,7 @@ class WorkerStopHandler implements SignalHandlerInterface
         // shutdown => https://wiki.swoole.com/#/server/methods?id=shutdown 直接kill -15 不触发后续动作
         // stop => https://wiki.swoole.com/#/server/methods?id=stop 使当前 Worker 进程停止运行，并立即触发 onWorkerStop 回调函数。
 
-        //        $this->container->get(Server::class)->shutdown();
+        // $this->container->get(Server::class)->shutdown();
         $this->container->get(Server::class)->stop();
     }
 }
