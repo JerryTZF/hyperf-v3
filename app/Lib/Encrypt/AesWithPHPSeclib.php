@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Encrypt;
 
 use phpseclib3\Crypt\Common\SymmetricKey;
@@ -61,7 +62,7 @@ class AesWithPHPSeclib
     /**
      * 解密Hex字符串.
      */
-    public function decryptHex(string $decryptText): string|array
+    public function decryptHex(string $decryptText): array|string
     {
         $data = $this->aesInstance->decrypt(hex2bin($decryptText));
         return json_decode($data, true) ?? $data;
@@ -79,7 +80,7 @@ class AesWithPHPSeclib
     /**
      * 解密Base64字符串.
      */
-    public function decryptBase64(string $decryptText): string|array
+    public function decryptBase64(string $decryptText): array|string
     {
         $data = $this->aesInstance->decrypt(base64_decode($decryptText));
         return json_decode($data, true) ?? $data;

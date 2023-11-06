@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Result;
 
 use Hyperf\Context\Context;
@@ -75,7 +76,7 @@ class Result
      * 设置数据.
      * @return $this
      */
-    public function setData(string|array $data): Result
+    public function setData(array|string $data): Result
     {
         $isExist = Context::has($this->key);
         if ($isExist) {
@@ -93,7 +94,7 @@ class Result
      * 添加额外Key-Value.
      * @return $this
      */
-    public function addKey(string $key, string|array $values): Result
+    public function addKey(string $key, array|string $values): Result
     {
         $isExist = Context::has($this->key);
         if ($isExist) {

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Image;
 
 use Endroid\QrCode\Color\Color;
@@ -17,12 +18,21 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\GifWriter;
+use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
+use Endroid\QrCode\Writer\SvgWriter;
 use Exception;
 
 class Qrcode
 {
+    /**
+     * 输出二维码的 Mime 类型.
+     */
+    private string $mime = 'png';
+
     /**
      * 文字编码
      */
@@ -77,6 +87,7 @@ class Qrcode
         $this->logoPath = $config['logo_path'] ?? '';
         $this->labelText = $config['label_text'] ?? '';
         $this->path = $config['path'] ?? BASE_PATH . '/runtime/qrcode/';
+        $this->mime = $config['mime'] ?? 'png';
         $this->foregroundColor = $config['foreground_color'] ?? [0, 0, 0];
         $this->backgroundColor = $config['background_color'] ?? [255, 255, 255];
 
@@ -87,6 +98,7 @@ class Qrcode
 
     /**
      * 获取二维码字符串.
+     * @throws Exception
      */
     public function getStream(string $content): string
     {
@@ -94,7 +106,17 @@ class Qrcode
     }
 
     /**
+     * 获取二维码MIME类型.
+     * @throws Exception
+     */
+    public function getMimeType(string $content): string
+    {
+        return $this->getResult($content)->getMimeType();
+    }
+
+    /**
      * 保存二维码到本地.
+     * @throws Exception
      */
     public function move(string $filename, string $content): void
     {
@@ -107,7 +129,13 @@ class Qrcode
      */
     private function getResult(string $content): ResultInterface
     {
-        $writer = new PngWriter();
+        $writer = match (true) {
+            $this->mime == 'eps' => new EpsWriter(),
+            $this->mime == 'pdf' => new PdfWriter(),
+            $this->mime == 'svg' => new SvgWriter(),
+            $this->mime == 'gif' => new GifWriter(),
+            default => new PngWriter(),
+        };
         $qrCode = \Endroid\QrCode\QrCode::create($content)
             ->setEncoding(new Encoding($this->encoding))
             ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Job;
 
 use App\Exception\BusinessException;
@@ -28,7 +29,8 @@ class DemoJob extends AbstractJob
     {
         //  $this->mockConsumeTimeout();
         //  $this->mockServerStop();
-        $this->mockException();
+        //  $this->mockException();
+        Log::stdout()->info($this->uniqueId);
     }
 
     /**

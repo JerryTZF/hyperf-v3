@@ -41,10 +41,10 @@ return [
         // 消费消息超时时间
         'handle_timeout' => 3,
         // 消费者进程数
-        'processes' => 1,
+        'processes' => 10,
         // 并行消费消息数目
         'concurrent' => [
-            'limit' => 20,
+            'limit' => 100,
         ],
         // 当前进程处理多少消息后重启消费者进程(0||不写=>不重启)
         'max_messages' => 0,

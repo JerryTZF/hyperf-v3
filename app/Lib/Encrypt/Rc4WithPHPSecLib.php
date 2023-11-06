@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Encrypt;
 
 use phpseclib3\Crypt\RC4;
@@ -40,7 +41,7 @@ class Rc4WithPHPSecLib
     /**
      * 加密.
      */
-    public function encrypt(string|array $message): string
+    public function encrypt(array|string $message): string
     {
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $message;
         return base64_encode($this->RC4->encrypt($message));
@@ -49,7 +50,7 @@ class Rc4WithPHPSecLib
     /**
      * 解密.
      */
-    public function decrypt(string $encryptData): string|array
+    public function decrypt(string $encryptData): array|string
     {
         $decryptData = $this->RC4->decrypt(base64_decode($encryptData));
         return json_decode($decryptData, true) ?? $decryptData;
@@ -58,7 +59,7 @@ class Rc4WithPHPSecLib
     /**
      * 原生加密.
      */
-    public function encryptNative(string|array $message): string
+    public function encryptNative(array|string $message): string
     {
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $message;
         return base64_encode($this->native($this->key, $message));
@@ -67,7 +68,7 @@ class Rc4WithPHPSecLib
     /**
      * 原生解密.
      */
-    public function decryptNative(string $encryptData): string|array
+    public function decryptNative(string $encryptData): array|string
     {
         $decryptData = $this->native($this->key, base64_decode($encryptData));
         return json_decode($decryptData, true) ?? $decryptData;

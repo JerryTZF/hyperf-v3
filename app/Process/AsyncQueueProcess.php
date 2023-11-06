@@ -9,13 +9,14 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Process;
 
 use Hyperf\AsyncQueue\Process\ConsumerProcess;
 use Hyperf\Process\Annotation\Process;
 
 #[Process(
-    nums: 4, // 消费者进程数
+    nums: 10, // 消费者进程数
     name: 'AsyncQueueProcess', // 队列名称
     redirectStdinStdout: false, // 重定向自定义进程的标准输入和输出
     enableCoroutine: true, // 是否启用协程

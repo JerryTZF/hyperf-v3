@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Encrypt;
 
 class Aes
@@ -28,7 +29,7 @@ class Aes
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
      */
-    public static function ecbDecryptHex(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): string|array
+    public static function ecbDecryptHex(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): array|string
     {
         $padding = OPENSSL_RAW_DATA;
         $decrypt = openssl_decrypt(hex2bin($encryptData), $cipher, $key, $padding);
@@ -48,7 +49,7 @@ class Aes
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
      */
-    public static function ecbDecryptBase64(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): string|array
+    public static function ecbDecryptBase64(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): array|string
     {
         $padding = OPENSSL_RAW_DATA;
         $decrypt = openssl_decrypt(base64_decode($encryptData), $cipher, $key, $padding);
@@ -69,7 +70,7 @@ class Aes
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
      */
-    public static function cbcDecryptHex(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): string|array
+    public static function cbcDecryptHex(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): array|string
     {
         $padding = OPENSSL_RAW_DATA;
         $iv = md5($iv, true); // 注意别的语言是否是这种方式固定16位长度!!!
@@ -91,7 +92,7 @@ class Aes
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
      */
-    public static function cbcDecryptBase64(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): string|array
+    public static function cbcDecryptBase64(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): array|string
     {
         $padding = OPENSSL_RAW_DATA;
         $iv = md5($iv, true); // 注意别的语言是否是这种方式固定16位长度!!!

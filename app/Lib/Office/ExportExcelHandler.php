@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Office;
 
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -107,7 +108,7 @@ class ExportExcelHandler
     {
         $this->spreadsheet->setActiveSheetIndex(0);
 
-        $filename = $filename . '.xlsx';
+        $filename .= '.xlsx';
         $outFileName = $this->dir . $filename;
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
         $writer->save($outFileName);
@@ -124,7 +125,7 @@ class ExportExcelHandler
      */
     public function saveToBrowser(string $filename): ResponseInterface
     {
-        $filename = $filename . '.xlsx';
+        $filename .= '.xlsx';
         $unique = $this->dir . uniqid() . microtime() . '.xlsx';
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
         $writer->save($unique);

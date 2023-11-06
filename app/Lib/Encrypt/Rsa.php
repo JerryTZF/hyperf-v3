@@ -9,12 +9,11 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Encrypt;
 
 /**
  * Class Rsa.
  * @see https://phpseclib.com/docs/php
  */
-class Rsa
-{
-}
+class Rsa {}

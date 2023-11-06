@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Encrypt;
 
 use phpseclib3\Crypt\RSA;
@@ -21,7 +22,7 @@ class RsaWithPHPSeclib
     /**
      * RSA私钥实例.
      */
-    private RSA|PrivateKey $privateKey;
+    private PrivateKey|RSA $privateKey;
 
     /**
      * 秘钥保存路径.
@@ -107,7 +108,7 @@ class RsaWithPHPSeclib
     /**
      * 公钥加密.
      */
-    public function publicKeyEncrypt(string|array $message): string
+    public function publicKeyEncrypt(array|string $message): string
     {
         $privateKey = $this->buildPrivateKey('encrypt');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
@@ -127,7 +128,7 @@ class RsaWithPHPSeclib
     /**
      * 私钥加签.
      */
-    public function privateKeySign(string|array $message): string
+    public function privateKeySign(array|string $message): string
     {
         $privateKey = $this->buildPrivateKey('signature');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;
@@ -137,7 +138,7 @@ class RsaWithPHPSeclib
     /**
      * 公钥验签.
      */
-    public function publicKeyVerifySign(string|array $message, string $signature): bool
+    public function publicKeyVerifySign(array|string $message, string $signature): bool
     {
         $privateKey = $this->buildPrivateKey('signature');
         $message = is_array($message) ? json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $message;

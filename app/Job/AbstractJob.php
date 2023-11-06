@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Job;
 
 use Hyperf\AsyncQueue\Job;
@@ -35,7 +36,5 @@ abstract class AbstractJob extends Job
         [$this->uniqueId, $this->params] = [$uniqueId, $params];
     }
 
-    public function handle()
-    {
-    }
+    public function handle() {}
 }

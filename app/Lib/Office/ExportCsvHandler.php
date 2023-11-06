@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Lib\Office;
 
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -65,7 +66,7 @@ class ExportCsvHandler
      */
     public function saveToLocal(string $filename): string
     {
-        $filename = $filename . '.csv';
+        $filename .= '.csv';
         $outFileName = $this->dir . $filename;
         file_put_contents($outFileName, $this->content);
 
@@ -77,7 +78,7 @@ class ExportCsvHandler
      */
     public function saveToBrowser(string $filename): ResponseInterface
     {
-        $filename = $filename . '.csv';
+        $filename .= '.csv';
         $response = new Response();
         return $response->withHeader('content-description', 'File Transfer')
             ->withHeader('content-type', 'text/csv')

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Job;
 
 use App\Lib\Log\Log;
@@ -41,7 +42,7 @@ class CreateOrderJob extends AbstractJob
                 'money' => $goodInfo->price * $num,
                 'customer' => 'Jerry',
             ]))->save();
-            $goodInfo->stock = $goodInfo->stock - $num;
+            $goodInfo->stock -= $num;
             $goodInfo->save();
         } else {
             Log::warning("{$goodInfo->name} 库存不足 !!!");

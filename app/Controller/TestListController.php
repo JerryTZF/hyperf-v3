@@ -149,7 +149,7 @@ class TestListController extends AbstractController
                     'customer' => 'Jerry',
                 ]))->save();
 
-                $goodInfo->stock = $goodInfo->stock - $num;
+                $goodInfo->stock -= $num;
                 $goodInfo->save();
 
                 Db::commit();
@@ -481,16 +481,13 @@ class TestListController extends AbstractController
         return $this->result->getResult();
     }
 
-    #[GetMapping(path: 'queue/stop')]
+    #[GetMapping(path: 'queue/run')]
     public function queueStop(): array
     {
         $factory = RedisQueueFactory::getQueueInstance('redis-queue');
-        for ($i = 2; --$i;) {
-            Coroutine::create(function () use ($factory, $i) {
-                $factory->push(new DemoJob((string) $i, []));
-            });
-        }
-
+        Coroutine::create(function () use ($factory) {
+            $factory->push(new DemoJob(microtime() . uniqid(), []));
+        });
         return $this->result->getResult();
     }
 
@@ -525,5 +522,4 @@ class TestListController extends AbstractController
             'CAPACITY' => 50,
         ])->getResult();
     }
-
 }
