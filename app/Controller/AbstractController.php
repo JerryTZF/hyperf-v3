@@ -20,6 +20,8 @@ use Psr\Container\ContainerInterface;
 
 abstract class AbstractController
 {
+    protected string $uploadPath;
+
     #[Inject]
     protected ContainerInterface $container;
 
@@ -31,4 +33,14 @@ abstract class AbstractController
 
     #[Inject]
     protected Result $result;
+
+    public function __construct()
+    {
+        $path = BASE_PATH . '/runtime/upload/';
+        if (! is_dir($path)) {
+            mkdir(iconv('GBK', 'UTF-8', $path), 0755);
+        }
+
+        $this->uploadPath = $path;
+    }
 }

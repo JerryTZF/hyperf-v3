@@ -29,9 +29,14 @@ use Exception;
 class Qrcode
 {
     /**
+     * logo边长.
+     */
+    private int $logoSize;
+
+    /**
      * 输出二维码的 Mime 类型.
      */
-    private string $mime = 'png';
+    private string $mime;
 
     /**
      * 文字编码
@@ -88,6 +93,7 @@ class Qrcode
         $this->labelText = $config['label_text'] ?? '';
         $this->path = $config['path'] ?? BASE_PATH . '/runtime/qrcode/';
         $this->mime = $config['mime'] ?? 'png';
+        $this->logoSize = $config['logo_size'] ?? 50;
         $this->foregroundColor = $config['foreground_color'] ?? [0, 0, 0];
         $this->backgroundColor = $config['background_color'] ?? [255, 255, 255];
 
@@ -146,7 +152,7 @@ class Qrcode
             ->setBackgroundColor(new Color(...$this->backgroundColor));
 
         $logo = ! empty($this->logoPath) ? Logo::create($this->logoPath)
-            ->setResizeToWidth(50)
+            ->setResizeToWidth($this->logoSize)
             ->setPunchoutBackground(true) : null;
 
         $label = ! empty($this->labelText) ? Label::create($this->labelText)
