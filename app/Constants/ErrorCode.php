@@ -42,4 +42,9 @@ class ErrorCode extends AbstractConstants
      * @Message("% 消息投递失败")
      */
     public const QUEUE_PUSH_ERR = 50004;
+
+    /**
+     * @Message("MIME 类型错误")
+     */
+    public const MIME_ERROR = 50005;
 }

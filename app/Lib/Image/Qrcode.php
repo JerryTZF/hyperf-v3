@@ -87,15 +87,15 @@ class Qrcode
 
     public function __construct(array $config = [])
     {
-        $this->size = $config['size'] ?? 300;
-        $this->margin = $config['margin'] ?? 10;
+        $this->size = isset($config['size']) ? intval($config['size']) : 300;
+        $this->margin = isset($config['margin']) ? intval($config['margin']) : 10;
         $this->logoPath = $config['logo_path'] ?? '';
         $this->labelText = $config['label_text'] ?? '';
         $this->path = $config['path'] ?? BASE_PATH . '/runtime/qrcode/';
         $this->mime = $config['mime'] ?? 'png';
-        $this->logoSize = $config['logo_size'] ?? 50;
-        $this->foregroundColor = $config['foreground_color'] ?? [0, 0, 0];
-        $this->backgroundColor = $config['background_color'] ?? [255, 255, 255];
+        $this->logoSize = isset($config['logo_size']) ? intval($config['logo_size']) : 50;
+        $this->foregroundColor = isset($config['foreground_color']) ? array_map('intval', $config['foreground_color']) : [0, 0, 0];
+        $this->backgroundColor = isset($config['background_color']) ? array_map('intval', $config['background_color']) : [255, 255, 255];
 
         if (! is_dir($this->path)) {
             mkdir(iconv('GBK', 'UTF-8', $this->path), 0755);
