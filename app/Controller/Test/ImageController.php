@@ -19,6 +19,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\Validation\Annotation\Scene;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -31,7 +32,17 @@ class ImageController extends AbstractController
     #[PostMapping(path: 'qrcode')]
     public function qrcode(): MessageInterface|ResponseInterface
     {
+        // 表单验证
+        $this->formValidator->scene('qrcode')->validateResolved();
+        // 参数获取和处理
         $logo = $this->request->file('logo');
+        // 对 logo 进行判断处理
+        if ($logo !== null) {
+            $logoPath = BASE_PATH . '/runtime/upload/' . $logo->getClientFilename();
+            $logo->moveTo($logoPath);
+        } else {
+            $logoPath = '';
+        }
         $default = [
             'size' => 300,
             'margin' => 30,
@@ -43,19 +54,7 @@ class ImageController extends AbstractController
             'content' => '',
         ];
         $config = $this->request->inputs(array_keys($default), $default);
-
-        // 对 logo 进行判断处理
-        if ($logo !== null && in_array($logo->getExtension(), ['png', 'jpg', 'jpeg'])) {
-            $logoPath = BASE_PATH . '/runtime/upload/' . $logo->getClientFilename();
-            $logo->moveTo($logoPath);
-        } else {
-            $logoPath = '';
-        }
-
         $config['logo_path'] = $logoPath;
-
-        // 表单验证
-        $this->formValidator->scene('qrcode')->validateResolved();
 
         $qrcode = new Qrcode($config);
         $qrCodeString = $qrcode->getStream($config['content']);

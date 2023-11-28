@@ -18,7 +18,7 @@ use Hyperf\Validation\Rule;
 class ImageRequest extends FormRequest
 {
     protected array $scenes = [
-        'qrcode' => ['size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
+        'qrcode' => ['logo','size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
     ];
 
     public function authorize(): bool
@@ -37,6 +37,7 @@ class ImageRequest extends FormRequest
             'background_color' => ['array'],
             'mime' => [Rule::in(['png', 'jpeg', 'jpg', 'bmp'])],
             'label_text' => ['string'],
+            'logo' => ['file', 'image'],
         ];
     }
 }
