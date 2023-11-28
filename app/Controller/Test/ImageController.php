@@ -15,7 +15,6 @@ namespace App\Controller\Test;
 use App\Controller\AbstractController;
 use App\Lib\Image\Qrcode;
 use App\Request\ImageRequest;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -55,6 +54,7 @@ class ImageController extends AbstractController
         $qrcode = new Qrcode($config);
         $qrCodeString = $qrcode->getStream($config['content']);
 
+        unlink($logoPath);
         return $this->response->withHeader('Content-Type', 'image/png')
             ->withBody(new SwooleStream($qrCodeString));
     }
