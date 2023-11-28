@@ -26,16 +26,12 @@ use Psr\Http\Message\ResponseInterface;
 #[AutoController(prefix: 'image')]
 class ImageController extends AbstractController
 {
-    #[Inject]
-    protected ImageRequest $formValidator;
-
     #[PostMapping(path: 'qrcode')]
-    public function qrcode(): MessageInterface|ResponseInterface
+    #[Scene(scene: 'qrcode')]
+    public function qrcode(ImageRequest $request): MessageInterface|ResponseInterface
     {
-        // 表单验证
-        $this->formValidator->scene('qrcode')->validateResolved();
         // 参数获取和处理
-        $logo = $this->request->file('logo');
+        $logo = $request->file('logo');
         // 对 logo 进行判断处理
         if ($logo !== null) {
             $logoPath = BASE_PATH . '/runtime/upload/' . $logo->getClientFilename();
@@ -53,7 +49,7 @@ class ImageController extends AbstractController
             'background_color' => [255, 255, 255],
             'content' => '',
         ];
-        $config = $this->request->inputs(array_keys($default), $default);
+        $config = $request->inputs(array_keys($default), $default);
         $config['logo_path'] = $logoPath;
 
         $qrcode = new Qrcode($config);
