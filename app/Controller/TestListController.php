@@ -30,7 +30,9 @@ use App\Lib\Log\Log;
 use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
+use App\Model\AppUser;
 use App\Model\Goods;
+use App\Model\NyMenuGoodsOrder;
 use App\Model\Orders;
 use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Coroutine\Coroutine;
@@ -273,13 +275,15 @@ class TestListController extends AbstractController
         return $lock->lockAsync(function () {
             $excelHandler = new ExportExcelHandler();
             $excelHandler->setHeaders([
-                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
+                'ID', '姓名', '邮箱', '手机号', '性别', '密码', '年龄', '创建时间', '修改时间',
             ]);
-            Orders::query()->orderBy('id', 'DESC')
-                ->chunk(20, function ($records) use ($excelHandler) {
+
+            AppUser::query()->orderBy('id', 'DESC')
+                ->where('id', '<', 5000)
+                ->chunk(100, function ($records) use ($excelHandler) {
                     $excelHandler->setData($records->toArray());
                 });
-            return $excelHandler->saveToBrowser('测试导出');
+            return $excelHandler->saveToLocal('测试导出百万级别');
         });
     }
 
@@ -521,5 +525,28 @@ class TestListController extends AbstractController
             'CREATE TOKEN PER SECOND' => 10,
             'CAPACITY' => 50,
         ])->getResult();
+    }
+
+    #[GetMapping(path: 'test')]
+    public function test(): array
+    {
+        $fields = [
+            'id', 'uid', 'app_id', 'wechat_user_space_id', 'openid', 'unionid', 'buyer_name', 'buyer_photo',
+            'order_type', 'goods_type', 'trade_status', 'order_status', 'is_settle', 'create_time', 'payment_time',
+            'complete_time', 'payment_method', 'llian_sub_chnl_no', 'llian_pay_chnl_txno', 'authorizer_appid',
+        ];
+        $excelHandler = new ExportExcelHandler();
+        $excelHandler->setHeaders($fields);
+
+        $startTime = microtime(true);
+        NyMenuGoodsOrder::query()
+            ->where(['uid' => '96825'])
+            ->select($fields)
+            ->chunk(100, function ($records) use ($excelHandler) {
+                $excelHandler->setData($records->toArray());
+            });
+        $excelHandler->saveToLocal('45808_order_list');
+        $spendTime = (microtime(true) - $startTime) * 1000;
+        return $this->result->addKey('耗时', $spendTime . ' 毫秒')->getResult();
     }
 }

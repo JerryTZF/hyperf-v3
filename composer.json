@@ -15,6 +15,7 @@
         "php": ">=8.0",
         "ext-iconv": "*",
         "ext-openssl": "*",
+        "ext-pdo": "*",
         "endroid/qr-code": "^4.8",
         "gregwar/captcha": "1.*",
         "hyperf/async-queue": "~3.0.0",
@@ -55,7 +56,6 @@
     "suggest": {
         "ext-redis": "Required to use Redis Client.",
         "ext-json": "Required to use JSON.",
-        "ext-pdo": "Required to use MySQL Client.",
         "ext-pdo_mysql": "Required to use MySQL Client."
     },
     "autoload": {
