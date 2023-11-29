@@ -18,7 +18,8 @@ use Hyperf\Validation\Rule;
 class ImageRequest extends FormRequest
 {
     protected array $scenes = [
-        'qrcode' => ['logo','size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
+        'qrcode' => ['is_download', 'logo', 'size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
+        'decode' => ['upload_qrcode', 'qrcode_url'],
     ];
 
     public function authorize(): bool
@@ -38,6 +39,9 @@ class ImageRequest extends FormRequest
             'mime' => [Rule::in(['png', 'jpeg', 'jpg', 'bmp'])],
             'label_text' => ['string'],
             'logo' => ['file', 'image'],
+            'upload_qrcode' => ['file', 'image'],
+            'qrcode_url' => ['url'],
+            'is_download' => ['boolean'],
         ];
     }
 }
