@@ -15,6 +15,7 @@ namespace App\Controller\Test;
 use App\Constants\ConstCode;
 use App\Controller\AbstractController;
 use App\Lib\File\FileSystem;
+use App\Lib\Image\Barcode;
 use App\Lib\Image\Qrcode;
 use App\Request\ImageRequest;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -89,6 +90,19 @@ class ImageController extends AbstractController
 
         return $this->response->withHeader('Content-Type', 'image/png')
             ->withBody(new SwooleStream($qrCodeString));
+    }
+
+    // 展示条形码
+    #[Scene(scene: 'barcode')]
+    #[PostMapping(path: 'barcode/show')]
+    public function barcode(ImageRequest $request): MessageInterface|ResponseInterface
+    {
+        $config = $request->all();
+        var_dump($config);
+        $barcodeString = (new Barcode($config))->getStream($config['content']);
+
+        return $this->response->withHeader('Content-Type', 'image/png')
+            ->withBody(new SwooleStream($barcodeString));
     }
 
     // 构建二维码配置

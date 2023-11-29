@@ -56,10 +56,10 @@ class Barcode
     public function __construct(array $config = [])
     {
         $this->generator = new BarcodeGeneratorPNG();
-        $this->barType = $config['bar_type'] ?? $this->generator::TYPE_CODE_128;
-        $this->width = $config['width'] ?? 1;
-        $this->height = $config['height'] ?? 50;
-        $this->foregroundColor = $config['foreground_color'] ?? [0, 0, 0];
+        $this->barType = isset($config['bar_type']) && $config['bar_type'] !== '' ? $config['bar_type'] : $this->generator::TYPE_CODE_128;
+        $this->width = isset($config['width']) ? intval($config['width']) : 1;
+        $this->height = isset($config['height']) ? intval($config['height']) : 50;
+        $this->foregroundColor = isset($config['foreground_color']) ? array_map('intval', $config['foreground_color']) : [0, 0, 0];
         $this->path = $config['path'] ?? BASE_PATH . '/runtime/barcode/';
 
         if (! is_dir($this->path)) {

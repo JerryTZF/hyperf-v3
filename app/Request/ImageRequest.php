@@ -14,12 +14,19 @@ namespace App\Request;
 
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
+use Picqer\Barcode\BarcodeGenerator;
+use ReflectionClass;
 
 class ImageRequest extends FormRequest
 {
+    /**
+     * 场景值
+     * @var array|string[][]
+     */
     protected array $scenes = [
         'qrcode' => ['is_download', 'logo', 'size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
         'decode' => ['upload_qrcode', 'qrcode_url'],
+        'barcode' => ['bar_type', 'height', 'width', 'content'],
     ];
 
     public function authorize(): bool
@@ -27,6 +34,9 @@ class ImageRequest extends FormRequest
         return true;
     }
 
+    /**
+     * 验证规则.
+     */
     public function rules(): array
     {
         return [
@@ -42,6 +52,43 @@ class ImageRequest extends FormRequest
             'upload_qrcode' => ['file', 'image'],
             'qrcode_url' => ['url'],
             'is_download' => ['boolean'],
+            'bar_type' => [Rule::in($this->getBarcodeConstants())],
+            'width' => ['integer'],
+            'height' => ['integer'],
         ];
+    }
+
+    /**
+     * 自定义错误文案.
+     * @return string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'bar_type.in' => '条形码类型必须为：' . implode(',', $this->getBarcodeConstants()) . ' 中',
+            'size.integer' => 'size 必须为整数',
+            'margin.integer' => 'margin 必须为整数',
+            'logo_size.integer' => 'logo_size 必须为整数',
+            'content.string' => 'content 必须为字符串',
+            'foreground_color.array' => 'foreground_color 必须为数组，例如 [0,0,0]',
+            'background_color.array' => 'background_color 必须为数组，例如 [255,255,255]',
+            'mime.in' => 'mime 必须为 png, jpeg, jpg, bmp',
+            'label_text.string' => 'label_text 必须为字符串',
+            'logo.file' => 'logo 必须为上传文件',
+            'logo.image' => 'logo 必须为图片类型文件',
+            'qrcode_url.url' => 'qrcode_url 必须为合法的url地址',
+            'is_download.boolean' => 'boolean 必须为合法的布尔值，例如 1、true、\'true\'、false、\'false\'',
+            'width.integer' => 'width 必须为整数',
+            'height.integer' => 'height 必须为整数',
+        ];
+    }
+
+    /**
+     * 获取 Picqer\Barcode\BarcodeGenerator 所有常量.
+     */
+    private function getBarcodeConstants(): array
+    {
+        $reflection = new ReflectionClass(BarcodeGenerator::class);
+        return array_values($reflection->getConstants());
     }
 }

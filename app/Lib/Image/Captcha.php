@@ -29,7 +29,6 @@ class Captcha
     /**
      * 获取验证
      * @param string $clientUniqueCode 不同的客户端使用不同的唯一标识
-     * @return string
      */
     public function getStream(string $clientUniqueCode): string
     {
