@@ -12,15 +12,24 @@ declare(strict_types=1);
 
 namespace App\Lib\Image;
 
-use App\Lib\Redis\Redis;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Redis\Redis;
 
 class Captcha
 {
+    private Redis $redis;
+
+    public function __construct()
+    {
+        $this->redis = ApplicationContext::getContainer()->get(Redis::class);
+    }
+
     /**
      * 获取验证
      * @param string $clientUniqueCode 不同的客户端使用不同的唯一标识
+     * @return string
      */
     public function getStream(string $clientUniqueCode): string
     {
@@ -32,10 +41,8 @@ class Captcha
         $builder->build();
         // 获取验证码内容
         $phrase = $builder->getPhrase();
-        // 写入Redis,以便验证
-        $redis = Redis::getRedisInstance();
-        $redis->del($clientUniqueCode);
-        $redis->set($clientUniqueCode, $phrase, ['NX', 'EX' => 300]);
+        $this->redis->del($clientUniqueCode);
+        $this->redis->set($clientUniqueCode, $phrase, ['NX', 'EX' => 300]);
 
         return $builder->get();
     }
@@ -45,10 +52,9 @@ class Captcha
      */
     public function verify(string $captcha, string $clientUniqueCode): bool
     {
-        $redis = Redis::getRedisInstance();
-        $cachedCaptcha = $redis->get($clientUniqueCode);
+        $cachedCaptcha = $this->redis->get($clientUniqueCode);
         if ($cachedCaptcha === $captcha) {
-            $redis->del($clientUniqueCode);
+            $this->redis->del($clientUniqueCode);
             return true;
         }
         return false;
