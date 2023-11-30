@@ -16,10 +16,12 @@ use App\Constants\ConstCode;
 use App\Controller\AbstractController;
 use App\Lib\File\FileSystem;
 use App\Lib\Image\Barcode;
+use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Request\ImageRequest;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
 use Psr\Http\Message\MessageInterface;
@@ -133,6 +135,34 @@ class ImageController extends AbstractController
 
         return $this->response->withHeader('Content-Type', 'image/png')
             ->withBody(new SwooleStream($barcodeString));
+    }
+
+    // 获取验证码
+    #[Scene(scene: 'captcha')]
+    #[GetMapping(path: 'captcha/show')]
+    public function getCaptcha(ImageRequest $request): MessageInterface|ResponseInterface
+    {
+        $ip = $this->getRequestIp();
+        $uniqueCode = $request->input('captcha_unique_code');
+        $unique = $ip . '_' . $uniqueCode;
+        $captchaString = (new Captcha())->getStream($unique);
+
+        return $this->response->withHeader('Content-Type', 'image/png')
+            ->withBody(new SwooleStream($captchaString));
+    }
+
+    // 验证验证码
+    #[Scene(scene: 'verify')]
+    #[GetMapping(path: 'captcha/verify')]
+    public function verifyCaptcha(ImageRequest $request): array
+    {
+        $ip = $this->getRequestIp();
+        $uniqueCode = $request->input('captcha_unique_code');
+        $unique = $ip . '_' . $uniqueCode;
+        $captchaCode = $request->input('captcha');
+
+        $isSuccess = (new Captcha())->verify($captchaCode, $unique);
+        return $this->result->setData(['is_success' => $isSuccess])->getResult();
     }
 
     // 构建二维码配置

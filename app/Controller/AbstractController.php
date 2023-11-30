@@ -43,4 +43,25 @@ abstract class AbstractController
 
         $this->uploadPath = $path;
     }
+
+    /**
+     * 获取请求IP.
+     * @return mixed
+     */
+    public function getRequestIp(): mixed
+    {
+        $serverParams = $this->request->getServerParams();
+        if (isset($serverParams['http_client_ip'])) {
+            return $serverParams['http_client_ip'];
+        }
+        if (isset($serverParams['http_x_real_ip'])) {
+            return $serverParams['http_x_real_ip'];
+        }
+        if (isset($serverParams['http_x_forwarded_for'])) {
+            $arr = explode(',', $serverParams['http_x_forwarded_for']);
+            return $arr[0];
+        }
+
+        return $serverParams['remote_addr'] ?? '';
+    }
 }

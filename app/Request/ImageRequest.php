@@ -27,6 +27,8 @@ class ImageRequest extends FormRequest
         'qrcode' => ['is_download', 'logo', 'size', 'margin', 'logo_size', 'content', 'foreground_color', 'background_color', 'mime', 'label_text', 'logo_path'],
         'decode' => ['upload_qrcode', 'qrcode_url'],
         'barcode' => ['bar_type', 'height', 'width', 'content'],
+        'captcha' => ['captcha_unique_code'],
+        'verify' => ['captcha_unique_code', 'captcha'],
     ];
 
     public function authorize(): bool
@@ -55,6 +57,8 @@ class ImageRequest extends FormRequest
             'bar_type' => [Rule::in($this->getBarcodeConstants())],
             'width' => ['integer'],
             'height' => ['integer'],
+            'captcha_unique_code' => ['required', 'string'],
+            'captcha' => ['required', 'alpha_num'],
         ];
     }
 
@@ -80,7 +84,16 @@ class ImageRequest extends FormRequest
             'is_download.boolean' => 'boolean 必须为合法的布尔值，例如 1、true、\'true\'、false、\'false\'',
             'width.integer' => 'width 必须为整数',
             'height.integer' => 'height 必须为整数',
+            'captcha_unique_code.string' => 'captcha_unique_code 必须为唯一字符串',
+            'captcha_unique_code.required' => 'captcha_unique_code 必须必填',
+            'captcha.required' => 'captcha 验证码必填',
+            'captcha.alpha_num' => 'captcha 验证码必须是字母或数字',
         ];
+    }
+
+    public function attributes(): array
+    {
+        return [];
     }
 
     /**
