@@ -51,6 +51,7 @@ abstract class AbstractController
     public function getRequestIp(): mixed
     {
         $serverParams = $this->request->getServerParams();
+        var_dump($serverParams);
         if (isset($serverParams['http_client_ip'])) {
             return $serverParams['http_client_ip'];
         }
