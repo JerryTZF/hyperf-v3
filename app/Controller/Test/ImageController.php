@@ -45,6 +45,21 @@ class ImageController extends AbstractController
         return $this->result->setData(['url' => ConstCode::OSS_DOMAIN . $path])->getResult();
     }
 
+    // 制作条形码上传到OSS返回条形码地址
+    #[Scene(scene: 'barcode')]
+    #[PostMapping(path: 'barcode/upload')]
+    public function uploadBarcodeToOss(ImageRequest $request): array
+    {
+        $config = $request->all();
+        $barcodeString = (new Barcode($config))->getStream($config['content']);
+
+        $fileFactory = new FileSystem();
+        $path = '/img/' . uniqid() . '_barcode.png';
+        $fileFactory->write($path, $barcodeString);
+
+        return $this->result->setData(['url' => ConstCode::OSS_DOMAIN . $path])->getResult();
+    }
+
     // 识别二维码
     #[Scene(scene: 'decode')]
     #[PostMapping(path: 'qrcode/decode')]
@@ -79,6 +94,22 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($qrCodeString));
     }
 
+    // 下载条形码
+    #[Scene(scene: 'barcode')]
+    #[PostMapping(path: 'barcode/download')]
+    public function downloadBarcode(ImageRequest $request): MessageInterface|ResponseInterface
+    {
+        $config = $request->all();
+        $barcodeString = (new Barcode($config))->getStream($config['content']);
+
+        $tmpFilename = uniqid() . '.png';
+        return $this->response->withHeader('content-description', 'File Transfer')
+            ->withHeader('content-type', 'image/png')
+            ->withHeader('content-disposition', "attachment; filename={$tmpFilename}")
+            ->withHeader('content-transfer-encoding', 'binary')
+            ->withBody(new SwooleStream($barcodeString));
+    }
+
     // 展示二维码
     #[Scene(scene: 'qrcode')]
     #[PostMapping(path: 'qrcode/show')]
@@ -98,7 +129,6 @@ class ImageController extends AbstractController
     public function barcode(ImageRequest $request): MessageInterface|ResponseInterface
     {
         $config = $request->all();
-        var_dump($config);
         $barcodeString = (new Barcode($config))->getStream($config['content']);
 
         return $this->response->withHeader('Content-Type', 'image/png')
