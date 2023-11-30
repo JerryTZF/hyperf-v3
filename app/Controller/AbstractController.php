@@ -16,6 +16,7 @@ use App\Lib\Result\Result;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
+use Hyperf\Stringable\Str;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractController
@@ -46,7 +47,6 @@ abstract class AbstractController
 
     /**
      * 获取请求IP.
-     * @return mixed
      */
     public function getRequestIp(): mixed
     {
@@ -58,8 +58,7 @@ abstract class AbstractController
             return $serverParams['http_x_real_ip'];
         }
         if (isset($serverParams['http_x_forwarded_for'])) {
-            $arr = explode(',', $serverParams['http_x_forwarded_for']);
-            return $arr[0];
+            return Str::before($serverParams['http_x_forwarded_for'], ',');
         }
 
         return $serverParams['remote_addr'] ?? '';

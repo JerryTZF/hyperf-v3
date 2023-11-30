@@ -28,6 +28,7 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zxing\QrReader;
 
+// 二维码、条形码、验证码常规使用
 #[Controller(prefix: 'image')]
 class ImageController extends AbstractController
 {
