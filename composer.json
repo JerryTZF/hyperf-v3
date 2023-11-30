@@ -17,6 +17,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "endroid/qr-code": "^4.8",
+        "firebase/php-jwt": "^6.9",
         "gregwar/captcha": "dev-master",
         "hyperf/async-queue": "~3.0.0",
         "hyperf/cache": "^3.0",

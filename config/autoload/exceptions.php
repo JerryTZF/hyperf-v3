@@ -12,6 +12,8 @@ declare(strict_types=1);
 return [
     'handler' => [
         'http' => [
+            // JWT认证失败
+            App\Exception\Handler\JwtExceptionHandler::class,
             // 业务逻辑异常
             App\Exception\Handler\BusinessExceptionHandler::class,
             // 验证器类型错误处理
