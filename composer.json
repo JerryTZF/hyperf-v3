@@ -17,7 +17,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "endroid/qr-code": "^4.8",
-        "gregwar/captcha": "1.*",
+        "gregwar/captcha": "dev-master",
         "hyperf/async-queue": "~3.0.0",
         "hyperf/cache": "^3.0",
         "hyperf/command": "~3.0.0",
