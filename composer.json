@@ -39,7 +39,7 @@
         "hyperf/signal": "^3.0",
         "hyperf/validation": "^3.0",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "khanamiryan/qrcode-detector-decoder": "^1.0",
+        "khanamiryan/qrcode-detector-decoder": "^2.0",
         "lysice/hyperf-redis-lock": "^2.1",
         "phpoffice/phpspreadsheet": "^1.28",
         "phpseclib/phpseclib": "^3.0",
