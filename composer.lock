@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6163a35eda150f220e14dad4a7325515",
+    "content-hash": "fb4c65119b051d285a9b52cf5e2d31e7",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -2890,16 +2890,16 @@
         },
         {
             "name": "hyperf/guzzle",
-            "version": "v3.0.37",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/guzzle.git",
-                "reference": "312d15dd1c94e423da3ab959363fa5c42e131c52"
+                "reference": "df01c9b6ba645347a05113c6bcac2314145e611c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/guzzle/zipball/312d15dd1c94e423da3ab959363fa5c42e131c52",
-                "reference": "312d15dd1c94e423da3ab959363fa5c42e131c52",
+                "url": "https://api.github.com/repos/hyperf/guzzle/zipball/df01c9b6ba645347a05113c6bcac2314145e611c",
+                "reference": "df01c9b6ba645347a05113c6bcac2314145e611c",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2910,7 +2910,7 @@
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.3|^7.0",
-                "php": ">=8.0",
+                "php": ">=8.1",
                 "psr/container": "^1.0|^2.0",
                 "psr/http-message": "^1.0|^2.0"
             },
@@ -2921,7 +2921,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.1-dev"
                 },
                 "hyperf": {
                     "config": "Hyperf\\Guzzle\\ConfigProvider"
@@ -2945,9 +2945,19 @@
             ],
             "support": {
                 "issues": "https://github.com/hyperf/guzzle/issues",
-                "source": "https://github.com/hyperf/guzzle/tree/v3.0.37"
+                "source": "https://github.com/hyperf/guzzle/tree/v3.1.0"
             },
-            "time": "2023-09-19T01:50:18+00:00"
+            "funding": [
+                {
+                    "url": "https://hyperf.wiki/#/zh-cn/donate",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://opencollective.com/hyperf",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2023-11-24T03:10:53+00:00"
         },
         {
             "name": "hyperf/http-message",
@@ -8002,6 +8012,108 @@
                 }
             ],
             "time": "2022-10-16T01:01:54+00:00"
+        },
+        {
+            "name": "yurunsoft/yurun-http",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Yurunsoft/YurunHttp.git",
+                "reference": "30c330dc55ab4eea70cea49a35a99122dea09868"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Yurunsoft/YurunHttp/zipball/30c330dc55ab4eea70cea49a35a99122dea09868",
+                "reference": "30c330dc55ab4eea70cea49a35a99122dea09868",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1",
+                "psr/http-message": "~1.0|~2.0",
+                "psr/log": "~1.0|~2.0|~3.0"
+            },
+            "require-dev": {
+                "monolog/monolog": "*",
+                "phpunit/phpunit": ">=4 <9.7",
+                "swoole/ide-helper": "^4.5",
+                "workerman/workerman": "^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yurun\\Util\\": "./src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "YurunHttp 是开源的 PHP HTTP 类库，支持链式操作，简单易用。支持 Curl、Swoole，支持 Http、Http2、WebSocket！",
+            "support": {
+                "issues": "https://github.com/Yurunsoft/YurunHttp/issues",
+                "source": "https://github.com/Yurunsoft/YurunHttp/tree/v5.0.0"
+            },
+            "time": "2023-10-16T03:47:51+00:00"
+        },
+        {
+            "name": "yurunsoft/yurun-oauth-login",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Yurunsoft/YurunOAuthLogin.git",
+                "reference": "e026602773daa59b3a1e519db772897e46d118cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Yurunsoft/YurunOAuthLogin/zipball/e026602773daa59b3a1e519db772897e46d118cd",
+                "reference": "e026602773daa59b3a1e519db772897e46d118cd",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.5",
+                "yurunsoft/yurun-http": "~4.0|~5.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "2.18.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yurun\\OAuthLogin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yurun",
+                    "email": "admin@yurunsoft.com"
+                },
+                {
+                    "name": "Lu Fei",
+                    "email": "lufei@simps.io"
+                }
+            ],
+            "description": "YurunOAuthLogin 是一个 PHP 第三方登录授权 SDK，集成了 QQ、微信、微博、GitHub 等常用接口。",
+            "support": {
+                "issues": "https://github.com/Yurunsoft/YurunOAuthLogin/issues",
+                "source": "https://github.com/Yurunsoft/YurunOAuthLogin/tree/v3.1.0"
+            },
+            "time": "2023-10-17T06:15:44+00:00"
         }
     ],
     "packages-dev": [
