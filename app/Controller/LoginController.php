@@ -13,11 +13,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\PostMapping;
 
 // 自有注册、登录体系
-#[Controller(prefix: 'auth')]
+#[Controller(prefix: 'webhook')]
 class LoginController extends AbstractController
 {
+    #[PostMapping(path: 'github')]
+    public function github()
+    {
+        var_dump($this->request->all());
+        return $this->result->getResult();
+    }
+
     public function login() {}
 
     public function logout() {}
