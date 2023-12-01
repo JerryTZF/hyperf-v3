@@ -19,14 +19,11 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 #[Controller(prefix: 'webhook')]
 class LoginController extends AbstractController
 {
-    #[PostMapping(path: 'github')]
-    public function github()
+    public function login()
     {
-        var_dump($this->request->all());
-        return $this->result->getResult();
     }
 
-    public function login() {}
-
-    public function logout() {}
+    public function logout()
+    {
+    }
 }
