@@ -25,7 +25,9 @@ class LoginController extends AbstractController
         return $this->result->getResult();
     }
 
+    #[PostMapping(path: 'logout')]
     public function logout()
     {
+        return $this->result->getResult();
     }
 }
