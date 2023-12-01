@@ -16,11 +16,13 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
 // 自有注册、登录体系
-#[Controller(prefix: 'webhook')]
+#[Controller(prefix: 'auth')]
 class LoginController extends AbstractController
 {
-    public function login()
+    #[PostMapping(path: 'login')]
+    public function login(): array
     {
+        return $this->result->getResult();
     }
 
     public function logout()
