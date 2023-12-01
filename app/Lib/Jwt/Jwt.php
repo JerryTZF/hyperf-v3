@@ -36,21 +36,24 @@ class Jwt
 
     private const RS512 = 'RS512';
 
+    // TODO:
+    // 1、如果你想让某些jwt主动失效, 那么需要进行存储, 然后对其删除或者变更, 那么之前颁发的jwt将无法通过验证
+    // 2、如果想实现自动延时, 那么可以颁发两个jwt(access_token, refresh_token), 两个jwt有效期不一样,
+    // access_token 失效后验证 refresh_token, 通过后再次颁发access_token
+
     /**
      * 获取jwt.
-     * @param array|string $data
-     * @return string
      */
     public static function createJwt(array|string $data): string
     {
         $key = \Hyperf\Support\env('JWT_KEY', 'hyperf');
         $now = Carbon::now()->timestamp;
         $payload = [
-            'iss' => 'api.tzf-foryou.xyz', // 颁发者,
+            'iss' => \Hyperf\Support\env('APP_DOMAIN', 'hyperf'), // 颁发者,
             'sub' => 'accredit', // 主题,
             'aud' => 'pc', // 接收者
             'iat' => $now, // jwt发出的时间
-            'nbf' => $now + 1, // jwt的开始处理的时间
+            'nbf' => $now + 1, // jwt的开始处理的时间(颁发jwt后一秒才能进行解析jwt)
             'exp' => $now + 60 * 60, // 到期时间
             'data' => is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data,
         ];
@@ -65,8 +68,6 @@ class Jwt
 
     /**
      * 解析jwt.
-     * @param string $jwt
-     * @return array
      */
     public static function explainJwt(string $jwt): array
     {

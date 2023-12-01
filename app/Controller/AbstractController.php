@@ -23,6 +23,8 @@ abstract class AbstractController
 {
     protected string $uploadPath;
 
+    protected array $jwtPayload;
+
     #[Inject]
     protected ContainerInterface $container;
 
@@ -43,6 +45,7 @@ abstract class AbstractController
         }
 
         $this->uploadPath = $path;
+        $this->jwtPayload = $this->request->getAttribute('jwt', []);
     }
 
     /**

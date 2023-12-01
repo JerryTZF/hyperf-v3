@@ -31,7 +31,7 @@ class JwtExceptionHandler extends ExceptionHandler
         $this->stopPropagation();
 
         return $response->withHeader('Content-Type', 'application/json')
-            ->withStatus(200)->withBody(new SwooleStream(json_encode([
+            ->withStatus(401)->withBody(new SwooleStream(json_encode([
                 'code' => SystemCode::JWT_ERROR,
                 'msg' => SystemCode::getMessage(SystemCode::JWT_ERROR, [$throwable->getMessage()]),
                 'status' => false,

@@ -12,28 +12,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Lib\Jwt\Jwt;
 use Hyperf\HttpServer\Annotation\Controller;
-use Hyperf\HttpServer\Annotation\GetMapping;
 
 // 自有注册、登录体系
 #[Controller(prefix: 'auth')]
 class LoginController extends AbstractController
 {
-    public function login()
-    {
-    }
+    public function login() {}
 
-    public function logout()
-    {
-    }
-
-    #[GetMapping(path: 'test')]
-    public function demo()
-    {
-        $jwt = Jwt::createJwt('你好');
-        $payload = Jwt::explainJwt($jwt);
-
-        return $this->result->setData($payload)->getResult();
-    }
+    public function logout() {}
 }
