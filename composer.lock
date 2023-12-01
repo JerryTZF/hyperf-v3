@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb4c65119b051d285a9b52cf5e2d31e7",
+    "content-hash": "6163a35eda150f220e14dad4a7325515",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -8012,108 +8012,6 @@
                 }
             ],
             "time": "2022-10-16T01:01:54+00:00"
-        },
-        {
-            "name": "yurunsoft/yurun-http",
-            "version": "v5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Yurunsoft/YurunHttp.git",
-                "reference": "30c330dc55ab4eea70cea49a35a99122dea09868"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Yurunsoft/YurunHttp/zipball/30c330dc55ab4eea70cea49a35a99122dea09868",
-                "reference": "30c330dc55ab4eea70cea49a35a99122dea09868",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=7.1",
-                "psr/http-message": "~1.0|~2.0",
-                "psr/log": "~1.0|~2.0|~3.0"
-            },
-            "require-dev": {
-                "monolog/monolog": "*",
-                "phpunit/phpunit": ">=4 <9.7",
-                "swoole/ide-helper": "^4.5",
-                "workerman/workerman": "^4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yurun\\Util\\": "./src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "YurunHttp 是开源的 PHP HTTP 类库，支持链式操作，简单易用。支持 Curl、Swoole，支持 Http、Http2、WebSocket！",
-            "support": {
-                "issues": "https://github.com/Yurunsoft/YurunHttp/issues",
-                "source": "https://github.com/Yurunsoft/YurunHttp/tree/v5.0.0"
-            },
-            "time": "2023-10-16T03:47:51+00:00"
-        },
-        {
-            "name": "yurunsoft/yurun-oauth-login",
-            "version": "v3.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Yurunsoft/YurunOAuthLogin.git",
-                "reference": "e026602773daa59b3a1e519db772897e46d118cd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Yurunsoft/YurunOAuthLogin/zipball/e026602773daa59b3a1e519db772897e46d118cd",
-                "reference": "e026602773daa59b3a1e519db772897e46d118cd",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=5.5",
-                "yurunsoft/yurun-http": "~4.0|~5.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.18.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yurun\\OAuthLogin\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Yurun",
-                    "email": "admin@yurunsoft.com"
-                },
-                {
-                    "name": "Lu Fei",
-                    "email": "lufei@simps.io"
-                }
-            ],
-            "description": "YurunOAuthLogin 是一个 PHP 第三方登录授权 SDK，集成了 QQ、微信、微博、GitHub 等常用接口。",
-            "support": {
-                "issues": "https://github.com/Yurunsoft/YurunOAuthLogin/issues",
-                "source": "https://github.com/Yurunsoft/YurunOAuthLogin/tree/v3.1.0"
-            },
-            "time": "2023-10-17T06:15:44+00:00"
         }
     ],
     "packages-dev": [
@@ -9412,16 +9310,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.13",
+            "version": "9.6.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f3d767f7f9e191eab4189abe41ab37797e30b1be"
+                "reference": "43653e6ad7adc22e7b667dd561bf8fcb74c10cf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f3d767f7f9e191eab4189abe41ab37797e30b1be",
-                "reference": "f3d767f7f9e191eab4189abe41ab37797e30b1be",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/43653e6ad7adc22e7b667dd561bf8fcb74c10cf0",
+                "reference": "43653e6ad7adc22e7b667dd561bf8fcb74c10cf0",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -9501,7 +9399,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.13"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.14"
             },
             "funding": [
                 {
@@ -9517,7 +9415,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-19T05:39:22+00:00"
+            "time": "2023-12-01T06:10:48+00:00"
         },
         {
             "name": "sebastian/cli-parser",
