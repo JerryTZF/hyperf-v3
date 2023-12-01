@@ -26,6 +26,10 @@ class AccreditMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        if (! \Hyperf\Support\env('JWT_OPEN', false)) {
+            return $handler->handle($request);
+        }
+
         if (! $request->hasHeader('authorization')) {
             $response = Context::get(ResponseInterface::class);
             $response = $response->withStatus(401)
