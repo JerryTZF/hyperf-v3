@@ -35,7 +35,10 @@ class LoginService
                 ErrorCode::getMessage(ErrorCode::USER_NOT_FOUND, ["{$account}"])
             );
         }
-        $jwt = Jwt::createJwt($userInfo->toArray(), Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        $jwt = Jwt::createJwt([
+            'uid' => $userInfo->id,
+            'rid' => $userInfo->role_id,
+        ], Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
         $refreshJwt = Jwt::createJwt($userInfo->id, Carbon::now()->addDays(7)->timestamp);
         $userInfo->jwt_token = $jwt;
         $userInfo->refresh_jwt_token = $refreshJwt;
