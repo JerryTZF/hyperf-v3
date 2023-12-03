@@ -26,7 +26,13 @@ class LoginController extends AbstractController
     }
 
     #[PostMapping(path: 'logout')]
-    public function logout()
+    public function logout(): array
+    {
+        return $this->result->getResult();
+    }
+
+    #[PostMapping(path: 'status')]
+    public function loginStatus(): array
     {
         return $this->result->getResult();
     }
