@@ -49,7 +49,7 @@ class ErrorCode extends AbstractConstants
     public const MIME_ERROR = 50005;
 
     /**
-     * @Message("用户 %s 未注册")
+     * @Message("用户 %s 未注册或者密码错误")
      */
     public const USER_NOT_FOUND = 50006;
 
