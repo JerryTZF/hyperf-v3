@@ -15,7 +15,9 @@ return [
         App\Middleware\CorsMiddleware::class,
         // 验证器中间件(官方)
         Hyperf\Validation\Middleware\ValidationMiddleware::class,
-        // 授权中间件
+        // jwt验证中间件
         App\Middleware\AccreditMiddleware::class,
+        // 权限校验中间件
+        App\Middleware\AuthMiddleware::class,
     ],
 ];
