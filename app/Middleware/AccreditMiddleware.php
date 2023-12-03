@@ -15,6 +15,7 @@ namespace App\Middleware;
 use App\Constants\SystemCode;
 use App\Lib\Jwt\Jwt;
 use Hyperf\Context\Context;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
@@ -26,13 +27,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 // 授权验证
 class AccreditMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface|RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    #[Inject]
+    protected RequestInterface $request;
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (! \Hyperf\Support\env('JWT_OPEN', false)) {
             return $handler->handle($request);
         }
 
-        if (! $request->hasHeader('authorization') && ! $request->is('auth/*')) {
+        if (! $request->hasHeader('authorization') && ! $this->request->is('auth/*')) {
             $response = Context::get(ResponseInterface::class);
             $response = $response->withStatus(401)
                 ->withHeader('Content-Type', 'application/json')
