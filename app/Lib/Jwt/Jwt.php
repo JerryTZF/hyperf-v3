@@ -44,7 +44,7 @@ class Jwt
     /**
      * 获取jwt.
      */
-    public static function createJwt(array|string $data): string
+    public static function createJwt(array|string|int $data, int $expire = 0): string
     {
         $key = \Hyperf\Support\env('JWT_KEY', 'hyperf');
         $now = Carbon::now()->timestamp;
@@ -54,7 +54,7 @@ class Jwt
             'aud' => 'pc', // 接收者
             'iat' => $now, // jwt发出的时间
             'nbf' => $now + 1, // jwt的开始处理的时间(颁发jwt后一秒才能进行解析jwt)
-            'exp' => $now + 60 * 60, // 到期时间
+            'exp' => $expire === 0 ? $now + 60 * 60 : $expire, // 到期时间
             'data' => is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $data,
         ];
         $head = [

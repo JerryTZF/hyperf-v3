@@ -20,6 +20,7 @@ namespace App\Model;
  * @property int $age
  * @property string $sex
  * @property string $jwt_token
+ * @property string $refresh_jwt_token
  * @property int $role_id
  * @property string $create_time
  * @property string $update_time

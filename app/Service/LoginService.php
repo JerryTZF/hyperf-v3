@@ -16,13 +16,16 @@ use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Lib\Jwt\Jwt;
 use App\Model\Users;
+use Carbon\Carbon;
+use JetBrains\PhpStorm\ArrayShape;
 
 class LoginService
 {
     /**
      * 获取JWT.
      */
-    public function getJwt(string $account, string $password): string
+    #[ArrayShape(['jwt' => 'string', 'refresh_jwt' => 'string'])]
+    public function getJwt(string $account, string $password): array
     {
         /** @var Users $userInfo */
         $userInfo = Users::query()->where(['account' => $account, 'password' => md5($password)])->first();
@@ -32,11 +35,13 @@ class LoginService
                 ErrorCode::getMessage(ErrorCode::USER_NOT_FOUND, ["{$account}"])
             );
         }
-        $jwt = Jwt::createJwt($userInfo->toArray());
+        $jwt = Jwt::createJwt($userInfo->toArray(), Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        $refreshJwt = Jwt::createJwt($userInfo->id, Carbon::now()->addDays(7)->timestamp);
         $userInfo->jwt_token = $jwt;
+        $userInfo->refresh_jwt_token = $refreshJwt;
         $userInfo->save();
 
-        return $jwt;
+        return ['jwt' => $jwt, 'refresh_jwt' => $refreshJwt];
     }
 
     /**
