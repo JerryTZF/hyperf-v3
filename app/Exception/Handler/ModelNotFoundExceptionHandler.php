@@ -29,7 +29,7 @@ class ModelNotFoundExceptionHandler extends ExceptionHandler
         return $response->withHeader('Content-Type', 'application/json')
             ->withStatus(200)->withBody(new SwooleStream(json_encode([
                 'code' => SystemCode::DATA_NOT_FOUND,
-                'msg' => SystemCode::getMessage(SystemCode::DATA_NOT_FOUND),
+                'msg' => SystemCode::getMessage(SystemCode::DATA_NOT_FOUND, [$throwable->getMessage()]),
                 'status' => false,
                 'data' => [],
             ], JSON_UNESCAPED_UNICODE)));

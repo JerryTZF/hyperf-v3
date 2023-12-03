@@ -34,7 +34,7 @@ class SystemCode extends AbstractConstants
     public const SYSTEM_ERROR = 9999;
 
     /**
-     * @Message("数据库数据未找到")
+     * @Message("数据库数据未找到: %s")
      */
     public const DATA_NOT_FOUND = 9904;
 

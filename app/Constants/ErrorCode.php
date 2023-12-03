@@ -47,4 +47,14 @@ class ErrorCode extends AbstractConstants
      * @Message("MIME 类型错误")
      */
     public const MIME_ERROR = 50005;
+
+    /**
+     * @Message("用户 %s 未注册")
+     */
+    public const USER_NOT_FOUND = 50006;
+
+    /**
+     * @Message("用户 %s 已注册")
+     */
+    public const USER_HAD_REGISTERED = 50007;
 }

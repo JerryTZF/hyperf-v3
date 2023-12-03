@@ -12,26 +12,45 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Request\AuthRequest;
+use App\Service\LoginService;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\Validation\Annotation\Scene;
 
 // 自有注册、登录体系
 #[Controller(prefix: 'auth')]
 class LoginController extends AbstractController
 {
-    #[PostMapping(path: 'login')]
-    public function login(): array
+    #[Inject]
+    protected LoginService $service;
+
+    #[PostMapping(path: 'jwt/get')]
+    #[Scene(scene: 'get_jwt')]
+    public function login(AuthRequest $request): array
     {
+        $account = $request->input('account');
+        $password = $request->input('pwd');
+
+        return $this->result->setData($this->service->getJwt($account, $password))->getResult();
+    }
+
+    #[PostMapping(path: 'register')]
+    #[Scene(scene: 'register')]
+    public function register(AuthRequest $request): array
+    {
+        $this->service->register(...$request->inputs(['account', 'password', 'phone']));
         return $this->result->getResult();
     }
 
-    #[PostMapping(path: 'logout')]
+    #[PostMapping(path: 'jwt/deactivate')]
     public function logout(): array
     {
         return $this->result->getResult();
     }
 
-    #[PostMapping(path: 'status')]
+    #[PostMapping(path: 'jwt/status')]
     public function loginStatus(): array
     {
         return $this->result->getResult();
