@@ -33,11 +33,12 @@ class LoginService extends AbstractService
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, opt: ["{$account}"]));
         }
-        $jwt = Jwt::createJwt([
+        $data = [
             'uid' => $userInfo->id,
             'rid' => $userInfo->role_id,
-        ], Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
-        $refreshJwt = Jwt::createJwt($userInfo->id, Carbon::now()->addDays(7)->timestamp);
+        ];
+        $jwt = Jwt::createJwt($data, Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        $refreshJwt = Jwt::createJwt($data, Carbon::now()->addDays(7)->timestamp);
         $userInfo->jwt_token = $jwt;
         $userInfo->refresh_jwt_token = $refreshJwt;
         $userInfo->save();
@@ -112,17 +113,24 @@ class LoginService extends AbstractService
     /**
      * 刷新jwt.
      * @param string $refreshJwt
-     * @return array
+     * @return string
      */
-    public function refreshJwt(string $refreshJwt): array
+    public function refreshJwt(string $refreshJwt): string
     {
         $originalData = Jwt::explainJwt($refreshJwt);
-        var_dump($originalData);
+        /** @var Users $userInfo */
         $userInfo = Users::query()->where(['id' => $originalData['data'] ?? 0, 'refresh_jwt_token' => $refreshJwt])->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知的 refresh jwt'));
         }
 
-        return [];
+        $jwt = Jwt::createJwt([
+            'uid' => $userInfo->id,
+            'rid' => $userInfo->role_id,
+        ], Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        $userInfo->jwt_token = $jwt;
+        $userInfo->save();
+
+        return $jwt;
     }
 }
