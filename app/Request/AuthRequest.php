@@ -19,7 +19,7 @@ class AuthRequest extends FormRequest
     protected array $scenes = [
         'get_jwt' => ['account', 'pwd'],
         'register' => ['account', 'password', 'password_confirmation', 'phone'],
-        'deactivate_jwt' => ['jwt'],
+        'explain_jwt' => ['jwt'],
     ];
 
     public function authorize(): bool

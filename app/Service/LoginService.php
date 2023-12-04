@@ -31,7 +31,7 @@ class LoginService extends AbstractService
         /** @var Users $userInfo */
         $userInfo = Users::query()->where(['account' => $account, 'password' => md5($password)])->first();
         if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NOT_FOUND, ["{$account}"]));
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, opt: ["{$account}"]));
         }
         $jwt = Jwt::createJwt([
             'uid' => $userInfo->id,
@@ -69,7 +69,7 @@ class LoginService extends AbstractService
         }
         // 注册失败
         if (isset($registerResult['msg']) && $registerResult['msg'] !== 'ok') {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_HAD_REGISTERED, ["{$account} 或者 {$phone}"]));
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_HAD_REGISTERED, opt: ["{$account} 或者 {$phone}"]));
         }
     }
 
@@ -82,10 +82,29 @@ class LoginService extends AbstractService
         /** @var Users $userInfo */
         $userInfo = Users::query()->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])->first();
         if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NOT_FOUND, [], '未知用户的jwt'));
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知用户的jwt'));
         }
         $userInfo->jwt_token = '';
         $userInfo->refresh_jwt_token = '';
         $userInfo->save();
+    }
+
+    /**
+     * 解析jwt.
+     */
+    #[ArrayShape(['exp' => 'int|mixed', 'uid' => 'mixed', 'iat' => 'mixed'])]
+    public function explainJwt(string $jwt): array
+    {
+        $originalData = Jwt::explainJwt($jwt);
+        $userInfo = Users::query()->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])->first();
+        if ($userInfo === null) {
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '该 jwt 已失效'));
+        }
+        $exp = $originalData['exp'] - time() > 0 ? $originalData['exp'] - time() : 0;
+        return [
+            'exp' => $exp, // 剩余秒数
+            'uid' => $originalData['data']['uid'], // uid
+            'iat' => Carbon::createFromTimestamp($originalData['iat'])->toDateTimeString(), // 颁发时间
+        ];
     }
 }
