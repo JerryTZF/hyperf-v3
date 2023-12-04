@@ -64,7 +64,7 @@ class ErrorCode extends AbstractConstants
     public const USER_HAD_REGISTERED = 50007;
 
     /**
-     * @Message("jwt已被主动失效")
+     * @Message("jwt已失效")
      */
     public const DO_JWT_FAIL = 50008;
 
