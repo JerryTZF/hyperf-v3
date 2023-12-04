@@ -64,4 +64,12 @@ class LoginController extends AbstractController
         $result = $this->service->explainJwt($request->input('jwt'));
         return $this->result->setData($result)->getResult();
     }
+
+    // 刷新jwt
+    #[PostMapping(path: 'jwt/refresh')]
+    #[Scene(scene: 'explain_jwt')]
+    public function refresh(AuthRequest $request): array
+    {
+
+    }
 }

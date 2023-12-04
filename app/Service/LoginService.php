@@ -92,7 +92,6 @@ class LoginService extends AbstractService
     /**
      * 解析jwt.
      */
-    #[ArrayShape(['exp' => 'int|mixed', 'exp_date' => 'int|mixed', 'uid' => 'mixed', 'iat' => 'mixed'])]
     public function explainJwt(string $jwt): array
     {
         $originalData = Jwt::explainJwt($jwt);
@@ -103,9 +102,21 @@ class LoginService extends AbstractService
         $exp = $originalData['exp'] - time() > 0 ? $originalData['exp'] - time() : 0;
         return [
             'exp' => $exp, // 剩余秒数
-            'exp_date' => Carbon::createFromTimestamp($originalData['exp'])->toDateTimeString(), // 失效时间
             'uid' => $originalData['data']['uid'], // uid
-            'iat' => Carbon::createFromTimestamp($originalData['iat'])->toDateTimeString(), // 颁发时间
+            'data' => $originalData['data'], // data
+            'exp_date' => Carbon::createFromTimestamp($originalData['exp'])->toDateTimeString(), // 失效时间
+            'iat_date' => Carbon::createFromTimestamp($originalData['iat'])->toDateTimeString(), // 颁发时间
         ];
+    }
+
+    public function refreshJwt(string $refreshJwt): array
+    {
+        $originalData = Jwt::explainJwt($refreshJwt);
+        $userInfo = Users::query()->where(['id' => $originalData['data'] ?? 0, 'refresh_jwt_token' => $refreshJwt])->first();
+        if ($userInfo === null) {
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知的 refresh jwt'));
+        }
+
+
     }
 }
