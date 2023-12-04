@@ -18,6 +18,13 @@ abstract class AbstractService
 {
     public static function getErrorMap(int $errorCode, array $opt = [], string $message = ''): array
     {
-        return [$errorCode, ErrorCode::getMessage($errorCode, $message !== '' ? $message : $opt)];
+        if ($message !== '') {
+            return [$errorCode, $message];
+        }
+        if ($opt !== []) {
+            return [$errorCode, ErrorCode::getMessage($errorCode, $opt)];
+        }
+
+        return [$errorCode, ErrorCode::getMessage($errorCode)];
     }
 }
