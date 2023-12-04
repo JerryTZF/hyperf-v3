@@ -109,14 +109,20 @@ class LoginService extends AbstractService
         ];
     }
 
+    /**
+     * 刷新jwt.
+     * @param string $refreshJwt
+     * @return array
+     */
     public function refreshJwt(string $refreshJwt): array
     {
         $originalData = Jwt::explainJwt($refreshJwt);
+        var_dump($originalData);
         $userInfo = Users::query()->where(['id' => $originalData['data'] ?? 0, 'refresh_jwt_token' => $refreshJwt])->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知的 refresh jwt'));
         }
 
-
+        return [];
     }
 }
