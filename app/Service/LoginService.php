@@ -86,6 +86,7 @@ class LoginService extends AbstractService
             throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NOT_FOUND, ['用户不存在']));
         }
         $userInfo->jwt_token = '';
+        $userInfo->refresh_jwt_token = '';
         $userInfo->save();
     }
 }
