@@ -72,11 +72,21 @@ class Jwt
     public static function explainJwt(string $jwt): array
     {
         $key = \Hyperf\Support\env('JWT_KEY', 'hyperf');
-        $decode = \Firebase\JWT\JWT::decode($jwt, new Key($key, self::HS256));
-        $decode = get_object_vars($decode);
-        if (isset($decode['data'])) {
-            $decode['data'] = json_decode($decode['data']) ?? $decode['data'];
+        $payload = \Firebase\JWT\JWT::decode($jwt, new Key($key, self::HS256));
+        $payload = get_object_vars($payload);
+        if (isset($payload['data'])) {
+            $payload['data'] = json_decode($payload['data']) ?? $payload['data'];
         }
-        return $decode;
+        return $payload;
+    }
+
+    /**
+     * jwt距离失效还有的秒数.
+     */
+    public static function jwtLeftSeconds(string $jwt): int
+    {
+        $payload = self::explainJwt($jwt);
+        $exp = $payload['exp'];
+        return (Carbon::now()->timestamp - $exp) > 0 ? (Carbon::now()->timestamp - $exp) : 0;
     }
 }

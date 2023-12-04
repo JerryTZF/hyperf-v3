@@ -26,16 +26,19 @@ class LoginController extends AbstractController
     #[Inject]
     protected LoginService $service;
 
+    // 获取jwt && refresh jwt
     #[PostMapping(path: 'jwt/get')]
     #[Scene(scene: 'get_jwt')]
     public function login(AuthRequest $request): array
     {
         $account = $request->input('account');
         $password = $request->input('pwd');
+        $result = $this->service->getJwt($account, $password);
 
-        return $this->result->setData($this->service->getJwt($account, $password))->getResult();
+        return $this->result->setData($result)->getResult();
     }
 
+    // 注册
     #[PostMapping(path: 'register')]
     #[Scene(scene: 'register')]
     public function register(AuthRequest $request): array
@@ -44,6 +47,7 @@ class LoginController extends AbstractController
         return $this->result->getResult();
     }
 
+    // 使得jwt失效
     #[PostMapping(path: 'jwt/deactivate')]
     public function logout(): array
     {

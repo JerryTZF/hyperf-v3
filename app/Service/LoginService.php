@@ -15,11 +15,12 @@ namespace App\Service;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Lib\Jwt\Jwt;
+use App\Lib\Lock\RedisLock;
 use App\Model\Users;
 use Carbon\Carbon;
 use JetBrains\PhpStorm\ArrayShape;
 
-class LoginService
+class LoginService extends AbstractService
 {
     /**
      * 获取JWT.
@@ -30,10 +31,7 @@ class LoginService
         /** @var Users $userInfo */
         $userInfo = Users::query()->where(['account' => $account, 'password' => md5($password)])->first();
         if ($userInfo === null) {
-            throw new BusinessException(
-                ErrorCode::USER_NOT_FOUND,
-                ErrorCode::getMessage(ErrorCode::USER_NOT_FOUND, ["{$account}"])
-            );
+            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NOT_FOUND, ["{$account}"]));
         }
         $jwt = Jwt::createJwt([
             'uid' => $userInfo->id,
@@ -52,21 +50,26 @@ class LoginService
      */
     public function register(string $account, string $password, string $phone): void
     {
-        $exist = Users::query()
-            ->where(['phone' => $phone])
-            ->orWhere(['account' => $account])
-            ->exists();
-        if ($exist) {
-            throw new BusinessException(
-                ErrorCode::USER_HAD_REGISTERED,
-                ErrorCode::getMessage(ErrorCode::USER_HAD_REGISTERED, ["{$phone} 或者 {$account}"])
-            );
+        $lock = new RedisLock('register', 3, 1, $account);
+        $registerResult = $lock->lockSync(function () use ($account, $password, $phone) {
+            $exist = Users::query()->where(['phone' => $phone])->orWhere(['account' => $account])->exists();
+            if ($exist) {
+                return ['msg' => "{$account} had registered"];
+            }
+            $isSaved = (new Users([
+                'account' => $account,
+                'password' => md5($password),
+                'phone' => $phone,
+            ]))->save();
+            return $isSaved ? ['msg' => 'ok'] : ['msg' => 'save fail'];
+        });
+        // 获取锁失败
+        if ($registerResult === false) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::ACT_BUSY));
         }
-
-        (new Users([
-            'account' => $account,
-            'password' => md5($password),
-            'phone' => $phone,
-        ]))->save();
+        // 注册失败
+        if (isset($registerResult['msg']) && $registerResult['msg'] !== 'ok') {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_HAD_REGISTERED, ["{$account} 或者 {$phone}"]));
+        }
     }
 }

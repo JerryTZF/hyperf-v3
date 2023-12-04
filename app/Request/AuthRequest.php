@@ -19,6 +19,7 @@ class AuthRequest extends FormRequest
     protected array $scenes = [
         'get_jwt' => ['account', 'pwd'],
         'register' => ['account', 'password', 'password_confirmation', 'phone'],
+        'deactivate_jwt' => ['jwt'],
     ];
 
     public function authorize(): bool
@@ -34,6 +35,7 @@ class AuthRequest extends FormRequest
             'password' => ['required', 'alpha_num', 'confirmed'],
             'password_confirmation' => ['required', 'same:password'],
             'phone' => ['required', 'phone'],
+            'jwt' => ['required', 'string', 'alpha_num'],
         ];
     }
 
@@ -49,6 +51,9 @@ class AuthRequest extends FormRequest
             'phone.required' => 'phone 手机号必填',
             'phone.phone' => 'phone 非法',
             'password_confirmation.required' => '确认密码必填',
+            'jwt.required' => 'jwt 必填',
+            'jwt.string' => 'jwt 只能是字符串',
+            'jwt.alpha_num' => 'jwt 必须是字母或数字',
         ];
     }
 

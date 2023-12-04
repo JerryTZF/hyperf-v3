@@ -24,6 +24,11 @@ class ErrorCode extends AbstractConstants
     public const SERVER_ERROR = 500;
 
     /**
+     * @Message("操作频繁, 请稍后再试")
+     */
+    public const ACT_BUSY = 50000;
+
+    /**
      * @Message("验证码错误")
      */
     public const CAPTCHA_ERROR = 50001;
@@ -57,4 +62,14 @@ class ErrorCode extends AbstractConstants
      * @Message("用户 %s 已注册")
      */
     public const USER_HAD_REGISTERED = 50007;
+
+    /**
+     * @Message("jwt已被主动失效")
+     */
+    public const DO_JWT_FAIL = 50008;
+
+    /**
+     * @Message("jwt 缺失")
+     */
+    public const JWT_EMPTY_ERR = 50009;
 }
