@@ -103,7 +103,7 @@ class LoginService extends AbstractService
         return [
             'exp' => $exp, // 剩余秒数
             'uid' => $originalData['data']['uid'], // uid
-            'data' => $originalData['data'], // data
+            'jwt_data' => $originalData['data'], // data
             'exp_date' => Carbon::createFromTimestamp($originalData['exp'])->toDateTimeString(), // 失效时间
             'iat_date' => Carbon::createFromTimestamp($originalData['iat'])->toDateTimeString(), // 颁发时间
         ];
