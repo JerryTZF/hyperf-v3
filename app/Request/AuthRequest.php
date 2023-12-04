@@ -35,7 +35,7 @@ class AuthRequest extends FormRequest
             'password' => ['required', 'alpha_num', 'confirmed'],
             'password_confirmation' => ['required', 'same:password'],
             'phone' => ['required', 'phone'],
-            'jwt' => ['required', 'string', 'alpha_dash'],
+            'jwt' => ['required', 'string'],
         ];
     }
 
@@ -53,7 +53,6 @@ class AuthRequest extends FormRequest
             'password_confirmation.required' => '确认密码必填',
             'jwt.required' => 'jwt 必填',
             'jwt.string' => 'jwt 只能是字符串',
-            'jwt.alpha_dash' => 'jwt 必须是字母或数字或下划线',
         ];
     }
 
