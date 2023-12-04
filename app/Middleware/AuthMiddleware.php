@@ -32,7 +32,6 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         $payload = $request->getAttributes();
-        var_dump($payload);
 
         return $handler->handle($request);
     }

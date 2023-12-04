@@ -49,8 +49,10 @@ class LoginController extends AbstractController
 
     // 使得jwt失效
     #[PostMapping(path: 'jwt/deactivate')]
-    public function logout(): array
+    #[Scene(scene: 'deactivate_jwt')]
+    public function logout(AuthRequest $request): array
     {
+        $this->service->deactivateJwt($request->input('jwt'));
         return $this->result->getResult();
     }
 

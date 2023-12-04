@@ -72,4 +72,20 @@ class LoginService extends AbstractService
             throw new BusinessException(...self::getErrorMap(ErrorCode::USER_HAD_REGISTERED, ["{$account} 或者 {$phone}"]));
         }
     }
+
+    /**
+     * 使用户存储的jwt_token失效.
+     * @param string $jwt
+     */
+    public function deactivateJwt(string $jwt): void
+    {
+        $originalData = Jwt::explainJwt($jwt);
+        /** @var Users $userInfo */
+        $userInfo = Users::query()->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])->first();
+        if ($userInfo === null) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NOT_FOUND, ['用户不存在']));
+        }
+        $userInfo->jwt_token = '';
+        $userInfo->save();
+    }
 }

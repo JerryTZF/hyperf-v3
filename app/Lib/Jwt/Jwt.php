@@ -75,7 +75,7 @@ class Jwt
         $payload = \Firebase\JWT\JWT::decode($jwt, new Key($key, self::HS256));
         $payload = get_object_vars($payload);
         if (isset($payload['data'])) {
-            $payload['data'] = json_decode($payload['data']) ?? $payload['data'];
+            $payload['data'] = json_decode($payload['data'], true) ?? $payload['data'];
         }
         return $payload;
     }
