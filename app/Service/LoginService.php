@@ -19,6 +19,7 @@ use App\Lib\Lock\RedisLock;
 use App\Model\Users;
 use Carbon\Carbon;
 use JetBrains\PhpStorm\ArrayShape;
+use Throwable;
 
 class LoginService extends AbstractService
 {
@@ -52,16 +53,22 @@ class LoginService extends AbstractService
     public function register(string $account, string $password, string $phone): void
     {
         $lock = new RedisLock('register', 3, 1, $account);
+        // query & insert. so locked.
         $registerResult = $lock->lockSync(function () use ($account, $password, $phone) {
-            $exist = Users::query()->where(['phone' => $phone])->orWhere(['account' => $account])->exists();
-            if ($exist) {
-                return ['msg' => "{$account} had registered"];
+            try {
+                $exist = Users::query()->where(['phone' => $phone])->orWhere(['account' => $account])->exists();
+                if ($exist) {
+                    return ['msg' => "{$account} had registered"];
+                }
+                $isSaved = (new Users([
+                    'account' => $account,
+                    'password' => md5($password),
+                    'phone' => $phone,
+                ]))->save();
+            } catch (Throwable) {
+                $isSaved = false;
             }
-            $isSaved = (new Users([
-                'account' => $account,
-                'password' => md5($password),
-                'phone' => $phone,
-            ]))->save();
+
             return $isSaved ? ['msg' => 'ok'] : ['msg' => 'save fail'];
         });
         // 获取锁失败
@@ -109,8 +116,6 @@ class LoginService extends AbstractService
 
     /**
      * 刷新jwt.
-     * @param string $refreshJwt
-     * @return string
      */
     public function refreshJwt(string $refreshJwt): string
     {

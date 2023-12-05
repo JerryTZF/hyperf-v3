@@ -26,12 +26,15 @@ class AuthMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $payload = $this->request->getAttribute('jwt');
+        $route = $this->request->getPathInfo();
         // 登录相关不校验
         if ($this->request->is('auth/*')) {
             return $handler->handle($request);
         }
 
-        $payload = $request->getAttributes();
+        $payload = $this->request->getPathInfo();
+        var_dump($payload);
 
         return $handler->handle($request);
     }

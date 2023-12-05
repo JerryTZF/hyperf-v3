@@ -57,7 +57,8 @@ class AccreditMiddleware implements MiddlewareInterface
         $originalData = Jwt::explainJwt($jwt); // 解析过程中的异常, 会被 JwtExceptionHandler 捕获, 这里无需处理
 
         // token是否被主动失效
-        $storageJwt = Users::query()->where(['id' => $originalData['data']['uid']])->value('jwt_token');
+        $uid = $originalData['data']['uid'] ?? 0;
+        $storageJwt = Users::query()->where(['id' => $uid])->value('jwt_token');
         if ($storageJwt !== $jwt) {
             $error = ['code' => ErrorCode::DO_JWT_FAIL, 'msg' => ErrorCode::getMessage(ErrorCode::DO_JWT_FAIL), 'status' => false, 'data' => []];
             $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json')
