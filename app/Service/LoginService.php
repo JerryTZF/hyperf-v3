@@ -96,15 +96,11 @@ class LoginService extends AbstractService
     public function explainJwt(string $jwt): array
     {
         $originalData = Jwt::explainJwt($jwt);
-        $id = $originalData['data']['uid'] ?? 0;
-        $userInfo = Users::query()->where(['id' => $id, 'jwt_token' => $jwt])->first();
-        if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '该 jwt 已失效'));
-        }
+        $uid = $originalData['data']['uid'] ?? 0;
         $exp = $originalData['exp'] - time() > 0 ? $originalData['exp'] - time() : 0;
         return [
             'exp' => $exp, // 剩余秒数
-            'uid' => $originalData['data']['uid'], // uid
+            'uid' => $uid, // uid
             'jwt_data' => $originalData['data'], // data
             'exp_date' => Carbon::createFromTimestamp($originalData['exp'])->toDateTimeString(), // 失效时间
             'iat_date' => Carbon::createFromTimestamp($originalData['iat'])->toDateTimeString(), // 颁发时间
