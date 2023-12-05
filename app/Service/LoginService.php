@@ -96,7 +96,8 @@ class LoginService extends AbstractService
     public function explainJwt(string $jwt): array
     {
         $originalData = Jwt::explainJwt($jwt);
-        $userInfo = Users::query()->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])->first();
+        $id = $originalData['data']['uid'] ?? 0;
+        $userInfo = Users::query()->where(['id' => $id, 'jwt_token' => $jwt])->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '该 jwt 已失效'));
         }
@@ -118,8 +119,9 @@ class LoginService extends AbstractService
     public function refreshJwt(string $refreshJwt): string
     {
         $originalData = Jwt::explainJwt($refreshJwt);
+        $id = $originalData['data']['uid'] ?? 0;
         /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $originalData['data'] ?? 0, 'refresh_jwt_token' => $refreshJwt])->first();
+        $userInfo = Users::query()->where(['id' => $id, 'refresh_jwt_token' => $refreshJwt])->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知的 refresh jwt'));
         }
