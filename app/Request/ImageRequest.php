@@ -54,7 +54,7 @@ class ImageRequest extends FormRequest
             'upload_qrcode' => ['file', 'image'],
             'qrcode_url' => ['url'],
             'is_download' => ['boolean'],
-            'bar_type' => [Rule::in($this->getBarcodeConstants())],
+            'bar_type' => ['required', Rule::in($this->getBarcodeConstants())],
             'width' => ['integer'],
             'height' => ['integer'],
             'captcha_unique_code' => ['required', 'string'],
