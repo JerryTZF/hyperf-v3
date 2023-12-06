@@ -58,6 +58,7 @@ class SyncAuthsTableScheduler
                     try {
                         $guzzleClient->request($key, $uri, ['headers' => ['x-self-called' => 'yes']]);
                     } catch (GuzzleException $e) {
+                        // 注意: 有些接口不传参数可能会导致500, 请在接口处进行处理
                         if ($e->getCode() == 404) {
                             $auth->status = Auths::STATUS_BAN;
                             $auth->save();
