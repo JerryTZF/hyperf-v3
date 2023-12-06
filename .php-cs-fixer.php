@@ -18,6 +18,7 @@ This file is part of Hyperf.
 @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
 EOF;
 
+// 详情参见: https://mlocati.github.io/php-cs-fixer-configurator/#version:3.40
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([

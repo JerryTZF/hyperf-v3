@@ -33,7 +33,10 @@ class LoginService extends AbstractService
     public function getJwt(string $account, string $password): array
     {
         /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['account' => $account, 'password' => md5($password)])->first();
+        $userInfo = Users::query()
+            ->where(['account' => $account, 'password' => md5($password)])
+            ->select(['id', 'role_id', 'jwt_token', 'refresh_jwt_token'])
+            ->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, opt: ["{$account}"]));
         }
@@ -41,7 +44,7 @@ class LoginService extends AbstractService
             'uid' => $userInfo->id,
             'rid' => $userInfo->role_id,
         ];
-        $jwt = Jwt::createJwt($data, Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        $jwt = Jwt::createJwt($data, Carbon::now()->addSeconds(24 * 60 * 60)->timestamp);
         $refreshJwt = Jwt::createJwt($data, Carbon::now()->addDays(7)->timestamp);
         $userInfo->jwt_token = $jwt;
         $userInfo->refresh_jwt_token = $refreshJwt;
@@ -95,7 +98,10 @@ class LoginService extends AbstractService
     {
         $originalData = Jwt::explainJwt($jwt);
         /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])->first();
+        $userInfo = Users::query()
+            ->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])
+            ->select(['jwt_token', 'refresh_jwt_token'])
+            ->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知用户的jwt'));
         }
@@ -125,13 +131,18 @@ class LoginService extends AbstractService
 
     /**
      * 刷新jwt.
+     * @param string $refreshJwt refresh_jwt
+     * @return string new jwt
      */
     public function refreshJwt(string $refreshJwt): string
     {
         $originalData = Jwt::explainJwt($refreshJwt);
         $id = $originalData['data']['uid'] ?? 0;
         /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $id, 'refresh_jwt_token' => $refreshJwt])->first();
+        $userInfo = Users::query()
+            ->where(['id' => $id, 'refresh_jwt_token' => $refreshJwt])
+            ->select(['id', 'role_id', 'jwt_token'])
+            ->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知的 refresh jwt'));
         }
