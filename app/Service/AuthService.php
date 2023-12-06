@@ -20,9 +20,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class AuthService extends AbstractService
 {
-    public function getAuthsByUid(int $uid)
-    {
-    }
+    public function getAuthsByUid(int $uid) {}
 
     /**
      * 获取全局路由.

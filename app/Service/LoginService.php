@@ -34,7 +34,7 @@ class LoginService extends AbstractService
     {
         /** @var Users $userInfo */
         $userInfo = Users::query()
-            ->where(['account' => $account, 'password' => md5($password)])
+            ->where(['account' => $account, 'password' => md5($password), 'status' => Users::STATUS_ACTIVE])
             ->select(['id', 'role_id', 'jwt_token', 'refresh_jwt_token'])
             ->first();
         if ($userInfo === null) {
@@ -99,7 +99,7 @@ class LoginService extends AbstractService
         $originalData = Jwt::explainJwt($jwt);
         /** @var Users $userInfo */
         $userInfo = Users::query()
-            ->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt])
+            ->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt, 'status' => Users::STATUS_ACTIVE])
             ->select(['jwt_token', 'refresh_jwt_token'])
             ->first();
         if ($userInfo === null) {
@@ -140,7 +140,7 @@ class LoginService extends AbstractService
         $id = $originalData['data']['uid'] ?? 0;
         /** @var Users $userInfo */
         $userInfo = Users::query()
-            ->where(['id' => $id, 'refresh_jwt_token' => $refreshJwt])
+            ->where(['id' => $id, 'refresh_jwt_token' => $refreshJwt, 'status' => Users::STATUS_ACTIVE])
             ->select(['id', 'role_id', 'jwt_token'])
             ->first();
         if ($userInfo === null) {

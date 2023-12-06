@@ -50,6 +50,6 @@ class ConsumerProcess extends AbstractProcess
     // 是否随着服务一起启动
     public function isEnable($server): bool
     {
-        return \Hyperf\Support\env('APP_ENV', 'dev') === 'pro';
+        return false;
     }
 }

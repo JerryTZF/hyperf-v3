@@ -35,7 +35,7 @@ class Roles extends Model
 
     protected string $primaryKey = 'id';
 
-    protected array $status = ['active', 'delete', 'pause'];
+    protected array $statusArray = ['active', 'delete', 'pause'];
 
     protected ?string $connection = 'default';
 
@@ -69,6 +69,6 @@ class Roles extends Model
      */
     public function setStatusAttribute(mixed $value): void
     {
-        $this->attributes['status'] = in_array($value, $this->status) ? $value : 'active';
+        $this->attributes['status'] = in_array($value, $this->statusArray) ? $value : 'active';
     }
 }

@@ -15,6 +15,9 @@ namespace App\Model;
 /**
  * @property int $id
  * @property string $route
+ * @property string $method
+ * @property string $controller
+ * @property string $function
  * @property string $status
  * @property string $create_time
  * @property string $update_time
@@ -33,7 +36,7 @@ class Auths extends Model
 
     protected string $primaryKey = 'id';
 
-    protected array $status = ['active', 'ban', 'pause'];
+    protected array $statusArray = ['active', 'ban', 'pause'];
 
     protected ?string $connection = 'default';
 
@@ -66,6 +69,6 @@ class Auths extends Model
      */
     public function setStatusAttribute(mixed $value): void
     {
-        $this->attributes['status'] = in_array($value, $this->status) ? $value : 'active';
+        $this->attributes['status'] = in_array($value, $this->statusArray) ? $value : 'active';
     }
 }

@@ -16,7 +16,8 @@ ARG timezone
 
 ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
     APP_ENV=prod \
-    SCAN_CACHEABLE=(true)
+    #生产环境请置于true
+    SCAN_CACHEABLE=(false)
 
 # update
 RUN set -ex \

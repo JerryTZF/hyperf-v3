@@ -13,11 +13,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\AuthService;
-use Hyperf\Context\ApplicationContext;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
-use Hyperf\HttpServer\Router\DispatcherFactory;
 
 /**
  * 权限操作相关控制器.
@@ -38,10 +37,9 @@ class AuthController extends AbstractController
         return $this->result->getResult();
     }
 
-    #[PostMapping(path: 'auth/add')]
-    public function addAuth(): array
+    #[GetMapping(path: 'test')]
+    public function test()
     {
-        $routes = $this->service->getAllRoutesInfo();
-        return $this->result->addKey('routes', $routes)->getResult();
+        return $this->result->getResult();
     }
 }

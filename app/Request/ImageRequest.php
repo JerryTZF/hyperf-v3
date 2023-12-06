@@ -45,7 +45,7 @@ class ImageRequest extends FormRequest
             'size' => ['integer'],
             'margin' => ['integer'],
             'logo_size' => ['integer'],
-            'content' => ['string'],
+            'content' => ['required', 'string'],
             'foreground_color' => ['array'],
             'background_color' => ['array'],
             'mime' => [Rule::in(['png', 'jpeg', 'jpg', 'bmp'])],

@@ -36,7 +36,7 @@ class Users extends Model
 
     public const STATUS_ACTIVE = 'active';
 
-    protected array $status = ['ban', 'active'];
+    protected array $statusArray = ['ban', 'active'];
 
     protected string $primaryKey = 'id';
 
@@ -73,6 +73,6 @@ class Users extends Model
      */
     public function setStatusAttribute(mixed $value): void
     {
-        $this->attributes['status'] = in_array($value, $this->status) ? $value : 'active';
+        $this->attributes['status'] = in_array($value, $this->statusArray) ? $value : 'active';
     }
 }

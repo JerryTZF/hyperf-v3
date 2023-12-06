@@ -19,6 +19,7 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -60,6 +61,7 @@ class JwtExceptionHandler extends ExceptionHandler
             || $throwable instanceof BeforeValidException
             || $throwable instanceof ExpiredException
             || $throwable instanceof DomainException
-            || $throwable instanceof UnexpectedValueException;
+            || $throwable instanceof UnexpectedValueException
+            || $throwable instanceof InvalidArgumentException;
     }
 }

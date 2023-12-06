@@ -40,6 +40,6 @@ class DemoScheduler
 
     public function isEnable(): bool
     {
-        return \Hyperf\Support\env('APP_ENV', 'dev') === 'pro';
+        return false;
     }
 }
