@@ -42,7 +42,7 @@ class AccreditMiddleware implements MiddlewareInterface
             \Hyperf\Support\env('JWT_OPEN', false),
         ];
 
-        // 不开启验证 && 是权限相关理由 直接通过
+        // 不开启验证 || 是权限相关理由 || 直接通过
         if (! $isOpenCheck || $isAuthPath || $selfCalled) {
             return $handler->handle($request);
         }
