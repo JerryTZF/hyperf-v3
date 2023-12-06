@@ -15,60 +15,73 @@ namespace App\Lib\Encrypt;
 use phpseclib3\Crypt\RSA;
 use phpseclib3\Crypt\RSA\PrivateKey;
 
-// 在线工具测试:
-// https://try8.cn/tool/cipher/rsa
+/**
+ * Rsa加解密.
+ * Class RsaWithPHPSeclib.
+ * 在线工具测试: https://try8.cn/tool/cipher/rsa.
+ */
 class RsaWithPHPSeclib
 {
     /**
      * RSA私钥实例.
+     * @var PrivateKey|RSA rsa实例
      */
     private PrivateKey|RSA $privateKey;
 
     /**
      * 秘钥保存路径.
+     * @var string 秘钥路径
      */
     private string $path;
 
     /**
      * 秘钥保存格式(PKCS8|PKCS1).
      * @see https://phpseclib.com/docs/publickeys#saving-keys
+     * @var string 保存格式
      */
     private string $keyFormat;
 
     /**
      * 可用的hash算法.
+     * @var array|string[]
      */
     private array $availableHash = ['md2', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'sha224'];
 
     /**
      * 可用的加密填充方式.
+     * @var array|int[]
      */
     private array $availableEncryptPadding = [RSA::ENCRYPTION_OAEP, RSA::ENCRYPTION_PKCS1, RSA::ENCRYPTION_NONE];
 
     /**
      * 私钥加签可用的填充方式.
+     * @var array|int[]
      */
     private array $availableSignaturePadding = [RSA::SIGNATURE_PKCS1, RSA::SIGNATURE_PSS, RSA::SIGNATURE_RELAXED_PKCS1];
 
     /**
      * 加解密填充方式(RSA::ENCRYPTION_OAEP, RSA::ENCRYPTION_PKCS1, RSA::ENCRYPTION_NONE).
      * @see https://phpseclib.com/docs/rsa#encryption--decryption
+     * @var int 填充
      */
     private int $encryptPadding;
 
     /**
      * 私钥加签填充方式.
      * @see https://phpseclib.com/docs/rsa#creating--verifying-signatures
+     * @var int 填充
      */
     private int $signaturePadding;
 
     /**
      * 加解(解密)|加签(验签) 单向HASH算法('md2', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'sha224').
+     * @var string 'md5|md2....'
      */
     private string $hash;
 
     /**
      * 加解(解密)|加签(验签) 单向mgfHASH算法('md2', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'sha224').
+     * @var string 'md5|md2....'
      */
     private string $mgfHash;
 
@@ -107,6 +120,8 @@ class RsaWithPHPSeclib
 
     /**
      * 公钥加密.
+     * @param array|string $message 待加密数据
+     * @return string 加密后数据
      */
     public function publicKeyEncrypt(array|string $message): string
     {
@@ -117,6 +132,8 @@ class RsaWithPHPSeclib
 
     /**
      * 私钥解密.
+     * @param string $encryptText 待解密数据
+     * @return array|string 解密后数据
      */
     public function privateKeyDecrypt(string $encryptText): array|string
     {
@@ -127,6 +144,8 @@ class RsaWithPHPSeclib
 
     /**
      * 私钥加签.
+     * @param array|string $message 待加密数据
+     * @return string 加密后数据
      */
     public function privateKeySign(array|string $message): string
     {
@@ -137,6 +156,9 @@ class RsaWithPHPSeclib
 
     /**
      * 公钥验签.
+     * @param array|string $message 待加签数据
+     * @param string $signature 签名
+     * @return bool 是否合法
      */
     public function publicKeyVerifySign(array|string $message, string $signature): bool
     {
@@ -162,6 +184,8 @@ class RsaWithPHPSeclib
 
     /**
      * 构建不同场景下的合法私钥.
+     * @param string $mode 模式
+     * @return PrivateKey|RSA rsa实例
      */
     private function buildPrivateKey(string $mode = 'encrypt'): PrivateKey|RSA
     {

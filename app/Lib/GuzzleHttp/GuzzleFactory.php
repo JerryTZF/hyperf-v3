@@ -25,6 +25,8 @@ class GuzzleFactory
      * 获取带有连接池的协程的guzzle客户端.
      * @explain make 从di中获取单例.
      * @see https://docs.guzzlephp.org/en/stable/
+     * @param array $options 选项
+     * @return Client 客户端
      */
     public static function getCoroutineGuzzleClient(array $options = []): Client
     {

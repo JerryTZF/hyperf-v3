@@ -28,13 +28,15 @@ class FileSystem
 {
     /**
      * 文件系统实例.
+     * @var \League\Flysystem\Filesystem 实例
      */
     private \League\Flysystem\Filesystem $fileInstance;
 
     /**
      * 适配器请根据对应的配置进行填写.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param string $adapterName 适配名称
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
      */
     public function __construct(string $adapterName = 'oss')
     {
@@ -44,8 +46,10 @@ class FileSystem
 
     /**
      * 读取文件, 输出文件内容.
-     * @return resource|string
-     * @throws FilesystemException
+     * @param string $filename 文件名
+     * @param bool $withStream 是否为文件流
+     * @return resource|string 资源|字符串
+     * @throws FilesystemException 异常
      */
     public function read(string $filename, bool $withStream = false)
     {
@@ -55,7 +59,9 @@ class FileSystem
 
     /**
      * 下载文件.
-     * @throws FilesystemException
+     * @param string $filename 文件名
+     * @return ResponseInterface 响应
+     * @throws FilesystemException 异常
      */
     public function download(string $filename): ResponseInterface
     {
@@ -70,7 +76,11 @@ class FileSystem
 
     /**
      * 写入文件.
-     * @throws FilesystemException
+     * @param string $filename 文件名
+     * @param mixed $content 内容
+     * @param bool $withStream 是否为文件流
+     * @param bool $isCover 是否覆盖
+     * @throws FilesystemException 异常
      */
     public function write(string $filename, mixed $content, bool $withStream = false, bool $isCover = true): void
     {
@@ -83,7 +93,8 @@ class FileSystem
 
     /**
      * 删除文件.
-     * @throws FilesystemException
+     * @param string $path 路径
+     * @throws FilesystemException 异常
      */
     public function delete(string $path): void
     {
@@ -92,8 +103,10 @@ class FileSystem
 
     /**
      * 获取目录下文件列表.
-     * @param bool $recursive 是否递归查询
-     * @throws FilesystemException
+     * @param string $path 路径
+     * @param bool $recursive 是否递归
+     * @return array 文件列表
+     * @throws FilesystemException 异常
      */
     public function list(string $path, bool $recursive = false): array
     {
@@ -102,7 +115,9 @@ class FileSystem
 
     /**
      * 获取文件的元数据.
-     * @throws FilesystemException
+     * @param string $filename 文件名
+     * @return array string[][]
+     * @throws FilesystemException 异常
      */
     #[ArrayShape(['visibility' => 'mixed', 'size' => 'mixed', 'mime' => 'mixed', 'last_modified' => 'int'])]
     public function getFileMetaData(string $filename): array
@@ -117,6 +132,7 @@ class FileSystem
 
     /**
      * 获取文件系统实例.
+     * @return \League\Flysystem\Filesystem 实例
      */
     public function getInstance(): \League\Flysystem\Filesystem
     {

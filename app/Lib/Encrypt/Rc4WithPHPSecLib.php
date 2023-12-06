@@ -18,11 +18,13 @@ class Rc4WithPHPSecLib
 {
     /**
      * RC4实例对象.
+     * @var RC4 rc4实例
      */
     private RC4 $RC4;
 
     /**
      * 秘钥.
+     * @var string ''
      */
     private string $key;
 
@@ -40,6 +42,8 @@ class Rc4WithPHPSecLib
 
     /**
      * 加密.
+     * @param array|string $message 待加密数据
+     * @return string 加密后数据
      */
     public function encrypt(array|string $message): string
     {
@@ -49,6 +53,8 @@ class Rc4WithPHPSecLib
 
     /**
      * 解密.
+     * @param string $encryptData 待解密数据
+     * @return array|string 解密后数据
      */
     public function decrypt(string $encryptData): array|string
     {
@@ -58,6 +64,8 @@ class Rc4WithPHPSecLib
 
     /**
      * 原生加密.
+     * @param array|string $message 待加密数据
+     * @return string 加密后数据
      */
     public function encryptNative(array|string $message): string
     {
@@ -67,6 +75,8 @@ class Rc4WithPHPSecLib
 
     /**
      * 原生解密.
+     * @param string $encryptData 待解密数据
+     * @return array|string 解密后数据
      */
     public function decryptNative(string $encryptData): array|string
     {
@@ -76,6 +86,9 @@ class Rc4WithPHPSecLib
 
     /**
      * 原生算法.
+     * @param string $key 秘钥
+     * @param string $data 待解密数据
+     * @return string 加密后数据
      */
     private function native(string $key, string $data): string
     {

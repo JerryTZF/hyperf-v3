@@ -69,6 +69,8 @@ class Barcode
 
     /**
      * 获取条形码字符串.
+     * @param string $content 字符串内容
+     * @return string 文件流字符串
      */
     public function getStream(string $content = ''): string
     {
@@ -77,6 +79,8 @@ class Barcode
 
     /**
      * 保存条码到本地.
+     * @param string $filename 文件名
+     * @param string $content 文件流字符串
      */
     public function move(string $filename, string $content = ''): void
     {

@@ -19,6 +19,10 @@ use Hyperf\Redis\Redis;
 
 class Captcha
 {
+    /**
+     * redis 实例.
+     * @var mixed|Redis Redis实例
+     */
     private Redis $redis;
 
     public function __construct()
@@ -29,6 +33,7 @@ class Captcha
     /**
      * 获取验证
      * @param string $clientUniqueCode 不同的客户端使用不同的唯一标识
+     * @return string 文件流字符串
      */
     public function getStream(string $clientUniqueCode): string
     {
@@ -48,6 +53,9 @@ class Captcha
 
     /**
      * 验证验证码
+     * @param string $captcha 验证码
+     * @param string $clientUniqueCode 唯一码
+     * @return bool 是否验证通过
      */
     public function verify(string $captcha, string $clientUniqueCode): bool
     {
