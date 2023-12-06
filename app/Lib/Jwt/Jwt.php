@@ -44,7 +44,7 @@ class Jwt
     /**
      * 获取jwt.
      */
-    public static function createJwt(array|string|int $data, int $expire = 0): string
+    public static function createJwt(array|int|string $data, int $expire = 0): string
     {
         $key = \Hyperf\Support\env('JWT_KEY', 'hyperf');
         $now = Carbon::now()->timestamp;

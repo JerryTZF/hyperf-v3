@@ -13,39 +13,30 @@ declare(strict_types=1);
 namespace App\Model;
 
 /**
- * @property int $id
- * @property string $account
- * @property string $password
- * @property string $phone
- * @property int $age
- * @property string $sex
- * @property string $jwt_token
- * @property string $refresh_jwt_token
- * @property string $status
- * @property int $role_id
- * @property string $create_time
- * @property string $update_time
+ * @protected int $id
+ * @protected string $role_name
+ * @protected int $auth_id
+ * @protected string $status
+ * @protected string $create_time
+ * @protected string $update_time
+ * Class Roles
  */
-class Users extends Model
+class Roles extends Model
 {
     public const CREATED_AT = 'create_time';
 
     public const UPDATED_AT = 'update_time';
 
-    public const STATUS_BAN = 'ban';
-
-    public const STATUS_ACTIVE = 'active';
-
-    protected array $status = ['ban', 'active'];
-
     protected string $primaryKey = 'id';
+
+    protected array $status = ['active', 'delete', 'pause'];
 
     protected ?string $connection = 'default';
 
     /**
      * 表名称.
      */
-    protected ?string $table = 'users';
+    protected ?string $table = 'roles';
 
     /**
      * 允许被批量赋值的字段集合(黑名单).
@@ -57,8 +48,7 @@ class Users extends Model
      */
     protected array $casts = [
         'id' => 'integer',
-        'age' => 'integer',
-        'role_id' => 'integer',
+        'auth_id' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
     ];
@@ -70,7 +60,6 @@ class Users extends Model
 
     /**
      * status修改器.
-     * @param mixed $value
      */
     public function setStatusAttribute(mixed $value): void
     {

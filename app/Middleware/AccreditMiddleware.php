@@ -20,6 +20,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -47,29 +48,37 @@ class AccreditMiddleware implements MiddlewareInterface
 
         // 非权限路由且不存在jwt
         if ($authorization === '') {
-            $error = ['code' => ErrorCode::JWT_EMPTY_ERR, 'msg' => ErrorCode::getMessage(ErrorCode::JWT_EMPTY_ERR), 'status' => false, 'data' => []];
-            $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json')
-                ->withBody(new SwooleStream(json_encode($error, JSON_UNESCAPED_UNICODE)));
-            Context::set(ResponseInterface::class, $response);
-            return $response;
+            return $this->buildErrorResponse(ErrorCode::JWT_EMPTY_ERR);
         }
         $jwt = Str::startsWith($authorization, 'Bearer') ? Str::after($authorization, 'Bearer ') : $authorization;
         $originalData = Jwt::explainJwt($jwt); // 解析过程中的异常, 会被 JwtExceptionHandler 捕获, 这里无需处理
 
         // token是否被主动失效
         $uid = $originalData['data']['uid'] ?? 0;
-        $storageJwt = Users::query()->where(['id' => $uid])->value('jwt_token');
+        $storageJwt = Users::query()->where(['id' => $uid, 'status' => Users::STATUS_ACTIVE])->value('jwt_token');
         if ($storageJwt !== $jwt) {
-            $error = ['code' => ErrorCode::DO_JWT_FAIL, 'msg' => ErrorCode::getMessage(ErrorCode::DO_JWT_FAIL), 'status' => false, 'data' => []];
-            $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json')
-                ->withBody(new SwooleStream(json_encode($error, JSON_UNESCAPED_UNICODE)));
-            Context::set(ResponseInterface::class, $response);
-            return $response;
+            return $this->buildErrorResponse(ErrorCode::DO_JWT_FAIL);
         }
 
         // TODO 可以根据 payload 的数据进行其他的判断操作. 这里直接将 payload 向下游传递.
         $request = Context::set(ServerRequestInterface::class, $request->withAttribute('jwt', $originalData));
 
         return $handler->handle($request);
+    }
+
+    private function buildErrorResponse(int $errorCode): MessageInterface|ResponseInterface
+    {
+        $error = [
+            'code' => $errorCode,
+            'msg' => ErrorCode::getMessage($errorCode),
+            'status' => false,
+            'data' => [],
+        ];
+        $response = Context::get(ResponseInterface::class);
+        $response = $response->withStatus(401)
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody(new SwooleStream(json_encode($error, JSON_UNESCAPED_UNICODE)));
+        Context::set(ResponseInterface::class, $response);
+        return $response;
     }
 }
