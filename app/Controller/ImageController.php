@@ -10,29 +10,38 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Controller\Test;
+namespace App\Controller;
 
 use App\Constants\ConstCode;
-use App\Controller\AbstractController;
 use App\Lib\File\FileSystem;
 use App\Lib\Image\Barcode;
 use App\Lib\Image\Captcha;
 use App\Lib\Image\Qrcode;
 use App\Request\ImageRequest;
+use Exception;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
+use League\Flysystem\FilesystemException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zxing\QrReader;
 
-// 二维码、条形码、验证码常规使用
+/**
+ * 二维码、条形码、验证码常规使用.
+ * Class ImageController.
+ */
 #[Controller(prefix: 'image')]
 class ImageController extends AbstractController
 {
-    // 制作二维码且上传到OSS返回二维码地址
+    /**
+     * 制作二维码且上传到OSS返回二维码地址.
+     * @param ImageRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     * @throws FilesystemException 异常抛出
+     */
     #[Scene(scene: 'qrcode')]
     #[PostMapping(path: 'qrcode/upload')]
     public function uploadQrcodeToOss(ImageRequest $request): array
@@ -48,7 +57,12 @@ class ImageController extends AbstractController
         return $this->result->setData(['url' => ConstCode::OSS_DOMAIN . $path])->getResult();
     }
 
-    // 制作条形码上传到OSS返回条形码地址
+    /**
+     * 制作条形码上传到OSS返回条形码地址
+     * @param ImageRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     * @throws FilesystemException 异常抛出
+     */
     #[Scene(scene: 'barcode')]
     #[PostMapping(path: 'barcode/upload')]
     public function uploadBarcodeToOss(ImageRequest $request): array
@@ -63,7 +77,11 @@ class ImageController extends AbstractController
         return $this->result->setData(['url' => ConstCode::OSS_DOMAIN . $path])->getResult();
     }
 
-    // 识别二维码
+    /**
+     * 识别二维码.
+     * @param ImageRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
     #[Scene(scene: 'decode')]
     #[PostMapping(path: 'qrcode/decode')]
     public function decodeQrcode(ImageRequest $request): array
@@ -80,7 +98,12 @@ class ImageController extends AbstractController
         return $this->result->setData(['text' => $text])->getResult();
     }
 
-    // 下载二维码
+    /**
+     * 下载二维码
+     * @param ImageRequest $request 验证请求类
+     * @return MessageInterface|ResponseInterface 流式响应
+     * @throws Exception 异常抛出
+     */
     #[Scene(scene: 'qrcode')]
     #[PostMapping(path: 'qrcode/download')]
     public function downloadQrcode(ImageRequest $request): MessageInterface|ResponseInterface
@@ -97,7 +120,11 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($qrCodeString));
     }
 
-    // 下载条形码
+    /**
+     * 下载条形码.
+     * @param ImageRequest $request 验证请求类
+     * @return MessageInterface|ResponseInterface 流式响应
+     */
     #[Scene(scene: 'barcode')]
     #[PostMapping(path: 'barcode/download')]
     public function downloadBarcode(ImageRequest $request): MessageInterface|ResponseInterface
@@ -113,7 +140,12 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($barcodeString));
     }
 
-    // 展示二维码
+    /**
+     * 展示二维码
+     * @param ImageRequest $request 验证请求类
+     * @return MessageInterface|ResponseInterface 流式响应
+     * @throws Exception 异常抛出
+     */
     #[Scene(scene: 'qrcode')]
     #[PostMapping(path: 'qrcode/show')]
     public function qrcode(ImageRequest $request): MessageInterface|ResponseInterface
@@ -126,7 +158,11 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($qrCodeString));
     }
 
-    // 展示条形码
+    /**
+     * 展示条形码
+     * @param ImageRequest $request 验证请求类
+     * @return MessageInterface|ResponseInterface 流式响应
+     */
     #[Scene(scene: 'barcode')]
     #[PostMapping(path: 'barcode/show')]
     public function barcode(ImageRequest $request): MessageInterface|ResponseInterface
@@ -138,7 +174,11 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($barcodeString));
     }
 
-    // 获取验证码
+    /**
+     * 获取验证码.
+     * @param ImageRequest $request 验证请求类
+     * @return MessageInterface|ResponseInterface 流式响应
+     */
     #[Scene(scene: 'captcha')]
     #[GetMapping(path: 'captcha/show')]
     public function getCaptcha(ImageRequest $request): MessageInterface|ResponseInterface
@@ -152,7 +192,11 @@ class ImageController extends AbstractController
             ->withBody(new SwooleStream($captchaString));
     }
 
-    // 验证验证码
+    /**
+     * 验证验证码.
+     * @param ImageRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
     #[Scene(scene: 'verify')]
     #[GetMapping(path: 'captcha/verify')]
     public function verifyCaptcha(ImageRequest $request): array
@@ -166,7 +210,11 @@ class ImageController extends AbstractController
         return $this->result->setData(['is_success' => $isSuccess])->getResult();
     }
 
-    // 构建二维码配置
+    /**
+     * 构建二维码配置.
+     * @param ImageRequest $request 验证请求类
+     * @return array 关联数组
+     */
     private function buildQrcodeConfig(ImageRequest $request): array
     {
         $logo = $request->file('logo');

@@ -30,8 +30,18 @@ use phpseclib3\Exception\UnsupportedOperationException;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
+/**
+ * PHPSeclib包异常处理器.
+ * Class PHPSeclibExceptionHandler.
+ */
 class PHPSeclibExceptionHandler extends ExceptionHandler
 {
+    /**
+     * 处理类.
+     * @param Throwable $throwable 异常
+     * @param ResponseInterface $response 响应接口实现类
+     * @return ResponseInterface 响应接口实现类
+     */
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         // 禁止异常冒泡
@@ -46,6 +56,11 @@ class PHPSeclibExceptionHandler extends ExceptionHandler
             ], JSON_UNESCAPED_UNICODE)));
     }
 
+    /**
+     * 是否满足处理条件.
+     * @param Throwable $throwable 异常
+     * @return bool true|false
+     */
     public function isValid(Throwable $throwable): bool
     {
         return match ($throwable) {

@@ -15,6 +15,10 @@ namespace App\Constants;
 use Hyperf\Constants\AbstractConstants;
 use Hyperf\Constants\Annotation\Constants;
 
+/**
+ * 业务逻辑错误码和错误信息.
+ * Class ErrorCode.
+ */
 #[Constants]
 class ErrorCode extends AbstractConstants
 {

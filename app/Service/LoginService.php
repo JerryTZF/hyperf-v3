@@ -25,6 +25,9 @@ class LoginService extends AbstractService
 {
     /**
      * 获取JWT.
+     * @param string $account 账号
+     * @param string $password 密码
+     * @return array ['jwt' => 'string', 'refresh_jwt' => 'string']
      */
     #[ArrayShape(['jwt' => 'string', 'refresh_jwt' => 'string'])]
     public function getJwt(string $account, string $password): array
@@ -49,6 +52,9 @@ class LoginService extends AbstractService
 
     /**
      * 注册.
+     * @param string $account 账号
+     * @param string $password 密码
+     * @param string $phone 手机号
      */
     public function register(string $account, string $password, string $phone): void
     {
@@ -83,6 +89,7 @@ class LoginService extends AbstractService
 
     /**
      * 使用户存储的jwt_token失效.
+     * @param string $jwt jwt
      */
     public function deactivateJwt(string $jwt): void
     {
@@ -99,6 +106,8 @@ class LoginService extends AbstractService
 
     /**
      * 解析jwt.
+     * @param string $jwt jwt
+     * @return array ['exp' => "int|mixed", 'uid' => "int|mixed", 'jwt_data' => "mixed", 'exp_date' => "string", 'iat_date' => "string"]
      */
     public function explainJwt(string $jwt): array
     {

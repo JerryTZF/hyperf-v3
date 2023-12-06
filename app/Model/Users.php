@@ -70,7 +70,6 @@ class Users extends Model
 
     /**
      * status修改器.
-     * @param mixed $value
      */
     public function setStatusAttribute(mixed $value): void
     {

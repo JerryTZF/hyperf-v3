@@ -19,8 +19,18 @@ use PhpOffice\PhpSpreadsheet\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
+/**
+ * phpoffice包异常处理器.
+ * Class OfficeExceptionHandler.
+ */
 class OfficeExceptionHandler extends ExceptionHandler
 {
+    /**
+     * 处理类.
+     * @param Throwable $throwable 异常
+     * @param ResponseInterface $response 响应接口实现类
+     * @return ResponseInterface 响应接口实现类
+     */
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         // 禁止异常冒泡
@@ -35,6 +45,11 @@ class OfficeExceptionHandler extends ExceptionHandler
             ], JSON_UNESCAPED_UNICODE)));
     }
 
+    /**
+     * 是否满足处理条件.
+     * @param Throwable $throwable 异常
+     * @return bool true|false
+     */
     public function isValid(Throwable $throwable): bool
     {
         return $throwable instanceof Exception;

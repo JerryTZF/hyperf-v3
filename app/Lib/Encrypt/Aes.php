@@ -16,8 +16,10 @@ class Aes
 {
     /**
      * ecb方式加密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
-     * @param array|string $data 待加密的数据
+     * @param array|string $data 待加密数据
      * @param string $key 秘钥
+     * @param string $cipher 加密类型
+     * @return string 加密后数据(Hex)
      */
     public static function ecbEncryptHex(array|string $data, string $key, string $cipher = 'AES-128-ECB'): string
     {
@@ -28,6 +30,10 @@ class Aes
 
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
+     * @param string $encryptData 待解密数据
+     * @param string $key 秘钥
+     * @param string $cipher 加密类型
+     * @return array|string 解密后数据(Hex)
      */
     public static function ecbDecryptHex(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): array|string
     {
@@ -38,6 +44,10 @@ class Aes
 
     /**
      * ecb方式加密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
+     * @param array|string $data 待加密数据
+     * @param string $key 秘钥
+     * @param string $cipher 加密类型
+     * @return string 加密后数据(Base64)
      */
     public static function ecbEncryptBase64(array|string $data, string $key, string $cipher = 'AES-128-ECB'): string
     {
@@ -48,6 +58,10 @@ class Aes
 
     /**
      * ecb方式解密. (不需要偏移量 && 默认 PKCS7Padding 填充方式).
+     * @param string $encryptData 待解密数据
+     * @param string $key 秘钥
+     * @param string $cipher 加密类型
+     * @return array|string 解密后数据(Base64)
      */
     public static function ecbDecryptBase64(string $encryptData, string $key, string $cipher = 'AES-128-ECB'): array|string
     {
@@ -58,6 +72,11 @@ class Aes
 
     /**
      * CBC方式加密(PKCS7Padding 填充方式).
+     * @param array|string $data 待加密数据
+     * @param string $key 秘钥
+     * @param string $iv 偏移量
+     * @param string $cipher 加密方式
+     * @return string 加密后数据
      */
     public static function cbcEncryptHex(array|string $data, string $key, string $iv, string $cipher = 'AES-128-CBC'): string
     {
@@ -69,6 +88,11 @@ class Aes
 
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
+     * @param string $encryptData 待解密数据
+     * @param string $key 秘钥
+     * @param string $iv 偏移量
+     * @param string $cipher 加密方式
+     * @return array|string 解密后数据
      */
     public static function cbcDecryptHex(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): array|string
     {
@@ -80,6 +104,11 @@ class Aes
 
     /**
      * CBC方式加密(PKCS7Padding 填充方式).
+     * @param array|string $data 待加密数据
+     * @param string $key 秘钥
+     * @param string $iv 偏移量
+     * @param string $cipher 加密方式
+     * @return string 加密后数据
      */
     public static function cbcEncryptBase64(array|string $data, string $key, string $iv, string $cipher = 'AES-128-CBC'): string
     {
@@ -91,6 +120,11 @@ class Aes
 
     /**
      * CBC方式解密(PKCS7Padding 填充方式).
+     * @param string $encryptData 待解密数据
+     * @param string $key 秘钥
+     * @param string $iv 偏移量
+     * @param string $cipher 加密方式
+     * @return array|string 解密后数据
      */
     public static function cbcDecryptBase64(string $encryptData, string $key, string $iv, string $cipher = 'AES-128-CBC'): array|string
     {

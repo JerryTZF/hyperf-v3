@@ -33,14 +33,20 @@ use Psr\SimpleCache\CacheInterface;
  */
 class Cache
 {
+    /**
+     * 事件触发器.
+     * @var eventDispatcherInterface 触发器实体类
+     */
     #[Inject]
     protected EventDispatcherInterface $dispatcher;
 
     /**
      * 静态调用.
-     * @return mixed
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param mixed $action 方法
+     * @param mixed $args 参数
+     * @return mixed 返回
+     * @throws ContainerExceptionInterface 异常实体类
+     * @throws NotFoundExceptionInterface 异常实体类
      */
     public static function __callStatic(mixed $action, mixed $args)
     {
@@ -49,8 +55,9 @@ class Cache
 
     /**
      * 获取实例.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @return CacheInterface 缓存实体类
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
      */
     public static function getInstance(): CacheInterface
     {
@@ -59,6 +66,8 @@ class Cache
 
     /**
      * 清除缓存.
+     * @param string $listener 监听器
+     * @param array $args 参数
      */
     public function flush(string $listener, array $args)
     {

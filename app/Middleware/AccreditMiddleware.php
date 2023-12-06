@@ -32,10 +32,10 @@ class AccreditMiddleware implements MiddlewareInterface
     #[Inject]
     protected RequestInterface $request;
 
+    // 原则上只检测jwt相关, 权限等需要再其他中间件实现.
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        [$response, $authorization, $isAuthPath, $isOpenCheck] = [
-            Context::get(ResponseInterface::class),
+        [$authorization, $isAuthPath, $isOpenCheck] = [
             $request->hasHeader('authorization') ? $request->getHeaderLine('authorization') : '',
             $this->request->is('auth/*'),
             \Hyperf\Support\env('JWT_OPEN', false),
@@ -53,7 +53,7 @@ class AccreditMiddleware implements MiddlewareInterface
         $jwt = Str::startsWith($authorization, 'Bearer') ? Str::after($authorization, 'Bearer ') : $authorization;
         $originalData = Jwt::explainJwt($jwt); // 解析过程中的异常, 会被 JwtExceptionHandler 捕获, 这里无需处理
 
-        // token是否被主动失效
+        // JWT是否被主动失效
         $uid = $originalData['data']['uid'] ?? 0;
         $storageJwt = Users::query()->where(['id' => $uid, 'status' => Users::STATUS_ACTIVE])->value('jwt_token');
         if ($storageJwt !== $jwt) {

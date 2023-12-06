@@ -50,20 +50,11 @@ return (new PhpCsFixer\Config())
                 'declare',
             ],
         ],
-        'general_phpdoc_annotation_remove' => [
-            'annotations' => [
-                'author',
-            ],
-        ],
         'ordered_imports' => [
             'imports_order' => [
                 'class', 'function', 'const',
             ],
             'sort_algorithm' => 'alpha',
-        ],
-        'single_line_comment_style' => [
-            'comment_types' => [
-            ],
         ],
         'yoda_style' => [
             'always_move_variable' => false,
@@ -73,27 +64,27 @@ return (new PhpCsFixer\Config())
         'phpdoc_align' => [
             'align' => 'left',
         ],
-        'multiline_whitespace_before_semicolons' => [
+        'multiline_whitespace_before_semicolons' => [ // 分号紧跟结束语句
             'strategy' => 'no_multi_line',
         ],
-        'constant_case' => [
+        'constant_case' => [ // 关键字小写
             'case' => 'lower',
         ],
-        'class_attributes_separation' => true,
-        'combine_consecutive_unsets' => true,
-        'declare_strict_types' => true,
-        'linebreak_after_opening_tag' => true,
-        'lowercase_static_reference' => true,
-        'no_useless_else' => true,
-        'no_unused_imports' => true,
-        'not_operator_with_successor_space' => true,
-        'not_operator_with_space' => false,
-        'ordered_class_elements' => true,
-        'php_unit_strict' => false,
-        'phpdoc_separation' => false,
-        'single_quote' => true,
-        'standardize_not_equals' => true,
-        'multiline_comment_opening_closing' => true,
+        'class_attributes_separation' => true, // 关联数组注释推荐
+        'combine_consecutive_unsets' => true, // 合并unset
+        'declare_strict_types' => true, // 严格模式
+        'linebreak_after_opening_tag' => true, // 关键字后换行
+        'lowercase_static_reference' => true, // 静态调用小写化
+        'no_useless_else' => true, // 移除非必要的else
+        'no_unused_imports' => true, // 移除无用的引用
+        'not_operator_with_successor_space' => true, // 取反(!)增加右空格
+        'not_operator_with_space' => false, // 取反(!)增加左右空格
+        'ordered_class_elements' => true, // 对类/接口/特征/枚举的元素进行排序。
+        'php_unit_strict' => false, // PHPUnit 方法（如 assertSame）应取代 assertEquals。
+        'phpdoc_separation' => false, // PHPDoc 中的注释应该组合在一起，以便相同类型的注释紧跟在一起，并且不同类型的注释由单个空行分隔
+        'single_quote' => true, // 单引号替代双引号
+        'standardize_not_equals' => true, // Replace all <> with !=
+        'multiline_comment_opening_closing' => false, // 必须以两个星号开头，多行注释必须以单个星号开头，在开头的斜线后面
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()

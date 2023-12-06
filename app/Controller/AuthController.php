@@ -10,16 +10,13 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Constants;
+namespace App\Controller;
+
+use Hyperf\HttpServer\Annotation\Controller;
 
 /**
- * 业务常量.
- * Class ConstCode.
+ * 权限操作相关控制器.
+ * Class AuthController.
  */
-class ConstCode
-{
-    /**
-     * OSS域名.
-     */
-    public const OSS_DOMAIN = 'https://img.tzf-foryou.xyz';
-}
+#[Controller(prefix: 'authority')]
+class AuthController extends AbstractController {}

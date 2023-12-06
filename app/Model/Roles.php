@@ -27,6 +27,12 @@ class Roles extends Model
 
     public const UPDATED_AT = 'update_time';
 
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_DELETE = 'delete';
+
+    public const STATUS_PAUSE = 'pause';
+
     protected string $primaryKey = 'id';
 
     protected array $status = ['active', 'delete', 'pause'];

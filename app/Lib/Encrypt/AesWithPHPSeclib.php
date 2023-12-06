@@ -18,6 +18,7 @@ class AesWithPHPSeclib
 {
     /**
      * aes实例.
+     * @var \phpseclib3\Crypt\AES 实例
      */
     private \phpseclib3\Crypt\AES $aesInstance;
 
@@ -52,6 +53,8 @@ class AesWithPHPSeclib
 
     /**
      * 加密输出Hex字符串.
+     * @param array|string $data 待加密数据
+     * @return string 加密后数据
      */
     public function encryptHex(array|string $data): string
     {
@@ -61,6 +64,8 @@ class AesWithPHPSeclib
 
     /**
      * 解密Hex字符串.
+     * @param string $decryptText 待解密数据
+     * @return array|string 解密后数据
      */
     public function decryptHex(string $decryptText): array|string
     {
@@ -70,6 +75,8 @@ class AesWithPHPSeclib
 
     /**
      * 加密输出base64字符串.
+     * @param array|string $data 带加密数据
+     * @return string 加密后数据
      */
     public function encryptBase64(array|string $data): string
     {
@@ -79,6 +86,8 @@ class AesWithPHPSeclib
 
     /**
      * 解密Base64字符串.
+     * @param string $decryptText 待解密数据
+     * @return array|string 解密后数据
      */
     public function decryptBase64(string $decryptText): array|string
     {

@@ -19,24 +19,55 @@ use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Stringable\Str;
 use Psr\Container\ContainerInterface;
 
+/**
+ * 控制器抽象类.
+ * Class AbstractController.
+ */
 abstract class AbstractController
 {
+    /**
+     * 上传文件临时路径.
+     * @var string './runtime/upload/'
+     */
     protected string $uploadPath;
 
+    /**
+     * jwt的载荷.
+     * @var array|mixed ['iss' => '', 'sub' => '', 'aud' => '', ...]
+     */
     protected array $jwtPayload;
 
+    /**
+     * 容器实例.
+     * @var ContainerInterface 容器接口类
+     */
     #[Inject]
     protected ContainerInterface $container;
 
+    /**
+     * 请求实例.
+     * @var RequestInterface 请求接口类
+     */
     #[Inject]
     protected RequestInterface $request;
 
+    /**
+     * 响应实例.
+     * @var responseInterface 响应接口类
+     */
     #[Inject]
     protected ResponseInterface $response;
 
+    /**
+     * 结果集.
+     * @var Result 结果集实体类
+     */
     #[Inject]
     protected Result $result;
 
+    /**
+     * 构造函数.
+     */
     public function __construct()
     {
         $path = BASE_PATH . '/runtime/upload/';
@@ -50,6 +81,7 @@ abstract class AbstractController
 
     /**
      * 获取请求IP.
+     * @return mixed 'XXX.XXX.XXX.XXX'
      */
     public function getRequestIp(): mixed
     {
