@@ -14,14 +14,9 @@ namespace App\Controller;
 
 use App\Model\Auths;
 use App\Service\AuthService;
-use Carbon\Carbon;
-use Hyperf\Collection\Arr;
-use Hyperf\Context\ApplicationContext;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
-use Hyperf\HttpServer\Router\DispatcherFactory;
-use Hyperf\HttpServer\Router\Handler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -47,6 +42,16 @@ class AuthController extends AbstractController
     }
 
     /**
+     * 获取权限节点.
+     * @return array []
+     */
+    #[PostMapping(path: 'auth/list')]
+    public function getAuthsList(): array
+    {
+        return $this->result->getResult();
+    }
+
+    /**
      * 同步API路由节点信息.
      * @return array []
      * @throws ContainerExceptionInterface 异常
@@ -55,24 +60,10 @@ class AuthController extends AbstractController
     #[PostMapping(path: 'auth/sync')]
     public function syncAuthsTable(): array
     {
-        $factory = ApplicationContext::getContainer()->get(DispatcherFactory::class);
-        $routes = Arr::first($factory->getRouter('http')->getData(), function ($v, $k) {return ! empty($v); });
-        $nowDate = Carbon::now()->toDateTimeString();
+        $routesInfo = $this->service->getRoutesInfoWithoutDB();
         Auths::truncate();
-        foreach ($routes as $method => $value) {
-            /** @var Handler $info */
-            foreach ($value as $info) {
-                [$callback, $route] = [$info->callback, $info->route];
-                $where = [
-                    'method' => $method,
-                    'route' => $route,
-                    'controller' => $callback[0],
-                    'function' => $callback[1],
-                ];
-                Auths::firstOrCreate($where, ['create_time' => $nowDate, 'update_time' => $nowDate]);
-            }
-        }
+        Auths::insert($routesInfo);
 
-        return $this->result->getResult();
+        return $this->result->setData($routesInfo)->getResult();
     }
 }
