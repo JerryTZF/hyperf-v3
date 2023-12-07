@@ -38,11 +38,11 @@ class AccreditMiddleware implements MiddlewareInterface
         [$selfCalled, $authorization, $isAuthPath, $isOpenCheck] = [
             $request->hasHeader('x-self-called'),
             $request->hasHeader('authorization') ? $request->getHeaderLine('authorization') : '',
-            $this->request->is('auth/*'),
+            $this->request->is('login/*'),
             \Hyperf\Support\env('JWT_OPEN', false),
         ];
 
-        // 不开启验证 || 是权限相关理由 || 直接通过
+        // 不开启验证 || 是权限相关理由 || 系统调用
         if (! $isOpenCheck || $isAuthPath || $selfCalled) {
             return $handler->handle($request);
         }

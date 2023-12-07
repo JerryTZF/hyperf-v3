@@ -29,7 +29,7 @@ class AuthMiddleware implements MiddlewareInterface
         $payload = $this->request->getAttribute('jwt');
         $route = $this->request->getPathInfo();
         // 登录相关不校验
-        if ($this->request->is('auth/*')) {
+        if ($this->request->is('login/*')) {
             return $handler->handle($request);
         }
 

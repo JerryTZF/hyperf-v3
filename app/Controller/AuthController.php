@@ -22,12 +22,14 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Router\DispatcherFactory;
 use Hyperf\HttpServer\Router\Handler;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * 权限操作相关控制器.
  * Class AuthController.
  */
-#[Controller(prefix: 'authority')]
+#[Controller(prefix: 'auth')]
 class AuthController extends AbstractController
 {
     #[Inject]
@@ -44,12 +46,19 @@ class AuthController extends AbstractController
         return $this->result->getResult();
     }
 
+    /**
+     * 同步API路由节点信息.
+     * @return array []
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     */
     #[PostMapping(path: 'auth/sync')]
     public function syncAuthsTable(): array
     {
         $factory = ApplicationContext::getContainer()->get(DispatcherFactory::class);
         $routes = Arr::first($factory->getRouter('http')->getData(), function ($v, $k) {return ! empty($v); });
         $nowDate = Carbon::now()->toDateTimeString();
+        Auths::truncate();
         foreach ($routes as $method => $value) {
             /** @var Handler $info */
             foreach ($value as $info) {

@@ -23,7 +23,7 @@ use Hyperf\Validation\Annotation\Scene;
  * 自有注册、登录体系.
  * Class LoginController.
  */
-#[Controller(prefix: 'auth')]
+#[Controller(prefix: 'login')]
 class LoginController extends AbstractController
 {
     /**
