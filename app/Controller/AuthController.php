@@ -31,8 +31,9 @@ class AuthController extends AbstractController
     protected AuthService $service;
 
     #[PostMapping(path: 'myself/info')]
-    public function getSelfAuthorityInfo()
+    public function getSelfAuthorityInfo(): array
     {
+        return $this->result->getResult();
     }
 
     #[PostMapping(path: 'role/add')]
