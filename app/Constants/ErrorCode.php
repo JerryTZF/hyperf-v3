@@ -76,4 +76,9 @@ class ErrorCode extends AbstractConstants
      * @Message("jwt 缺失")
      */
     public const JWT_EMPTY_ERR = 50009;
+
+    /**
+     * @Message("没有对应的角色")
+     */
+    public const ROLE_EMPTY = 50010;
 }

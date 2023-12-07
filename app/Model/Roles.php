@@ -33,9 +33,9 @@ class Roles extends Model
 
     public const STATUS_PAUSE = 'pause';
 
-    protected string $primaryKey = 'id';
+    public const STATUS_ARR = ['active', 'delete', 'pause'];
 
-    protected array $statusArray = ['active', 'delete', 'pause'];
+    protected string $primaryKey = 'id';
 
     protected ?string $connection = 'default';
 
@@ -69,6 +69,6 @@ class Roles extends Model
      */
     public function setStatusAttribute(mixed $value): void
     {
-        $this->attributes['status'] = in_array($value, $this->statusArray) ? $value : 'active';
+        $this->attributes['status'] = in_array($value, self::STATUS_ARR) ? $value : 'active';
     }
 }

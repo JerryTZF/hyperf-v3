@@ -13,15 +13,17 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\Auths;
+use App\Request\AuthRequest;
 use App\Service\AuthService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\Validation\Annotation\Scene;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * 权限操作相关控制器.
+ * 权限节点操作相关控制器.
  * Class AuthController.
  */
 #[Controller(prefix: 'auth')]
@@ -36,9 +38,32 @@ class AuthController extends AbstractController
         return $this->result->getResult();
     }
 
-    #[PostMapping(path: 'role/add')]
-    public function addRole(): array
+    /**
+     * 权限节点归属于的角色.
+     * @param AuthRequest $request 验证请求类
+     * @return array []
+     */
+    #[PostMapping(path: 'belong/roles')]
+    #[Scene(scene: 'belong')]
+    public function authBelongRole(AuthRequest $request): array
     {
+        $route = $request->input('route');
+        $aid = $request->input('auth_id');
+        return $this->result->setData($this->service->belongRoles($aid, $route))->getResult();
+    }
+
+    /**
+     * 修改权限节点状态.
+     * @param AuthRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'status/update')]
+    #[Scene(scene: 'update')]
+    public function addRole(AuthRequest $request): array
+    {
+        $aid = $request->input('auth_id');
+        $status = $request->input('status');
+        $this->service->updateAuthStatus($aid, $status);
         return $this->result->getResult();
     }
 
@@ -46,10 +71,10 @@ class AuthController extends AbstractController
      * 获取权限节点.
      * @return array []
      */
-    #[PostMapping(path: 'auth/list')]
+    #[PostMapping(path: 'list')]
     public function getAuthsList(): array
     {
-        return $this->result->getResult();
+        return $this->result->setData($this->service->getAuthsInfoWithDB())->getResult();
     }
 
     /**
@@ -58,13 +83,9 @@ class AuthController extends AbstractController
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
      */
-    #[PostMapping(path: 'auth/sync')]
-    public function syncAuthsTable(): array
+    #[PostMapping(path: 'sync/list')]
+    public function getAuthsListAndUpdate(): array
     {
-        $routesInfo = $this->service->getRoutesInfoWithoutDB();
-        Auths::truncate();
-        Auths::insert($routesInfo);
-
-        return $this->result->setData($routesInfo)->getResult();
+        return $this->result->setData($this->service->getAuthsInfoWithoutDB())->getResult();
     }
 }

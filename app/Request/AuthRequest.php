@@ -12,14 +12,16 @@ declare(strict_types=1);
 
 namespace App\Request;
 
+use App\Model\Auths;
 use Hyperf\Validation\Request\FormRequest;
+use Hyperf\Validation\Rule;
 
+// 规则: https://learnku.com/docs/laravel/9.x/validation/12219#189a36
 class AuthRequest extends FormRequest
 {
     protected array $scenes = [
-        'get_jwt' => ['account', 'pwd'],
-        'register' => ['account', 'password', 'password_confirmation', 'phone'],
-        'explain_jwt' => ['jwt'],
+        'update' => ['auth_id', 'status'],
+        'belong' => ['route']
     ];
 
     public function authorize(): bool
@@ -30,29 +32,22 @@ class AuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account' => ['string', 'required'],
-            'pwd' => ['required', 'alpha_num'],
-            'password' => ['required', 'alpha_num', 'confirmed'],
-            'password_confirmation' => ['required', 'same:password'],
-            'phone' => ['required', 'phone'],
-            'jwt' => ['required', 'string'],
+            'status' => ['required', Rule::in(Auths::STATUS_ARR)],
+            'auth_id' => ['required', 'integer'],
+            'route' => ['required', 'string'],
         ];
     }
 
     public function messages(): array
     {
+        $statusString = implode(',', Auths::STATUS_ARR);
         return [
-            'account.string' => 'account 账号必须为字符串',
-            'account.required' => 'account 账号必填',
-            'password.required' => 'password 密码必填',
-            'pwd.required' => '密码必填',
-            'password.alpha_num' => 'password 密码必须是字母或数字',
-            'password.confirmed' => '密码不一致',
-            'phone.required' => 'phone 手机号必填',
-            'phone.phone' => 'phone 非法',
-            'password_confirmation.required' => '确认密码必填',
-            'jwt.required' => 'jwt 必填',
-            'jwt.string' => 'jwt 只能是字符串',
+            'status.required' => 'status 状态必填',
+            'status.in' => "status 状态只能为 {$statusString}",
+            'auth_id.required' => 'auth_id 权限ID必填',
+            'auth_id.integer' => 'auth_id 权限ID只能为整数',
+            'route.required' => 'route 必填',
+            'route.string' => 'route 必须是合法的路由路径',
         ];
     }
 
