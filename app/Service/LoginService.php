@@ -44,7 +44,7 @@ class LoginService extends AbstractService
             'uid' => $userInfo->id,
             'rid' => $userInfo->role_id,
         ];
-        $jwt = Jwt::createJwt($data, Carbon::now()->addSeconds(24 * 60 * 60)->timestamp);
+        $jwt = Jwt::createJwt($data, Carbon::now()->addDays()->timestamp);
         $refreshJwt = Jwt::createJwt($data, Carbon::now()->addDays(7)->timestamp);
         $userInfo->jwt_token = $jwt;
         $userInfo->refresh_jwt_token = $refreshJwt;
@@ -150,7 +150,7 @@ class LoginService extends AbstractService
         $jwt = Jwt::createJwt([
             'uid' => $userInfo->id,
             'rid' => $userInfo->role_id,
-        ], Carbon::now()->addSeconds(2 * 60 * 60)->timestamp);
+        ], Carbon::now()->addDays()->timestamp);
         $userInfo->jwt_token = $jwt;
         $userInfo->save();
 

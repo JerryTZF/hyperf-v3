@@ -38,7 +38,6 @@ use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Coroutine\Coroutine;
 use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Stream\SwooleStream;
-use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\RateLimit\Annotation\RateLimit;
 use Hyperf\Stringable\Str;
@@ -46,7 +45,6 @@ use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-#[Controller(prefix: 'test')]
 class TestListController extends AbstractController
 {
     #[GetMapping(path: 'qrcode/stream')]
