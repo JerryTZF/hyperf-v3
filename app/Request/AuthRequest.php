@@ -21,7 +21,7 @@ class AuthRequest extends FormRequest
 {
     protected array $scenes = [
         'update' => ['auth_id', 'status'],
-        'belong' => ['route']
+        'belong' => ['route'],
     ];
 
     public function authorize(): bool
