@@ -32,11 +32,9 @@ class RoleService extends AbstractService
      */
     public function getDefaultRoleId(): int
     {
-        return Roles::query()->where(['status' => Roles::STATUS_ACTIVE])
-            ->where(function (Builder $query) {
-                $roleName = $this->defaultRoleName;
-                $query->whereRaw("auth_id='' OR node_id='' OR role_name='{$roleName}'");
-            })->value('id');
+        return Roles::query()
+            ->where(['status' => Roles::STATUS_ACTIVE, 'role_name' => $this->defaultRoleName])
+            ->value('id');
     }
 
     /**
