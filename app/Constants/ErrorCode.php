@@ -91,4 +91,9 @@ class ErrorCode extends AbstractConstants
      * @Message("默认角色不允许变更")
      */
     public const DEFAULT_ROLE_PROTECT = 50012;
+
+    /**
+     * @Message("权限不足")
+     */
+    public const NO_AUTH = 50013;
 }

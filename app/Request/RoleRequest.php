@@ -21,7 +21,7 @@ class RoleRequest extends FormRequest
     protected array $scenes = [
         'add' => ['role_name'],
         'bind' => ['role_id', 'auth_id'],
-        'update' => ['role_id', 'status']
+        'update' => ['role_id', 'status'],
     ];
 
     public function authorize(): bool

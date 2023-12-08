@@ -17,6 +17,7 @@ use App\Exception\BusinessException;
 use App\Model\Auths;
 use App\Model\Roles;
 use Carbon\Carbon;
+use Hyperf\Database\Query\Builder;
 use JetBrains\PhpStorm\ArrayShape;
 
 class RoleService extends AbstractService
@@ -107,13 +108,14 @@ class RoleService extends AbstractService
     #[ArrayShape(['auth_list' => 'mixed[]', 'node_list' => 'array'])]
     public function getAuthsByRoleId(int $rid): array
     {
-        $authIds = Roles::query()
-            ->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])
-            ->value('auth_id');
-        $authList = Auths::query()->whereIn('id', $authIds)
-            ->select(['id', 'method', 'route', 'function'])
-            ->get()
-            ->toArray();
+        $authFields = ['id', 'method', 'route', 'function'];
+        $isSuperAdmin = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('super_admin');
+        if ($isSuperAdmin === 'yes') {
+            $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
+        } else {
+            $authIds = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
+            $authList = Auths::query()->whereIn('id', $authIds)->select($authFields)->get()->toArray();
+        }
         $nodeList = []; // TODO
         return ['auth_list' => $authList, 'node_list' => $nodeList];
     }

@@ -56,9 +56,7 @@ class RoleController extends AbstractController
     }
 
     /**
-     * 修改角色信息(非权限节点)
-     * @param RoleRequest $request
-     * @return array
+     * 修改角色信息(非权限节点).
      */
     #[PostMapping(path: 'update')]
     #[Scene(scene: 'update')]
