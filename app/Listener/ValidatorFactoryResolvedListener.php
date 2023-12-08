@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Listener;
 
+use Hyperf\Collection\Arr;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
@@ -36,10 +37,16 @@ class ValidatorFactoryResolvedListener implements ListenerInterface
         $factory->extend('phone', function ($attr, $value, $parameters, $validator) {
             return (bool) preg_match('/^1[234578]\\d{9}$/', (string) $value);
         });
+        $factory->extend('array_list', function ($attr, $value, $parameters, $validator) {
+            return ! Arr::isAssoc($value);
+        });
 
         // 错误信息占位符
         $factory->replacer('phone', function ($message, $attr, $rule, $parameters) {
             return str_replace(':phone', $attr, $message);
+        });
+        $factory->replacer('array_list', function ($message, $attr, $rule, $parameters) {
+            return str_replace(':array_list', $attr, $message);
         });
     }
 }

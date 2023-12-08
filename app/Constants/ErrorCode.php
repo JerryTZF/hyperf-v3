@@ -81,4 +81,14 @@ class ErrorCode extends AbstractConstants
      * @Message("没有对应的角色")
      */
     public const ROLE_EMPTY = 50010;
+
+    /**
+     * @Message("部分或全部节点不存在")
+     */
+    public const AUTH_NOT_FOUND = 50011;
+
+    /**
+     * @Message("默认角色不允许变更")
+     */
+    public const DEFAULT_ROLE_PROTECT = 50012;
 }

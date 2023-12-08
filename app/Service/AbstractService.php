@@ -16,6 +16,13 @@ use App\Constants\ErrorCode;
 
 abstract class AbstractService
 {
+    /**
+     * 根据错误码获取对应的错误信息和错误码.
+     * @param int $errorCode 错误码
+     * @param array $opt 信息填充
+     * @param string $message 自定义错误信息
+     * @return array 异常数组
+     */
     public static function getErrorMap(int $errorCode, array $opt = [], string $message = ''): array
     {
         if ($message !== '') {

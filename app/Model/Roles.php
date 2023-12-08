@@ -13,14 +13,14 @@ declare(strict_types=1);
 namespace App\Model;
 
 /**
- * @protected int $id
- * @protected string $role_name
- * @protected string $auth_id
- * @protected string $node_id
- * @protected string $status
- * @protected string $create_time
- * @protected string $update_time
- * Class Roles
+ * @property int $id
+ * @property string $role_name
+ * @property string $auth_id
+ * @property string $node_id
+ * @property string $status
+ * @property string $create_time
+ * @property string $update_time
+ *                               Class Roles
  */
 class Roles extends Model
 {
@@ -79,6 +79,6 @@ class Roles extends Model
      */
     public function getAuthIdAttribute(mixed $value): array
     {
-        return explode(',', trim($value, ','));
+        return $value === '' ? [] : explode(',', trim($value, ','));
     }
 }
