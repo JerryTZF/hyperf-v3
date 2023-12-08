@@ -19,7 +19,6 @@ use App\Model\Roles;
 use Carbon\Carbon;
 use Hyperf\Collection\Arr;
 use Hyperf\Context\ApplicationContext;
-use Hyperf\Database\Model\Builder;
 use Hyperf\HttpServer\Router\DispatcherFactory;
 use Hyperf\HttpServer\Router\Handler;
 use Psr\Container\ContainerExceptionInterface;
@@ -27,17 +26,23 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class AuthService extends AbstractService
 {
+    public function getUserAuths(int $uid): array
+    {
+        return [];
+    }
+
     /**
      * 当前权限归属于哪些角色.
-     * @param int|null $aid 权限ID
-     * @param string|null $route 路由
+     * @param null|int $aid 权限ID
+     * @param null|string $route 路由
      * @return array []
      */
     public function belongRoles(?int $aid, ?string $route): array
     {
         $aid = ! is_null($aid) ? $aid : Auths::query()->where(['route' => $route])->value('id');
         $roles = Roles::query()
-            ->where(['auth_id' => $aid, 'status' => Roles::STATUS_ACTIVE])
+            ->where(['status' => Roles::STATUS_ACTIVE])
+            ->where('auth_id', 'like', "%{$aid}%")
             ->pluck('role_name', 'id')
             ->toArray();
         if (empty($roles)) {

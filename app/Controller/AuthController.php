@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Model\Auths;
 use App\Request\AuthRequest;
 use App\Service\AuthService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
 use Psr\Container\ContainerExceptionInterface;
@@ -35,6 +35,8 @@ class AuthController extends AbstractController
     #[PostMapping(path: 'myself/info')]
     public function getSelfAuthorityInfo(): array
     {
+        $jwt = $this->jwtPayload;
+        var_dump($jwt);
         return $this->result->getResult();
     }
 
@@ -71,7 +73,7 @@ class AuthController extends AbstractController
      * 获取权限节点.
      * @return array []
      */
-    #[PostMapping(path: 'list')]
+    #[GetMapping(path: 'list')]
     public function getAuthsList(): array
     {
         return $this->result->setData($this->service->getAuthsInfoWithDB())->getResult();
@@ -83,7 +85,7 @@ class AuthController extends AbstractController
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
      */
-    #[PostMapping(path: 'sync/list')]
+    #[GetMapping(path: 'sync/list')]
     public function getAuthsListAndUpdate(): array
     {
         return $this->result->setData($this->service->getAuthsInfoWithoutDB())->getResult();

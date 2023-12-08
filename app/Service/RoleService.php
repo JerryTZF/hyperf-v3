@@ -22,10 +22,6 @@ class RoleService extends AbstractService
      */
     public function add(string $roleName): void
     {
-        (new Roles([
-            'role_name' => $roleName,
-            'auth_id' => -1,
-            'node_id' => -1,
-        ]))->save();
+        (new Roles(['role_name' => $roleName]))->save();
     }
 }

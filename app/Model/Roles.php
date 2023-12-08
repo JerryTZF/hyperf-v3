@@ -15,7 +15,8 @@ namespace App\Model;
 /**
  * @protected int $id
  * @protected string $role_name
- * @protected int $auth_id
+ * @protected string $auth_id
+ * @protected string $node_id
  * @protected string $status
  * @protected string $create_time
  * @protected string $update_time
@@ -54,7 +55,6 @@ class Roles extends Model
      */
     protected array $casts = [
         'id' => 'integer',
-        'auth_id' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
     ];
