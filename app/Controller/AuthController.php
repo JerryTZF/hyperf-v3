@@ -14,6 +14,7 @@ namespace App\Controller;
 
 use App\Request\AuthRequest;
 use App\Service\AuthService;
+use App\Service\RoleService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -32,12 +33,18 @@ class AuthController extends AbstractController
     #[Inject]
     protected AuthService $service;
 
+    #[Inject]
+    protected RoleService $roleService;
+
+    /**
+     * 获取当前用户的权限列表(auth && node).
+     * @return array [][]
+     */
     #[PostMapping(path: 'myself/info')]
     public function getSelfAuthorityInfo(): array
     {
-        $jwt = $this->jwtPayload;
-        var_dump($jwt);
-        return $this->result->getResult();
+        $list = $this->roleService->getAuthsByRoleId($this->jwtPayload['data']['rid']);
+        return $this->result->setData($list)->getResult();
     }
 
     /**

@@ -71,4 +71,14 @@ class Roles extends Model
     {
         $this->attributes['status'] = in_array($value, self::STATUS_ARR) ? $value : 'active';
     }
+
+    /**
+     * 权限节点ID转数组.
+     * @param mixed $value 字段值
+     * @return array 权限节点数组
+     */
+    public function getAuthIdAttribute(mixed $value): array
+    {
+        return explode(',', trim($value, ','));
+    }
 }

@@ -18,11 +18,15 @@ use App\Lib\Jwt\Jwt;
 use App\Lib\Lock\RedisLock;
 use App\Model\Users;
 use Carbon\Carbon;
+use Hyperf\Di\Annotation\Inject;
 use JetBrains\PhpStorm\ArrayShape;
 use Throwable;
 
 class LoginService extends AbstractService
 {
+    #[Inject]
+    protected RoleService $roleService;
+
     /**
      * 获取JWT.
      * @param string $account 账号
@@ -73,6 +77,7 @@ class LoginService extends AbstractService
                     'account' => $account,
                     'password' => md5($password),
                     'phone' => $phone,
+                    'role_id' => $this->roleService->getDefaultRoleId(),
                 ]))->save();
             } catch (Throwable) {
                 $isSaved = false;
