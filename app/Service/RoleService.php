@@ -63,7 +63,7 @@ class RoleService extends AbstractService
     public function updateInfo(int $rid, array $update = []): void
     {
         /** @var Roles $roleInfo */
-        $roleInfo = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->first();
+        $roleInfo = Roles::query()->where(['id' => $rid])->first();
         if ($roleInfo === null) {
             throw new BusinessException(...self::getErrorMap(ErrorCode::ROLE_EMPTY));
         }
