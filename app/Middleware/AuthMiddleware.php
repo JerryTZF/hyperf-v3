@@ -42,7 +42,7 @@ class AuthMiddleware implements MiddlewareInterface
         $payload = $this->request->getAttribute('jwt');
         $uid = $payload['data']['uid'];
         $rid = $payload['data']['rid'];
-        $auths = $this->service->getAuthsByRoleId($rid);
+        $auths = $this->service->getAuthsByRoleIds($rid);
         [$authInfos, $nodeInfos] = [$auths['auth_list'], $auths['node_list']];
 
         $routes = array_column($authInfos, 'route');

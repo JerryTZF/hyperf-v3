@@ -43,7 +43,7 @@ class AuthController extends AbstractController
     #[PostMapping(path: 'myself/info')]
     public function getSelfAuthorityInfo(): array
     {
-        $list = $this->roleService->getAuthsByRoleId($this->jwtPayload['data']['rid']);
+        $list = $this->roleService->getAuthsByRoleIds($this->jwtPayload['data']['rid']);
         return $this->result->setData($list)->getResult();
     }
 

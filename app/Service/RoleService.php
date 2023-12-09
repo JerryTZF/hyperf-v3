@@ -17,7 +17,6 @@ use App\Exception\BusinessException;
 use App\Model\Auths;
 use App\Model\Roles;
 use Carbon\Carbon;
-use Hyperf\Database\Query\Builder;
 use JetBrains\PhpStorm\ArrayShape;
 
 class RoleService extends AbstractService
@@ -105,22 +104,29 @@ class RoleService extends AbstractService
     }
 
     /**
-     * 获取角色对应的权限列表.
-     * @param int $rid 角色id
+     * 获取多个或者单个角色对应的权限列表.
+     * @param int|array $rids 角色IDs
      * @return array 权限节点
      */
-    #[ArrayShape(['auth_list' => 'mixed[]', 'node_list' => 'array'])]
-    public function getAuthsByRoleId(int $rid): array
+    #[ArrayShape(['auth_list' => 'array|mixed[]', 'node_list' => 'array'])]
+    public function getAuthsByRoleIds(int|array $rids): array
     {
         $authFields = ['id', 'method', 'route', 'function'];
-        $isSuperAdmin = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('super_admin');
-        if ($isSuperAdmin === Roles::IS_SUPER_ADMIN) {
-            $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
-        } else {
-            $authIds = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
-            $authList = Auths::query()->whereIn('id', $authIds)->select($authFields)->get()->toArray();
+        $rids = array_map('intval', array_unique(is_int($rids) ? [$rids] : $rids));
+        [$authList, $nodeList] = [[], []];
+        $rolesInfo = Roles::query()->whereIn('id', $rids)->where(['status' => Roles::STATUS_ACTIVE])->get();
+        /** @var Roles $role */
+        foreach ($rolesInfo as $role) {
+            if ($role->super_admin === Roles::IS_SUPER_ADMIN) {
+                $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
+                break;
+            }
+            $thisRoleWithAuthIds = Roles::query()->where(['id' => $role->id, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
+            $thisRoleWithAuthFields = Auths::query()->whereIn('id', $thisRoleWithAuthIds)->select($authFields)->get()->toArray();
+            $authList = array_merge($authList, $thisRoleWithAuthFields);
         }
-        $nodeList = []; // TODO
+
+        $authList = array_unique($authList, SORT_REGULAR);
         return ['auth_list' => $authList, 'node_list' => $nodeList];
     }
 }
