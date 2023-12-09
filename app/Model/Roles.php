@@ -35,6 +35,10 @@ class Roles extends Model
 
     public const STATUS_PAUSE = 'pause';
 
+    public const IS_SUPER_ADMIN = 'yes';
+
+    public const NO_SUPER_ADMIN = 'no';
+
     public const STATUS_ARR = ['active', 'delete', 'pause'];
 
     protected string $primaryKey = 'id';

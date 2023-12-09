@@ -43,6 +43,7 @@ class AuthService extends AbstractService
         $roles = Roles::query()
             ->where(['status' => Roles::STATUS_ACTIVE])
             ->where('auth_id', 'like', "%{$aid}%")
+            ->orWhere(['super_admin' => Roles::IS_SUPER_ADMIN])
             ->pluck('role_name', 'id')
             ->toArray();
         if (empty($roles)) {
