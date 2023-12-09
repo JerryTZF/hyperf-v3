@@ -105,11 +105,11 @@ class RoleService extends AbstractService
 
     /**
      * 获取多个或者单个角色对应的权限列表.
-     * @param int|array $rids 角色IDs
+     * @param array|int $rids 角色IDs
      * @return array 权限节点
      */
     #[ArrayShape(['auth_list' => 'array|mixed[]', 'node_list' => 'array'])]
-    public function getAuthsByRoleIds(int|array $rids): array
+    public function getAuthsByRoleIds(array|int $rids): array
     {
         $authFields = ['id', 'method', 'route', 'function'];
         $rids = array_map('intval', array_unique(is_int($rids) ? [$rids] : $rids));
@@ -121,8 +121,11 @@ class RoleService extends AbstractService
                 $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
                 break;
             }
+            // 该角色对应的权限节点IDs
             $thisRoleWithAuthIds = Roles::query()->where(['id' => $role->id, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
+            // 该角色对应的权限节点信息
             $thisRoleWithAuthFields = Auths::query()->whereIn('id', $thisRoleWithAuthIds)->select($authFields)->get()->toArray();
+            // 权限节点列表
             $authList = array_merge($authList, $thisRoleWithAuthFields);
         }
 

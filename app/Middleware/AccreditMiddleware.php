@@ -32,7 +32,7 @@ class AccreditMiddleware implements MiddlewareInterface
     #[Inject]
     protected RequestInterface $request;
 
-    // 原则上只检测jwt相关, 权限等需要再其他中间件实现.
+    // 原则上只检测jwt相关, 权限等在AuthMiddleware中间件实现.
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         [$selfCalled, $authorization, $isAuthPath, $isOpenCheck] = [

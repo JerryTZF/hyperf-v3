@@ -44,6 +44,10 @@ class LoginService extends AbstractService
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, opt: ["{$account}"]));
         }
+
+        // payload 为什么只存储 uid(用户ID) 和 rid(角色IDs) ?
+        // 1、payload 尽量不放置敏感信息, 权限节点信息属于敏感信息;
+        // 2、payload 不应该过大, 应该防止可用于查询的简单信息.
         $data = [
             'uid' => $userInfo->id,
             'rid' => $userInfo->role_id,
