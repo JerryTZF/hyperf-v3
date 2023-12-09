@@ -73,11 +73,12 @@ class LoginService extends AbstractService
                 if ($exist) {
                     return ['msg' => "{$account} had registered"];
                 }
+                $defaultRoleId = $this->roleService->getDefaultRoleId();
                 $isSaved = (new Users([
                     'account' => $account,
                     'password' => md5($password),
                     'phone' => $phone,
-                    'role_id' => $this->roleService->getDefaultRoleId(),
+                    'role_id' => (string) $defaultRoleId,
                 ]))->save();
             } catch (Throwable) {
                 $isSaved = false;

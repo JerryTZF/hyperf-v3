@@ -22,7 +22,7 @@ namespace App\Model;
  * @property string $jwt_token
  * @property string $refresh_jwt_token
  * @property string $status
- * @property int $role_id
+ * @property string $role_id
  * @property string $create_time
  * @property string $update_time
  */
@@ -58,7 +58,6 @@ class Users extends Model
     protected array $casts = [
         'id' => 'integer',
         'age' => 'integer',
-        'role_id' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
     ];
@@ -74,5 +73,15 @@ class Users extends Model
     public function setStatusAttribute(mixed $value): void
     {
         $this->attributes['status'] = in_array($value, self::STATUS_ARR) ? $value : 'active';
+    }
+
+    /**
+     * 角色ID转数组.
+     * @param mixed $value 字段值
+     * @return array 角色ID数组
+     */
+    public function getRoleIdAttribute(mixed $value): array
+    {
+        return $value === '' ? [] : explode(',', trim($value, ','));
     }
 }
