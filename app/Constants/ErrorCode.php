@@ -96,4 +96,9 @@ class ErrorCode extends AbstractConstants
      * @Message("权限不足")
      */
     public const NO_AUTH = 50013;
+
+    /**
+     * @Message("超级管理员无需操作")
+     */
+    public const SUPER_ADMIN = 50014;
 }

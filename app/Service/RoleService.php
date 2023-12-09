@@ -39,6 +39,10 @@ class RoleService extends AbstractService
         $newAuthIds = is_array($aid) ? array_unique($aid) : [$aid];
         /** @var Roles $roleInfo */
         $roleInfo = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->first();
+        // 超级管理员无需添加权限节点(永远拥有所有权限节点)
+        if ($roleInfo->super_admin === Roles::IS_SUPER_ADMIN) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::SUPER_ADMIN));
+        }
         $authInfo = Auths::query()->whereIn('id', $newAuthIds)->get();
         if ($authInfo->count() !== count($newAuthIds) || $roleInfo === null) {
             $errorCode = is_null($roleInfo) ? ErrorCode::ROLE_EMPTY : ErrorCode::AUTH_NOT_FOUND;
@@ -110,7 +114,7 @@ class RoleService extends AbstractService
     {
         $authFields = ['id', 'method', 'route', 'function'];
         $isSuperAdmin = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('super_admin');
-        if ($isSuperAdmin === 'yes') {
+        if ($isSuperAdmin === Roles::IS_SUPER_ADMIN) {
             $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
         } else {
             $authIds = Roles::query()->where(['id' => $rid, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
