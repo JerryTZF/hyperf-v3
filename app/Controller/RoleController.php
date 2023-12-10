@@ -16,6 +16,7 @@ use App\Request\RoleRequest;
 use App\Service\RoleService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
 
@@ -28,6 +29,17 @@ class RoleController extends AbstractController
 {
     #[Inject]
     protected RoleService $service;
+
+    /**
+     * 获取角色列表.
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[GetMapping(path: 'list')]
+    public function getRoleList(): array
+    {
+        $roleName = $this->request->input('role_name');
+        return $this->result->setData($this->service->list($roleName))->getResult();
+    }
 
     /**
      * 添加角色.

@@ -79,10 +79,20 @@ class Roles extends Model
 
     /**
      * 权限节点ID转数组.
-     * @param mixed $value 字段值
+     * @param mixed $value 权限节点字段值
      * @return array 权限节点数组
      */
     public function getAuthIdAttribute(mixed $value): array
+    {
+        return $value === '' ? [] : explode(',', trim($value, ','));
+    }
+
+    /**
+     * 页面节点ID转数组.
+     * @param mixed $value 页面节点字段值
+     * @return array 页面节点数组
+     */
+    public function getNodeIdAttribute(mixed $value): array
     {
         return $value === '' ? [] : explode(',', trim($value, ','));
     }

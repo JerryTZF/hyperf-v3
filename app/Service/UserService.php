@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
+
 namespace App\Service;
 
 use App\Constants\ErrorCode;
@@ -11,7 +21,7 @@ use App\Model\Users;
 class UserService extends AbstractService
 {
     /**
-     * 获取用户角色、权限信息
+     * 获取用户角色、权限信息.
      * @param int $uid 用户ID
      * @return array [][] eg: ['role_name'=>[['id'=>1,'method'=>'POST','route'=>'/x/x/x','function'=>'xxx'],[],[]]]
      */
@@ -28,11 +38,9 @@ class UserService extends AbstractService
         $result = [];
         /** @var Roles $role */
         foreach ($rolesInfo as $role) {
-            if ($role->super_admin === Roles::IS_SUPER_ADMIN) {
-                $result[$role->role_name] = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
-                continue;
-            }
-            $result[$role->role_name] = Auths::query()->whereIn('id', $role->auth_id)->select($authFields)->get()->toArray();
+            $result[$role->role_name] = $role->super_admin === Roles::IS_SUPER_ADMIN ?
+                Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray() :
+                Auths::query()->whereIn('id', $role->auth_id)->select($authFields)->get()->toArray();
         }
 
         return $result;

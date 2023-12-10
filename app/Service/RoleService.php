@@ -28,6 +28,21 @@ class RoleService extends AbstractService
     protected string $defaultRoleName = '默认角色';
 
     /**
+     * 获取角色列表.
+     * @param null|string $roleName 角色名称
+     * @return array 角色列表
+     */
+    public function list(?string $roleName): array
+    {
+        $fields = ['id', 'role_name', 'super_admin', 'auth_id', 'node_id'];
+        return Roles::query()->select($fields)
+            ->where(['status' => Roles::STATUS_ACTIVE])
+            ->when($roleName, function ($query, $roleName) {
+                $query->where('role_name', 'like', "%{$roleName}%");
+            })->get()->toArray();
+    }
+
+    /**
      * 绑定权限节点到指定角色.
      * @param int $rid 角色ID
      * @param array|int $aid 权限ID或权限ID集合
