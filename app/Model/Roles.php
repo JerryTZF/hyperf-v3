@@ -16,7 +16,7 @@ namespace App\Model;
  * @property int $id
  * @property string $role_name
  * @property string $super_admin
- * @property string $auth_id
+ * @property array|string $auth_id
  * @property string $node_id
  * @property string $status
  * @property string $create_time

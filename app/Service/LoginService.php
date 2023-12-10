@@ -125,6 +125,7 @@ class LoginService extends AbstractService
      * @param string $jwt jwt
      * @return array ['exp' => "int|mixed", 'uid' => "int|mixed", 'jwt_data' => "mixed", 'exp_date' => "string", 'iat_date' => "string"]
      */
+    #[ArrayShape(['exp' => 'int|mixed', 'uid' => 'int|mixed', 'jwt_data' => 'mixed', 'exp_date' => 'string', 'iat_date' => 'string'])]
     public function explainJwt(string $jwt): array
     {
         $originalData = Jwt::explainJwt($jwt);

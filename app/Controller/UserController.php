@@ -12,11 +12,25 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\UserService;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\PostMapping;
 
 /**
  * 用户相关操作请求
  * Class UserController.
  */
 #[Controller(prefix: 'user')]
-class UserController extends AbstractController {}
+class UserController extends AbstractController
+{
+    #[Inject]
+    protected UserService $service;
+
+    #[PostMapping(path: 'auth/info')]
+    public function info(): array
+    {
+        $info = $this->service->getUserAuthInfo($this->jwtPayload['data']['uid']);
+        return $this->result->setData($info)->getResult();
+    }
+}

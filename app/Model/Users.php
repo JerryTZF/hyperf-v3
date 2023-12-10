@@ -22,7 +22,7 @@ namespace App\Model;
  * @property string $jwt_token
  * @property string $refresh_jwt_token
  * @property string $status
- * @property string $role_id
+ * @property array|string $role_id
  * @property string $create_time
  * @property string $update_time
  */

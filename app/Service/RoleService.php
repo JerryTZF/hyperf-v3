@@ -121,10 +121,8 @@ class RoleService extends AbstractService
                 $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
                 break;
             }
-            // 该角色对应的权限节点IDs
-            $thisRoleWithAuthIds = Roles::query()->where(['id' => $role->id, 'status' => Roles::STATUS_ACTIVE])->value('auth_id');
             // 该角色对应的权限节点信息
-            $thisRoleWithAuthFields = Auths::query()->whereIn('id', $thisRoleWithAuthIds)->select($authFields)->get()->toArray();
+            $thisRoleWithAuthFields = Auths::query()->whereIn('id', $role->auth_id)->select($authFields)->get()->toArray();
             // 权限节点列表
             $authList = array_merge($authList, $thisRoleWithAuthFields);
         }

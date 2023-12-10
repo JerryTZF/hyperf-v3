@@ -101,4 +101,9 @@ class ErrorCode extends AbstractConstants
      * @Message("超级管理员无需操作")
      */
     public const SUPER_ADMIN = 50014;
+
+    /**
+     * @Message("用户不存在")
+     */
+    public const USER_NONE = 50015;
 }
