@@ -106,4 +106,9 @@ class ErrorCode extends AbstractConstants
      * @Message("用户不存在")
      */
     public const USER_NONE = 50015;
+
+    /**
+     * @Message("密码一致未变更")
+     */
+    public const PWD_SAME = 50016;
 }

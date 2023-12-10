@@ -91,6 +91,11 @@ class RoleService extends AbstractService
         if ($roleInfo->role_name === $this->defaultRoleName) {
             throw new BusinessException(...self::getErrorMap(ErrorCode::DEFAULT_ROLE_PROTECT));
         }
+        // 超级管理员不允许禁用
+        $isBan = isset($update['status']) && ($update['status'] === Roles::STATUS_PAUSE || $update['status'] === Roles::STATUS_DELETE);
+        if ($roleInfo->super_admin === Roles::IS_SUPER_ADMIN && $isBan) {
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::SUPER_ADMIN, message: '超级管理不能禁用或暂停'));
+        }
 
         isset($update['status']) && in_array($update['status'], Roles::STATUS_ARR) && $roleInfo->status = $update['status'];
         isset($update['role_name']) && $roleInfo->role_name = $update['role_name'];
@@ -129,9 +134,9 @@ class RoleService extends AbstractService
         $authFields = ['id', 'method', 'route', 'function'];
         $rids = array_map('intval', array_unique(is_int($rids) ? [$rids] : $rids));
         [$authList, $nodeList] = [[], []];
-        $rolesInfo = Roles::query()->whereIn('id', $rids)->where(['status' => Roles::STATUS_ACTIVE])->get();
+        $rolesList = Roles::query()->whereIn('id', $rids)->where(['status' => Roles::STATUS_ACTIVE])->get();
         /** @var Roles $role */
-        foreach ($rolesInfo as $role) {
+        foreach ($rolesList as $role) {
             if ($role->super_admin === Roles::IS_SUPER_ADMIN) {
                 $authList = Auths::query()->where(['status' => Auths::STATUS_ACTIVE])->select($authFields)->get()->toArray();
                 break;
@@ -144,5 +149,20 @@ class RoleService extends AbstractService
 
         $authList = array_unique($authList, SORT_REGULAR);
         return ['auth_list' => $authList, 'node_list' => $nodeList];
+    }
+
+    /**
+     * 角色中是否是超级管理员.
+     * @param int $rid 角色ID
+     * @return bool 是否是超管
+     */
+    public function isSuperAdmin(int $rid): bool
+    {
+        /** @var Roles $roleInfo */
+        $roleInfo = Roles::query()->where(['id' => $rid])->first();
+        if ($roleInfo === null) {
+            return false;
+        }
+        return $roleInfo->super_admin === Roles::IS_SUPER_ADMIN;
     }
 }
