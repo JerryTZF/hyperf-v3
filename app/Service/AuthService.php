@@ -85,28 +85,45 @@ class AuthService extends AbstractService
     {
         $factory = ApplicationContext::getContainer()->get(DispatcherFactory::class);
         $routes = Arr::first($factory->getRouter('http')->getData(), function ($v, $k) {return ! empty($v); });
-        $list = [];
-        $nowDate = Carbon::now()->toDateTimeString();
-        Auths::truncate();
+        [$globalRoutesInfo, $newAuths] = [[], []];
+        $existsRoutes = Auths::query()->pluck('route')->toArray();
         foreach ($routes as $method => $value) {
             /** @var Handler $info */
             foreach ($value as $info) {
                 [$callback, $route] = [$info->callback, $info->route];
-                $insert = [
+                $globalRoutesInfo[$route] = [
                     'method' => $method,
                     'route' => $route,
                     'controller' => $callback[0],
                     'function' => $callback[1],
-                    'create_time' => $nowDate,
-                    'update_time' => $nowDate,
                 ];
-                $aid = Auths::insertGetId($insert);
-                unset($insert['controller'], $insert['create_time'], $insert['update_time']);
-                $insert['id'] = $aid;
-                $list[] = $insert;
             }
         }
 
-        return $list;
+        $nowDate = Carbon::now()->toDateTimeString();
+        // 全局路由列表
+        $globalRoutes = array_keys($globalRoutesInfo);
+        // 全局路由中有的, 但是已存路由中没有的.(新增路由)
+        $diff = array_diff($globalRoutes, $existsRoutes);
+        // 差集路由
+        $diffRoutes = array_values($diff);
+        foreach ($diffRoutes as $route) {
+            $authInfo = $globalRoutesInfo[$route];
+            $newAuths[] = [
+                'method' => $authInfo['method'],
+                'route' => $authInfo['route'],
+                'controller' => $authInfo['controller'],
+                'function' => $authInfo['function'],
+                'create_time' => $nowDate,
+                'update_time' => $nowDate,
+            ];
+        }
+        Auths::insert($newAuths);
+
+        return Auths::query()
+            ->select(['id', 'method', 'route', 'function'])
+            ->where(['status' => Auths::STATUS_ACTIVE])
+            ->orderBy('id', 'ASC')
+            ->get()->toArray();
     }
 }
