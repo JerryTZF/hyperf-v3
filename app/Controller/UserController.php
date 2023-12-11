@@ -56,7 +56,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * 修改基本信息.
+     * 修改基本信息(包含状态).
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
     #[PostMapping(path: 'update/info')]
@@ -66,6 +66,21 @@ class UserController extends AbstractController
         $post = $request->post();
         $uid = $this->jwtPayload['data']['uid'];
         $this->service->updateBasicInfo($uid, $post);
+        return $this->result->getResult();
+    }
+
+    /**
+     * 为用户绑定角色.
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'bind/role')]
+    #[Scene(scene: 'bind')]
+    public function bind(UserRequest $request): array
+    {
+        $roleIds = $request->input('role_id');
+        $uid = $this->jwtPayload['data']['uid'];
+
+        $this->service->bindRole($uid, $roleIds);
         return $this->result->getResult();
     }
 }

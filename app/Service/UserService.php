@@ -31,12 +31,7 @@ class UserService extends AbstractService
      */
     public function updatePassword(int $uid, string $newPassword): void
     {
-        /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $uid])->first();
-        // 用户不存在
-        if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NONE));
-        }
+        $userInfo = $this->getUserInfoIfExist($uid);
         // 密码未变更
         if ($userInfo->password === md5($newPassword)) {
             throw new BusinessException(...self::getErrorMap(ErrorCode::PWD_SAME));
@@ -54,12 +49,7 @@ class UserService extends AbstractService
      */
     public function updateBasicInfo(int $uid, array $infos = []): void
     {
-        /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $uid])->first();
-        if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NONE));
-        }
-
+        $userInfo = $this->getUserInfoIfExist($uid);
         // 超级管理员不允许被禁用
         if (isset($infos['status']) && $infos['status'] === Users::STATUS_BAN) {
             foreach ($userInfo->role_id as $rid) {
@@ -83,12 +73,7 @@ class UserService extends AbstractService
      */
     public function getUserAuthInfo(int $uid): array
     {
-        /** @var Users $userInfo */
-        $userInfo = Users::query()->where(['id' => $uid])->first();
-        if ($userInfo === null) {
-            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NONE));
-        }
-
+        $userInfo = $this->getUserInfoIfExist($uid);
         $rolesList = Roles::query()->whereIn('id', $userInfo->role_id)->where(['status' => Roles::STATUS_ACTIVE])->get();
         $authFields = ['id', 'method', 'route', 'function'];
         $result = [];
@@ -100,5 +85,54 @@ class UserService extends AbstractService
         }
 
         return $result;
+    }
+
+    /**
+     * 用户绑定角色.
+     * @param int $uid 用户ID
+     * @param array|int $roleIds 角色IDs
+     */
+    public function bindRole(int $uid, array|int $roleIds): void
+    {
+        $userInfo = $this->getUserInfoIfExist($uid);
+        $roleIds = is_array($roleIds) ? array_map('intval', array_unique($roleIds)) : [$roleIds];
+        // 角色IDs中是否含有不存在的角色
+        $rolesInfo = Roles::query()->whereIn('id', $roleIds)->get();
+        if ($rolesInfo->count() !== count($roleIds)) {
+            throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::ROLE_EMPTY, message: '部分角色不存在'));
+        }
+        $oldRoleIds = $userInfo->role_id;
+        if (empty($oldRoleIds)) {
+            $newStringRoleIds = trim(implode(',', $roleIds));
+        } else {
+            // 超管无需再次绑定其他角色
+            foreach ($oldRoleIds as $rid) {
+                if ($this->roleService->isSuperAdmin(intval($rid))) {
+                    throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::SUPER_ADMIN, message: '超管无需再次绑定其他角色'));
+                }
+            }
+
+            $newStringRoleIds = trim(implode(',', array_unique(array_merge($oldRoleIds, $roleIds))));
+        }
+
+        $userInfo->role_id = $newStringRoleIds;
+        $userInfo->save();
+    }
+
+    /**
+     * 获取用户信息.
+     * @param int $uid 用户ID
+     * @return Users 用户对象
+     * @throws BusinessException 异常
+     */
+    private function getUserInfoIfExist(int $uid): Users
+    {
+        /** @var Users $userInfo */
+        $userInfo = Users::query()->where(['id' => $uid])->first();
+        // 用户不存在
+        if ($userInfo === null) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::USER_NONE));
+        }
+        return $userInfo;
     }
 }

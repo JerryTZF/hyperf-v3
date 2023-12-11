@@ -76,7 +76,7 @@ class AuthService extends AbstractService
     }
 
     /**
-     * 获取全局路由.
+     * 获取全局路由(会重新同步路由).
      * @return array 关联数组
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

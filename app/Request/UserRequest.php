@@ -21,6 +21,7 @@ class UserRequest extends FormRequest
     protected array $scenes = [
         'update_password' => ['password', 'password_confirmation'],
         'update_info' => ['phone', 'age', 'sex', 'status'],
+        'bind' => ['role_id'],
     ];
 
     public function authorize(): bool
@@ -37,6 +38,7 @@ class UserRequest extends FormRequest
             'age' => ['integer', 'between:0,100'],
             'sex' => [Rule::in(['man', 'woman', 'others'])],
             'status' => [Rule::in(Users::STATUS_ARR)],
+            'role_id' => ['required', 'array_list'],
         ];
     }
 
@@ -53,6 +55,8 @@ class UserRequest extends FormRequest
             'age.between' => 'age 年龄必须在0,100之间',
             'sex.in' => 'sex 性别只能为man,woman,others',
             'status.in' => "status 状态只能是 {$statusString}",
+            'role_id.required' => 'role_id 角色ID必填',
+            'role_id.array_list' => 'role_id 角色ID必须为数组',
         ];
     }
 
