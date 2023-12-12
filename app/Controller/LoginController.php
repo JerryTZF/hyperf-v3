@@ -12,12 +12,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Lib\Alibaba\Sms;
 use App\Request\LoginRequest;
 use App\Service\LoginService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\RateLimit\Annotation\RateLimit;
 use Hyperf\Validation\Annotation\Scene;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * 自有注册、登录体系.
@@ -32,6 +36,21 @@ class LoginController extends AbstractController
      */
     #[Inject]
     protected LoginService $service;
+
+    /**
+     * 发送验证码.
+     * @param LoginRequest $request 请求验证类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'send/sms')]
+    #[Scene(scene: 'send_sms')]
+    #[RateLimit(create: 1, consume: 1, capacity: 1)]
+    public function sendSmsForRegister(LoginRequest $request): array
+    {
+        $phone = $request->input('phone');
+        $captcha = (new Sms())->sendSmsForRegister($phone);
+        return $this->result->setData(['code' => $captcha])->getResult();
+    }
 
     /**
      * 获取jwt && refresh jwt.
@@ -53,6 +72,8 @@ class LoginController extends AbstractController
      * 注册.
      * @param LoginRequest $request 请求验证类
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
      */
     #[PostMapping(path: 'register')]
     #[Scene(scene: 'register')]

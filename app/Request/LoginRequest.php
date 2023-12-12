@@ -20,6 +20,7 @@ class LoginRequest extends FormRequest
         'get_jwt' => ['account', 'pwd'],
         'register' => ['account', 'password', 'password_confirmation', 'phone', 'code'],
         'explain_jwt' => ['jwt'],
+        'send_sms' => ['phone'],
     ];
 
     public function authorize(): bool

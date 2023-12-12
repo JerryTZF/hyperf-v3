@@ -111,4 +111,9 @@ class ErrorCode extends AbstractConstants
      * @Message("密码一致未变更")
      */
     public const PWD_SAME = 50016;
+
+    /**
+     * @Message("短信还在有效期内, 请勿重复发送")
+     */
+    public const SMS_NOT_EXPIRED = 50017;
 }

@@ -14,6 +14,8 @@ namespace App\Lib\Alibaba;
 
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Dysmsapi;
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendSmsRequest;
+use App\Constants\ErrorCode;
+use App\Exception\BusinessException;
 use Darabonba\OpenApi\Models\Config;
 use Hyperf\Collection\Arr;
 use Hyperf\Context\ApplicationContext;
@@ -27,6 +29,11 @@ use function Hyperf\Support\env;
  */
 class Sms
 {
+    /**
+     * 用户注册短信验证码存储KEY值(%s为手机号).
+     */
+    public const SMS_REGISTER_VERIFY_KEY = 'SMS_REGISTER_%s';
+
     /**
      * 客户端实例.
      * @var Dysmsapi 客户端实例
@@ -54,12 +61,7 @@ class Sms
         'reset_password' => 'SMS_464225488',
     ];
 
-    /**
-     * 用户注册短信验证码存储KEY值(%s为手机号).
-     */
-    public const SMS_REGISTER_VERIFY_KEY = 'SMS_REGISTER_%s';
-
-    public function __construct(?string $accessKeyId, ?string $accessKeySecret)
+    public function __construct(string $accessKeyId = null, string $accessKeySecret = null)
     {
         if (is_null($accessKeyId) || is_null($accessKeySecret)) {
             [$accessKeyId, $accessKeySecret] = [env('SMS_ACCESS_ID'), env('SMS_ACCESS_SECRET')];
@@ -78,21 +80,28 @@ class Sms
     }
 
     /**
-     * 注册场景的短信验证.
+     * 注册场景的发送短信验证码.
      * @param string $phoneNumber 合法的手机号
-     * @return array[] 发送结果
+     * @return string 验证码
      */
-    public function sendSmsForRegister(string $phoneNumber): array
+    public function sendSmsForRegister(string $phoneNumber): string
     {
         $random = mt_rand(100000, 999999);
         $key = sprintf(self::SMS_REGISTER_VERIFY_KEY, $phoneNumber);
-        $this->redis->setex($key, 300, $random);
-        return $this->sendSms(
+        $isOk = $this->redis->set($key, $random, ['NX', 'EX' => 300]);
+        if (! $isOk) {
+            throw new BusinessException(ErrorCode::SMS_NOT_EXPIRED, ErrorCode::getMessage(ErrorCode::SMS_NOT_EXPIRED));
+        }
+        $result = $this->sendSms(
             phoneNumbers: $phoneNumber,
             templateCode: $this->templateCodeMap['register_scene'],
             signName: Arr::first($this->signList),
             param: ['code' => $random],
         );
+        if ($result['Code'] !== 'OK') {
+            throw new BusinessException($result['Code'], $result['Message']);
+        }
+        return (string) $random;
     }
 
     /**
@@ -101,7 +110,7 @@ class Sms
      * @param string $templateCode 模板码
      * @param string $signName 签名
      * @param array $param 模板变量对应参数
-     * @return array []
+     * @return array string[][]
      */
     private function sendSms(
         string $phoneNumbers,
