@@ -76,4 +76,9 @@ class SystemCode extends AbstractConstants
      * @Message("认证失败：%s")
      */
     public const JWT_ERROR = 9908;
+
+    /**
+     * @Message("阿里云异常，原因：%s")
+     */
+    public const ALIBABA_ERR = 9907;
 }

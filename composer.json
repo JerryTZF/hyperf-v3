@@ -16,6 +16,7 @@
         "ext-iconv": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
+        "alibabacloud/dysmsapi-20170525": "^2.0",
         "endroid/qr-code": "^4.8",
         "firebase/php-jwt": "^6.9",
         "gregwar/captcha": "dev-master",

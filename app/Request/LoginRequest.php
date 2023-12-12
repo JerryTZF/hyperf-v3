@@ -18,7 +18,7 @@ class LoginRequest extends FormRequest
 {
     protected array $scenes = [
         'get_jwt' => ['account', 'pwd'],
-        'register' => ['account', 'password', 'password_confirmation', 'phone'],
+        'register' => ['account', 'password', 'password_confirmation', 'phone', 'code'],
         'explain_jwt' => ['jwt'],
     ];
 
@@ -36,6 +36,7 @@ class LoginRequest extends FormRequest
             'password_confirmation' => ['required', 'same:password'],
             'phone' => ['required', 'phone'],
             'jwt' => ['required', 'string'],
+            'code' => ['required'],
         ];
     }
 
@@ -53,6 +54,7 @@ class LoginRequest extends FormRequest
             'password_confirmation.required' => '确认密码必填',
             'jwt.required' => 'jwt 必填',
             'jwt.string' => 'jwt 只能是字符串',
+            'code.required' => '手机验证码必填',
         ];
     }
 

@@ -16,6 +16,8 @@ return [
             App\Exception\Handler\JwtExceptionHandler::class,
             // 业务逻辑异常
             App\Exception\Handler\BusinessExceptionHandler::class,
+            // 阿里云包底层异常捕获器
+            App\Exception\Handler\AlibabaExceptionHandler::class,
             // 验证器类型错误处理
             App\Exception\Handler\ValidationExceptionHandler::class,
             // 文件系统异常捕获

@@ -58,7 +58,7 @@ class LoginController extends AbstractController
     #[Scene(scene: 'register')]
     public function register(LoginRequest $request): array
     {
-        $this->service->register(...$request->inputs(['account', 'password', 'phone']));
+        $this->service->register(...$request->inputs(['account', 'password', 'phone', 'code']));
         return $this->result->getResult();
     }
 

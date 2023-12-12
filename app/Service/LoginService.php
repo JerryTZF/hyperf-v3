@@ -14,12 +14,16 @@ namespace App\Service;
 
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Lib\Alibaba\Sms;
 use App\Lib\Jwt\Jwt;
 use App\Lib\Lock\RedisLock;
+use App\Lib\Redis\Redis;
 use App\Model\Users;
 use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
 use JetBrains\PhpStorm\ArrayShape;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
 class LoginService extends AbstractService
@@ -66,10 +70,18 @@ class LoginService extends AbstractService
      * @param string $account 账号
      * @param string $password 密码
      * @param string $phone 手机号
+     * @param string $code
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
      */
-    public function register(string $account, string $password, string $phone): void
+    public function register(string $account, string $password, string $phone, string $code): void
     {
         $lock = new RedisLock('register', 3, 1, $account);
+        $redis = Redis::getRedisInstance();
+        $cacheCode = $redis->get(sprintf(Sms::SMS_REGISTER_VERIFY_KEY, $phone));
+        if ($cacheCode !== $code) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::CAPTCHA_ERROR));
+        }
         // query & insert. so locked.
         $registerResult = $lock->lockSync(function () use ($account, $password, $phone) {
             try {
