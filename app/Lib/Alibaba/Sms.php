@@ -14,52 +14,39 @@ namespace App\Lib\Alibaba;
 
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Dysmsapi;
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendSmsRequest;
-use App\Constants\ErrorCode;
-use App\Exception\BusinessException;
 use Darabonba\OpenApi\Models\Config;
-use Hyperf\Collection\Arr;
-use Hyperf\Context\ApplicationContext;
-use Hyperf\Redis\Redis;
 
 use function Hyperf\Support\env;
 
 /**
  * 阿里云短信服务SMS.
+ * 请勿根据场景在此类中封装对应的发送短信方法, 应该在对应的service中调用该基础类.
  * Class Sms.
  */
 class Sms
 {
     /**
-     * 用户注册短信验证码存储KEY值(%s为手机号).
+     * 用于注册的短信模板.
      */
-    public const SMS_REGISTER_VERIFY_KEY = 'SMS_REGISTER_%s';
+    public const SMS_TEMPLATE_REGISTER = 'SMS_186579493';
+
+    /**
+     * 用于重置密码的短信模板.
+     */
+    public const SMS_TEMPLATE_RESET_PWD = 'SMS_464225488';
+
+    /**
+     * 可用的签名列表.
+     */
+    public const SMS_SIGN_LIST = [
+        'ZFY' => '追风雨',
+    ];
 
     /**
      * 客户端实例.
      * @var Dysmsapi 客户端实例
      */
     protected Dysmsapi $client;
-
-    /**
-     * 可用签名列表.
-     * @var array|string[] 可用签名列表
-     */
-    protected array $signList = ['追风雨'];
-
-    /**
-     * Redis实例.
-     * @var mixed|Redis redis实例
-     */
-    protected Redis $redis;
-
-    /**
-     * 可用的短信模板.
-     * @var array|string[] 模板列表
-     */
-    protected array $templateCodeMap = [
-        'register_scene' => 'SMS_186579493',
-        'reset_password' => 'SMS_464225488',
-    ];
 
     public function __construct(string $accessKeyId = null, string $accessKeySecret = null)
     {
@@ -73,35 +60,9 @@ class Sms
             // 必填，您的 AccessKey Secret
             'accessKeySecret' => $accessKeySecret,
         ]);
-        $this->redis = ApplicationContext::getContainer()->get(Redis::class);
         // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
         $config->endpoint = env('SMS_ENDPOINT', 'dysmsapi.aliyuncs.com');
         $this->client = new Dysmsapi($config);
-    }
-
-    /**
-     * 注册场景的发送短信验证码.
-     * @param string $phoneNumber 合法的手机号
-     * @return string 验证码
-     */
-    public function sendSmsForRegister(string $phoneNumber): string
-    {
-        $random = mt_rand(100000, 999999);
-        $key = sprintf(self::SMS_REGISTER_VERIFY_KEY, $phoneNumber);
-        $isOk = $this->redis->set($key, $random, ['NX', 'EX' => 300]);
-        if (! $isOk) {
-            throw new BusinessException(ErrorCode::SMS_NOT_EXPIRED, ErrorCode::getMessage(ErrorCode::SMS_NOT_EXPIRED));
-        }
-        $result = $this->sendSms(
-            phoneNumbers: $phoneNumber,
-            templateCode: $this->templateCodeMap['register_scene'],
-            signName: Arr::first($this->signList),
-            param: ['code' => $random],
-        );
-        if ($result['Code'] !== 'OK') {
-            throw new BusinessException($result['Code'], $result['Message']);
-        }
-        return (string) $random;
     }
 
     /**
@@ -112,7 +73,7 @@ class Sms
      * @param array $param 模板变量对应参数
      * @return array string[][]
      */
-    private function sendSms(
+    public function sendSms(
         string $phoneNumbers,
         string $templateCode,
         string $signName,

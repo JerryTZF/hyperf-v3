@@ -28,6 +28,11 @@ use Throwable;
 
 class LoginService extends AbstractService
 {
+    /**
+     * 用户注册短信验证码存储KEY值(%s为手机号).
+     */
+    public const SMS_REGISTER_VERIFY_KEY = 'SMS_REGISTER_%s';
+
     #[Inject]
     protected RoleService $roleService;
 
@@ -78,7 +83,7 @@ class LoginService extends AbstractService
     {
         $lock = new RedisLock('register', 3, 1, $account);
         $redis = Redis::getRedisInstance();
-        $cacheCode = $redis->get(sprintf(Sms::SMS_REGISTER_VERIFY_KEY, $phone));
+        $cacheCode = $redis->get(sprintf(self::SMS_REGISTER_VERIFY_KEY, $phone));
         if ($cacheCode !== $code) {
             throw new BusinessException(...self::getErrorMap(ErrorCode::CAPTCHA_ERROR));
         }
@@ -178,5 +183,30 @@ class LoginService extends AbstractService
         $userInfo->save();
 
         return $jwt;
+    }
+
+    /**
+     * @param string $phoneNumber
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function sendRegisterSms(string $phoneNumber): string
+    {
+        $random = mt_rand(100000, 999999);
+        $key = sprintf(self::SMS_REGISTER_VERIFY_KEY, $phoneNumber);
+        $isOk = (Redis::getRedisInstance())->set($key, $random, ['NX', 'EX' => 300]);
+        if (! $isOk) {
+            throw new BusinessException(ErrorCode::SMS_NOT_EXPIRED, ErrorCode::getMessage(ErrorCode::SMS_NOT_EXPIRED));
+        }
+
+        $sms = new Sms();
+        $sendResult = $sms->sendSms(
+            $phoneNumber, sms::SMS_TEMPLATE_REGISTER, sms::SMS_SIGN_LIST['ZFY'], ['code' => $random]
+        );
+        if ($sendResult['Code'] !== 'OK') {
+            throw new BusinessException($sendResult['Code'], $sendResult['Message']);
+        }
+        return (string) $random;
     }
 }
