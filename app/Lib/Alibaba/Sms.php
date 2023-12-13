@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Lib\Alibaba;
 
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Dysmsapi;
+use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendBatchSmsRequest;
 use AlibabaCloud\SDK\Dysmsapi\V20170525\Models\SendSmsRequest;
 use Darabonba\OpenApi\Models\Config;
 
@@ -67,24 +68,49 @@ class Sms
 
     /**
      * 发送短信.
-     * @param string $phoneNumbers 手机号
+     * @param string $phoneNumber 手机号
      * @param string $templateCode 模板码
      * @param string $signName 签名
      * @param array $param 模板变量对应参数
      * @return array string[][]
      */
     public function sendSms(
-        string $phoneNumbers,
+        string $phoneNumber,
         string $templateCode,
         string $signName,
         array $param,
     ): array {
         $request = new SendSmsRequest();
-        $request->phoneNumbers = $phoneNumbers;
+        $request->phoneNumbers = $phoneNumber;
         $request->signName = $signName;
         $request->templateCode = $templateCode;
         $request->templateParam = json_encode($param, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $response = $this->client->sendSms($request);
+        return $response->body->toMap();
+    }
+
+    /**
+     * 批量发送短信.
+     * 模板变量值的个数必须与手机号码、签名的个数相同、内容一一对应，表示向指定手机号码中发对应签名的短信，且短信模板中的变量参数替换为对应的值.
+     * @param array $phoneNumbers ['xxxx', 'xxxx', 'xxxx']
+     * @param string $templateCode sms_xxxx
+     * @param array $signList ['sign1', 'sign2', 'sign3']
+     * @param array $param [['code' => '1234', 'name' => 'kk'], [], []]
+     * @return array string[][]
+     */
+    public function batchSendSms(
+        array $phoneNumbers,
+        string $templateCode,
+        array $signList,
+        array $param,
+    ): array {
+        // 必须为索引数组(列表)
+        $request = new SendBatchSmsRequest();
+        $request->phoneNumberJson = json_encode($phoneNumbers, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $request->signNameJson = json_encode($signList, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $request->templateCode = $templateCode;
+        $request->templateParamJson = json_encode($param, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $response = $this->client->sendBatchSms($request);
         return $response->body->toMap();
     }
 }
