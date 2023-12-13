@@ -14,6 +14,10 @@ namespace App\Service;
 
 use App\Constants\ErrorCode;
 
+/**
+ * 服务抽象类, 用于继承.
+ * Class AbstractService.
+ */
 abstract class AbstractService
 {
     /**

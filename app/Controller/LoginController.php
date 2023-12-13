@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Lib\Alibaba\Sms;
 use App\Request\LoginRequest;
 use App\Service\LoginService;
 use Hyperf\Di\Annotation\Inject;

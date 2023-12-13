@@ -207,6 +207,7 @@ class LoginService extends AbstractService
             sms::SMS_SIGN_LIST['ZFY'],
             ['code' => $random],
         );
+        // 注意: 停机、欠费等依旧会发送成功, 但是用户收不到
         if ($sendResult['Code'] !== 'OK') {
             throw new BusinessException(ErrorCode::SMS_SEND_ERR, $sendResult['Message']);
         }
