@@ -208,7 +208,7 @@ class LoginService extends AbstractService
             ['code' => $random],
         );
         if ($sendResult['Code'] !== 'OK') {
-            throw new BusinessException($sendResult['Code'], $sendResult['Message']);
+            throw new BusinessException(ErrorCode::SMS_SEND_ERR, $sendResult['Message']);
         }
         return (string) $random;
     }

@@ -116,4 +116,9 @@ class ErrorCode extends AbstractConstants
      * @Message("短信还在有效期内, 请勿重复发送")
      */
     public const SMS_NOT_EXPIRED = 50017;
+
+    /**
+     * @Message("短信发送失败")
+     */
+    public const SMS_SEND_ERR = 50018;
 }
