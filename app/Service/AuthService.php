@@ -26,11 +26,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class AuthService extends AbstractService
 {
-    public function getUserAuths(int $uid): array
-    {
-        return [];
-    }
-
     /**
      * 当前权限归属于哪些角色.
      * @param null|int $aid 权限ID

@@ -44,4 +44,19 @@ class ShortChainController extends AbstractController
         $shortChain = $this->service->convert($uid, $url, $ttl);
         return $this->result->setData(['short_chain' => $shortChain])->getResult();
     }
+
+    /**
+     * 短链转化为长链(查找匹配的长链).
+     * @param ShortChainRequest $request 请求验证类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'reconvert')]
+    #[Scene(scene: 'reconvert')]
+    public function reConvert(ShortChainRequest $request): array
+    {
+        $shortChain = $request->input('short_chain');
+        $uid = $this->jwtPayload['data']['uid'];
+        $originUrl = $this->service->reConvert($uid, $shortChain);
+        return $this->result->setData(['origin_url' => $originUrl])->getResult();
+    }
 }

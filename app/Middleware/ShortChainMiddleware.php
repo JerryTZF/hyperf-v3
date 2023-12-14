@@ -46,7 +46,7 @@ class ShortChainMiddleware extends AbstractMiddleware
 
         [$toUrl, $expireAt] = [$chain->url, $chain->expire_at];
         // 过期短链
-        if (Carbon::createFromFormat('Y-m-d H:i:s', $expireAt) < time()) {
+        if (Carbon::createFromFormat('Y-m-d H:i:s', $expireAt)->timestamp < time()) {
             return $this->buildErrorResponse(ErrorCode::SHORT_CHAIN_EXPIRED);
         }
 

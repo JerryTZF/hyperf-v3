@@ -18,6 +18,7 @@ class ShortChainRequest extends FormRequest
 {
     protected array $scenes = [
         'convert' => ['url', 'ttl'],
+        'reconvert' => ['short_chain']
     ];
 
     public function authorize(): bool
@@ -30,6 +31,7 @@ class ShortChainRequest extends FormRequest
         return [
             'url' => ['required', 'url'],
             'ttl' => ['integer', 'gt:0'],
+            'short_chain' => ['required', 'url'],
         ];
     }
 
@@ -40,6 +42,8 @@ class ShortChainRequest extends FormRequest
             'url.url' => 'url 必须为合法的url地址',
             'ttl.integer' => 'ttl 必须为整数',
             'ttl.gt' => 'ttl 必须大于0',
+            'short_chain.required' => 'short_chain 短链必填',
+            'short_chain.url' => 'short_chain 必须为合法的链接',
         ];
     }
 

@@ -17,6 +17,7 @@ use App\Exception\BusinessException;
 use App\Lib\Algorithm\Murmur;
 use App\Model\ShortChain;
 use Carbon\Carbon;
+use Hyperf\Stringable\Str;
 
 class ShortChainService extends AbstractService
 {
@@ -47,5 +48,30 @@ class ShortChainService extends AbstractService
         $chain->save();
 
         return $appDomain . '/' . $hashCode;
+    }
+
+    /**
+     * 短链匹配对应的原始链接.
+     * @param string $shortChain 短连接
+     * @param int|null $uid
+     * @return string 原始链接
+     */
+    public function reConvert(?int $uid,string $shortChain): string
+    {
+        $hashCode = Str::after(parse_url($shortChain, PHP_URL_PATH), '/');
+        /** @var ShortChain $chain */
+        $chain = ShortChain::query()->where(['hash_code' => $hashCode])
+            ->when($uid, function ($query, $uid) {
+                $query->where(['uid' => $uid]);
+            })->first();
+        if ($chain === null) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::UNKNOWN_SHORT_CHAIN));
+        }
+        // 短链已过期
+        if (Carbon::createFromFormat('Y-m-d H:i:s', $chain->expire_at)->timestamp < time()) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::SHORT_CHAIN_EXPIRED));
+        }
+
+        return $chain->url;
     }
 }

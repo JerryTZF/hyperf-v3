@@ -131,4 +131,9 @@ class ErrorCode extends AbstractConstants
      * @Message("短链已过期")
      */
     public const SHORT_CHAIN_EXPIRED = 50020;
+
+    /**
+     * @Message("未知的短链")
+     */
+    public const UNKNOWN_SHORT_CHAIN = 50021;
 }
