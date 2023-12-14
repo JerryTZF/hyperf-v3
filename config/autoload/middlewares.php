@@ -15,6 +15,8 @@ return [
         App\Middleware\CorsMiddleware::class,
         // 验证器中间件(官方)
         Hyperf\Validation\Middleware\ValidationMiddleware::class,
+        // 短链中间件(顺序请在jwt验证中间件前面)
+        App\Middleware\ShortChainMiddleware::class => 99,
         // jwt验证中间件
         App\Middleware\AccreditMiddleware::class,
         // 权限校验中间件

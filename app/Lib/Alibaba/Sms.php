@@ -49,20 +49,16 @@ class Sms
      */
     protected Dysmsapi $client;
 
-    public function __construct(string $accessKeyId = null, string $accessKeySecret = null)
+    public function __construct(array $configs = [])
     {
-        if (is_null($accessKeyId) || is_null($accessKeySecret)) {
-            [$accessKeyId, $accessKeySecret] = [env('SMS_ACCESS_ID'), env('SMS_ACCESS_SECRET')];
-        }
-
-        $config = new Config([
-            // 必填，您的 AccessKey ID
-            'accessKeyId' => $accessKeyId,
-            // 必填，您的 AccessKey Secret
-            'accessKeySecret' => $accessKeySecret,
-        ]);
+        $config = new Config();
+        // 必填，您的 AccessKey ID
+        $config->accessKeyId = $configs['access_key_id'] ?? env('SMS_ACCESS_ID', '');
+        // 必填，您的 AccessKey Secret
+        $config->accessKeySecret = $configs['access_key_secret'] ?? env('SMS_ACCESS_SECRET', '');
         // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
         $config->endpoint = env('SMS_ENDPOINT', 'dysmsapi.aliyuncs.com');
+
         $this->client = new Dysmsapi($config);
     }
 

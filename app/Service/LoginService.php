@@ -187,7 +187,7 @@ class LoginService extends AbstractService
 
     /**
      * 注册发送短信.
-     * @param string $phoneNumber 手机啊哈哦
+     * @param string $phoneNumber 手机号码
      * @return string 验证码
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常

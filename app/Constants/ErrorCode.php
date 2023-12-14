@@ -121,4 +121,9 @@ class ErrorCode extends AbstractConstants
      * @Message("短信发送失败")
      */
     public const SMS_SEND_ERR = 50018;
+
+    /**
+     * @Message("该链接已存在短链, 请勿重复生成")
+     */
+    public const SHORT_CHAIN_EXIST = 50019;
 }

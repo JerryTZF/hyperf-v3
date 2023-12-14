@@ -35,7 +35,7 @@ class AccreditMiddleware implements MiddlewareInterface
     // 原则上只检测jwt相关, 权限等在AuthMiddleware中间件实现.
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        [$selfCalled, $authorization, $isAuthPath, $isOpenCheck] = [
+        [$selfCalled, $authorization, $isLoginPath, $isOpenCheck] = [
             $request->hasHeader('x-self-called'),
             $request->hasHeader('authorization') ? $request->getHeaderLine('authorization') : '',
             $this->request->is('login/*'),
@@ -43,7 +43,7 @@ class AccreditMiddleware implements MiddlewareInterface
         ];
 
         // 不开启验证 || 是权限相关理由 || 系统调用
-        if (! $isOpenCheck || $isAuthPath || $selfCalled) {
+        if (! $isOpenCheck || $isLoginPath || $selfCalled) {
             return $handler->handle($request);
         }
 
