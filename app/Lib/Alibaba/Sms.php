@@ -21,7 +21,7 @@ use function Hyperf\Support\env;
 
 /**
  * 阿里云短信服务SMS.
- * 请勿根据场景在此类中封装对应的发送短信方法, 应该在对应的service中调用该基础类.
+ * 请勿根据场景在此类中封装对应的发送短信方法, 应该在对应的service中调用该工具类.
  * Class Sms.
  */
 class Sms
