@@ -14,24 +14,22 @@ namespace App\Middleware;
 
 use App\Constants\ErrorCode;
 use App\Service\RoleService;
-use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\HttpMessage\Stream\SwooleStream;
-use Hyperf\HttpServer\Contract\RequestInterface;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AuthMiddleware implements MiddlewareInterface
+class AuthMiddleware extends AbstractMiddleware
 {
-    #[Inject]
-    protected RequestInterface $request;
-
     #[Inject]
     protected RoleService $service;
 
+    /**
+     * 权限验证.
+     * @param ServerRequestInterface $request 请求类
+     * @param RequestHandlerInterface $handler 处理器
+     * @return ResponseInterface 响应
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // 登录相关不校验
@@ -51,26 +49,5 @@ class AuthMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle($request);
-    }
-
-    /**
-     * 构建异常返回.
-     * @param int $errorCode 错误码
-     * @return MessageInterface|ResponseInterface 响应
-     */
-    private function buildErrorResponse(int $errorCode): MessageInterface|ResponseInterface
-    {
-        $error = [
-            'code' => $errorCode,
-            'msg' => ErrorCode::getMessage($errorCode),
-            'status' => false,
-            'data' => [],
-        ];
-        $response = Context::get(ResponseInterface::class);
-        $response = $response->withStatus(401)
-            ->withHeader('Content-Type', 'application/json')
-            ->withBody(new SwooleStream(json_encode($error, JSON_UNESCAPED_UNICODE)));
-        Context::set(ResponseInterface::class, $response);
-        return $response;
     }
 }

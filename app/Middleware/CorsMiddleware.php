@@ -15,13 +15,15 @@ namespace App\Middleware;
 use Hyperf\Context\Context;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class CorsMiddleware implements MiddlewareInterface
+class CorsMiddleware extends AbstractMiddleware
 {
     /**
      * 跨域处理.
+     * @param ServerRequestInterface $request 请求类
+     * @param RequestHandlerInterface $handler 处理器
+     * @return ResponseInterface 响应
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

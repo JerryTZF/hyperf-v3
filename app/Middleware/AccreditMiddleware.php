@@ -16,23 +16,20 @@ use App\Constants\ErrorCode;
 use App\Lib\Jwt\Jwt;
 use App\Model\Users;
 use Hyperf\Context\Context;
-use Hyperf\Di\Annotation\Inject;
-use Hyperf\HttpMessage\Stream\SwooleStream;
-use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Stringable\Str;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-// 授权验证
-class AccreditMiddleware implements MiddlewareInterface
+class AccreditMiddleware extends AbstractMiddleware
 {
-    #[Inject]
-    protected RequestInterface $request;
-
-    // 原则上只检测jwt相关, 权限等在AuthMiddleware中间件实现.
+    /**
+     * jwt验证.
+     * 原则上只检测jwt相关, 权限等在AuthMiddleware中间件实现.
+     * @param ServerRequestInterface $request 请求类
+     * @param RequestHandlerInterface $handler 处理器
+     * @return ResponseInterface 响应
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         [$selfCalled, $authorization, $isLoginPath, $isOpenCheck] = [
@@ -65,26 +62,5 @@ class AccreditMiddleware implements MiddlewareInterface
         $request = Context::set(ServerRequestInterface::class, $request->withAttribute('jwt', $originalData));
 
         return $handler->handle($request);
-    }
-
-    /**
-     * 构建异常返回.
-     * @param int $errorCode 错误码
-     * @return MessageInterface|ResponseInterface 响应
-     */
-    private function buildErrorResponse(int $errorCode): MessageInterface|ResponseInterface
-    {
-        $error = [
-            'code' => $errorCode,
-            'msg' => ErrorCode::getMessage($errorCode),
-            'status' => false,
-            'data' => [],
-        ];
-        $response = Context::get(ResponseInterface::class);
-        $response = $response->withStatus(401)
-            ->withHeader('Content-Type', 'application/json')
-            ->withBody(new SwooleStream(json_encode($error, JSON_UNESCAPED_UNICODE)));
-        Context::set(ResponseInterface::class, $response);
-        return $response;
     }
 }

@@ -12,32 +12,21 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Constants\ErrorCode;
 use App\Model\ShortChain;
-use Hyperf\Context\ApplicationContext;
-use Hyperf\Context\Context;
-use Hyperf\Di\Annotation\Inject;
-use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\HttpServer\Response;
+use Carbon\Carbon;
 use Hyperf\Stringable\Str;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ShortChainMiddleware implements MiddlewareInterface
+class ShortChainMiddleware extends AbstractMiddleware
 {
-    #[Inject]
-    protected RequestInterface $request;
-
     /**
      * 短链中间件.
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param ServerRequestInterface $request 请求类
+     * @param RequestHandlerInterface $handler 处理器
+     * @return ResponseInterface 响应
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -55,19 +44,12 @@ class ShortChainMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        return $this->buildRedirectResponse($chain->url);
-    }
+        [$toUrl, $expireAt] = [$chain->url, $chain->expire_at];
+        // 过期短链
+        if (Carbon::createFromFormat('Y-m-d H:i:s', $expireAt) < time()) {
+            return $this->buildErrorResponse(ErrorCode::SHORT_CHAIN_EXPIRED);
+        }
 
-    /**
-     * 返回短链重定向.
-     * @param string $toUrl 跳转地址
-     * @return ResponseInterface 响应
-     * @throws ContainerExceptionInterface 异常
-     * @throws NotFoundExceptionInterface 异常
-     */
-    private function buildRedirectResponse(string $toUrl): ResponseInterface
-    {
-        $response = ApplicationContext::getContainer()->get(Response::class);
-        return $response->redirect($toUrl);
+        return $this->buildRedirectResponse($toUrl);
     }
 }
