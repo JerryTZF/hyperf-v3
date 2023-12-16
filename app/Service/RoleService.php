@@ -111,7 +111,7 @@ class RoleService extends AbstractService
     {
         return Roles::query()
             ->where(['status' => Roles::STATUS_ACTIVE, 'role_name' => $this->defaultRoleName])
-            ->value('id');
+            ->value('id') ?? 0;
     }
 
     /**

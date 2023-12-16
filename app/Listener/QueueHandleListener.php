@@ -18,7 +18,6 @@ use Hyperf\AsyncQueue\Event\AfterHandle;
 use Hyperf\AsyncQueue\Event\BeforeHandle;
 use Hyperf\AsyncQueue\Event\Event;
 use Hyperf\AsyncQueue\Event\FailedHandle;
-use Hyperf\AsyncQueue\Event\QueueLength;
 use Hyperf\AsyncQueue\Event\RetryHandle;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
