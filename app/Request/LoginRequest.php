@@ -20,6 +20,7 @@ class LoginRequest extends FormRequest
         'get_jwt' => ['account', 'pwd'],
         'register' => ['account', 'password', 'password_confirmation', 'phone', 'code'],
         'explain_jwt' => ['jwt'],
+        'refresh_jwt' => ['refresh_jwt'],
         'send_sms' => ['phone'],
     ];
 
@@ -38,6 +39,7 @@ class LoginRequest extends FormRequest
             'phone' => ['required', 'phone'],
             'jwt' => ['required', 'string'],
             'code' => ['required'],
+            'refresh_jwt' => ['required', 'string'],
         ];
     }
 
@@ -54,7 +56,9 @@ class LoginRequest extends FormRequest
             'phone.phone' => 'phone 非法',
             'password_confirmation.required' => '确认密码必填',
             'jwt.required' => 'jwt 必填',
+            'refresh_jwt.required' => 'refresh_jwt 必填',
             'jwt.string' => 'jwt 只能是字符串',
+            'refresh_jwt.string' => 'refresh_jwt 只能是字符串',
             'code.required' => '手机验证码必填',
         ];
     }

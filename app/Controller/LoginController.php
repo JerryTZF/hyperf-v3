@@ -115,10 +115,10 @@ class LoginController extends AbstractController
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
     #[PostMapping(path: 'jwt/refresh')]
-    #[Scene(scene: 'explain_jwt')]
+    #[Scene(scene: 'refresh_jwt')]
     public function refresh(LoginRequest $request): array
     {
-        $result = $this->service->refreshJwt($request->input('jwt'));
+        $result = $this->service->refreshJwt($request->input('refresh_jwt'));
         return $this->result->setData($result)->getResult();
     }
 }
