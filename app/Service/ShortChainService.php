@@ -53,10 +53,10 @@ class ShortChainService extends AbstractService
     /**
      * 短链匹配对应的原始链接.
      * @param string $shortChain 短连接
-     * @param int|null $uid
+     * @param null|int $uid 用户ID
      * @return string 原始链接
      */
-    public function reConvert(?int $uid,string $shortChain): string
+    public function reConvert(?int $uid, string $shortChain): string
     {
         $hashCode = Str::after(parse_url($shortChain, PHP_URL_PATH), '/');
         /** @var ShortChain $chain */

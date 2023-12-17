@@ -40,7 +40,7 @@ class AuthController extends AbstractController
      * 获取当前用户的权限列表(auth && node).
      * @return array [][]
      */
-    #[PostMapping(path: 'myself/info')]
+    #[GetMapping(path: 'myself/info')]
     public function getSelfAuthorityInfo(): array
     {
         $list = $this->roleService->getAuthsByRoleIds($this->jwtPayload['data']['rid']);
@@ -68,7 +68,7 @@ class AuthController extends AbstractController
      */
     #[PostMapping(path: 'status/update')]
     #[Scene(scene: 'update')]
-    public function addRole(AuthRequest $request): array
+    public function updateStatus(AuthRequest $request): array
     {
         $aid = $request->input('auth_id');
         $status = $request->input('status');

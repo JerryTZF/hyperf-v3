@@ -35,6 +35,10 @@ class AuthService extends AbstractService
     public function belongRoles(?int $aid, ?string $route): array
     {
         $aid = ! is_null($aid) ? $aid : Auths::query()->where(['route' => $route])->value('id');
+        $isAuthExist = Auths::query()->where(['id' => $aid])->exists();
+        if (! $isAuthExist) {
+            throw new BusinessException(...self::getErrorMap(ErrorCode::AUTH_NOT_FOUND));
+        }
         $roles = Roles::query()
             ->where(['status' => Roles::STATUS_ACTIVE])
             ->where('auth_id', 'like', "%{$aid}%")

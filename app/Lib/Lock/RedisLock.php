@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace App\Lib\Lock;
 
-use App\Lib\Redis\Redis;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Redis\Redis;
 use Lysice\HyperfRedisLock\LockTimeoutException;
 
 class RedisLock
@@ -50,7 +51,7 @@ class RedisLock
         $this->lockingSeconds = $lockingSeconds;
         $this->owner = $owner;
 
-        $redisInstance = Redis::getRedisInstance();
+        $redisInstance = ApplicationContext::getContainer()->get(Redis::class);
         // who(不同的客户端) 持有 what(不同业务场景) 样子的锁
         $this->lock = new \Lysice\HyperfRedisLock\RedisLock(
             $redisInstance, // Redis实例
