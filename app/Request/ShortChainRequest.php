@@ -18,7 +18,7 @@ class ShortChainRequest extends FormRequest
 {
     protected array $scenes = [
         'convert' => ['url', 'ttl'],
-        'reconvert' => ['short_chain']
+        'reconvert' => ['short_chain'],
     ];
 
     public function authorize(): bool
