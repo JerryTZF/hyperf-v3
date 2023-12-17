@@ -74,6 +74,7 @@ class ImageRequest extends FormRequest
             'margin.integer' => 'margin 必须为整数',
             'logo_size.integer' => 'logo_size 必须为整数',
             'content.string' => 'content 必须为字符串',
+            'content.required' => 'content 必填',
             'foreground_color.array' => 'foreground_color 必须为数组，例如 [0,0,0]',
             'foreground_color.size' => 'foreground_color 数组元素必须为三个, 例如 [0,0,0]',
             'background_color.array' => 'background_color 必须为数组，例如 [255,255,255]',

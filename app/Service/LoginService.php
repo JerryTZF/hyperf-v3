@@ -127,7 +127,7 @@ class LoginService extends AbstractService
         /** @var Users $userInfo */
         $userInfo = Users::query()
             ->where(['id' => $originalData['data']['uid'], 'jwt_token' => $jwt, 'status' => Users::STATUS_ACTIVE])
-            ->select(['jwt_token', 'refresh_jwt_token'])
+            ->select(['id', 'jwt_token', 'refresh_jwt_token'])
             ->first();
         if ($userInfo === null) {
             throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::USER_NOT_FOUND, message: '未知用户的jwt'));
