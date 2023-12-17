@@ -16,6 +16,7 @@ use App\Request\UserRequest;
 use App\Service\UserService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
 
@@ -33,7 +34,7 @@ class UserController extends AbstractController
      * 用户权限信息.
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
-    #[PostMapping(path: 'auth/info')]
+    #[GetMapping(path: 'auth/info')]
     public function info(): array
     {
         $info = $this->service->getUserAuthInfo($this->jwtPayload['data']['uid']);

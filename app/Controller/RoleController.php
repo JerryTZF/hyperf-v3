@@ -67,21 +67,38 @@ class RoleController extends AbstractController
         return $this->result->getResult();
     }
 
-    /**
-     * 修改角色信息(非权限节点).
+    /**修改角色名称.
+     * @param RoleRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
-    #[PostMapping(path: 'update')]
-    #[Scene(scene: 'update')]
-    public function update(RoleRequest $request): array
+    #[PostMapping(path: 'name/update')]
+    #[Scene(scene: 'update_name')]
+    public function updateRoleName(RoleRequest $request): array
     {
         $rid = $request->input('role_id');
         $roleName = $request->input('role_name');
-        $status = $request->input('status');
-        $update = [];
 
-        $roleName !== null && $update['role_name'] = $roleName;
-        $status !== null && $update['status'] = $status;
-        $this->service->updateInfo($rid, $update);
+        $this->service->updateInfo($rid, [
+            'role_name' => $roleName,
+        ]);
+        return $this->result->getResult();
+    }
+
+    /**
+     * 修改角色状态.
+     * @param RoleRequest $request 验证请求类
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'status/update')]
+    #[Scene(scene: 'update_status')]
+    public function updateStatus(RoleRequest $request): array
+    {
+        $rid = $request->input('role_id');
+        $status = $request->input('status');
+
+        $this->service->updateInfo($rid, [
+            'status' => $status,
+        ]);
         return $this->result->getResult();
     }
 }
