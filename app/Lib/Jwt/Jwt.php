@@ -43,6 +43,9 @@ class Jwt
 
     /**
      * 获取jwt.
+     * @param array|int|string $data 待加密的数据
+     * @param int $expire 失效秒数
+     * @return string jwt
      */
     public static function createJwt(array|int|string $data, int $expire = 0): string
     {
@@ -68,6 +71,8 @@ class Jwt
 
     /**
      * 解析jwt.
+     * @param string $jwt 待解析的jwt
+     * @return array payload
      */
     public static function explainJwt(string $jwt): array
     {
@@ -82,6 +87,8 @@ class Jwt
 
     /**
      * jwt距离失效还有的秒数.
+     * @param string $jwt jwt
+     * @return int 距离失效的秒数
      */
     public static function jwtLeftSeconds(string $jwt): int
     {

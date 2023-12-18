@@ -32,8 +32,9 @@ class AuthMiddleware extends AbstractMiddleware
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        [$isLoginPath, $isTestPath] = [$this->request->is('login/*'), $this->request->is('test/*')];
         // 登录相关不校验
-        if ($this->request->is('login/*')) {
+        if ($isLoginPath || $isTestPath) {
             return $handler->handle($request);
         }
 

@@ -20,16 +20,18 @@ class RedisLock
 {
     /**
      * 锁名称.
+     * @var string 锁名称
      */
     private string $lockName;
 
     /**
      * 锁定的时间长度(该值一般应大于等于闭包执行的耗时).
+     * @var int 秒数
      */
     private int $lockingSeconds;
 
     /**
-     * 锁定的标志位.
+     * 锁定的标志位(持有者).
      * @var null|mixed|string
      */
     private string $owner;
@@ -41,6 +43,7 @@ class RedisLock
 
     /**
      * 锁实例.
+     * @var \Lysice\HyperfRedisLock\RedisLock 实例
      */
     private \Lysice\HyperfRedisLock\RedisLock $lock;
 
@@ -73,7 +76,9 @@ class RedisLock
 
     /**
      * 阻塞形式锁定.
-     * @throws LockTimeoutException
+     * @param callable $func 需锁定的闭包
+     * @return mixed bool:false 获取锁失败; mixed: 闭包返回的结果
+     * @throws LockTimeoutException 异常
      */
     public function lockAsync(callable $func): mixed
     {

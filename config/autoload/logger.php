@@ -9,6 +9,9 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
+use Monolog\Level;
+
 return [
     'default' => [
         'handlers' => [
@@ -17,7 +20,7 @@ return [
                 'class' => Monolog\Handler\RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/info.log',
-                    'level' => Monolog\Logger::INFO,
+                    'level' => Level::Info,
                 ],
                 'formatter' => [
                     'class' => Monolog\Formatter\LineFormatter::class,
@@ -33,7 +36,7 @@ return [
                 'class' => Monolog\Handler\RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/error.log',
-                    'level' => Monolog\Logger::ERROR,
+                    'level' => Level::Error,
                 ],
                 'formatter' => [
                     'class' => Monolog\Formatter\LineFormatter::class,

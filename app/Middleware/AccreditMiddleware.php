@@ -32,14 +32,15 @@ class AccreditMiddleware extends AbstractMiddleware
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        [$authorization, $isLoginPath, $isOpenCheck] = [
+        [$authorization, $isLoginPath, $isTestPath, $isOpenCheck] = [
             $request->hasHeader('authorization') ? $request->getHeaderLine('authorization') : '',
             $this->request->is('login/*'),
+            $this->request->is('test/*'),
             \Hyperf\Support\env('JWT_OPEN', false),
         ];
 
-        // 不开启验证 || 是权限相关理由
-        if (! $isOpenCheck || $isLoginPath) {
+        // 不开启验证 || 登录相关
+        if (! $isOpenCheck || $isLoginPath || $isTestPath) {
             return $handler->handle($request);
         }
 

@@ -33,14 +33,11 @@ class AppExceptionHandler extends ExceptionHandler
      */
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
-        $errorInfo = sprintf(
-            '发生系统异常:%s;行号为:[%s]; 文件为:[%s]; Trace为:[%s]',
-            $throwable->getMessage(),
-            $throwable->getLine(),
-            $throwable->getFile(),
+        Log::error(
+            sprintf('发生系统异常:%s', $throwable->getMessage()),
+            $throwable->getTrace(),
             $throwable->getTraceAsString()
         );
-        Log::error($errorInfo);
 
         return $response->withHeader('Content-Type', 'application/json')
             ->withStatus(500)
