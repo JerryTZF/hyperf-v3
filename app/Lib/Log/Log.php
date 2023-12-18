@@ -67,10 +67,13 @@ class Log
             'trace' => $traceString,
         ]))->save();
 
-        // CLI输出(没有$content)
-        static::stdout()->{$level}("[{$nowDate}][{$channel}][{$message}][{$contextString}]");
+        // CLI输出
+        $stdoutMessage = $traceString === '' ?
+            "[{$nowDate}][{$channel}][{$message}]" :
+            "[{$nowDate}][{$channel}][{$message}]\n{$traceString}";
+        static::stdout()->{$level}($stdoutMessage);
         // DISK输出
-        static::get($channel)->{$level}($message, $args[1] ?? []);
+        static::get($channel)->{$level}($message, $context);
     }
 
     /**

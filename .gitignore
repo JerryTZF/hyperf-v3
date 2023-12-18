@@ -14,3 +14,4 @@ vendor/
 .vscode/
 .github/
 reload.sh
+app/Controller/TestController.php
