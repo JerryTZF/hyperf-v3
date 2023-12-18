@@ -30,7 +30,6 @@ use App\Lib\Log\Log;
 use App\Lib\Office\ExportCsvHandler;
 use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
-use App\Model\AppUser;
 use App\Model\Goods;
 use App\Model\Orders;
 use Hyperf\Cache\Annotation\Cacheable;
@@ -262,26 +261,6 @@ class TestListController extends AbstractController
         }
 
         return $this->result->getResult();
-    }
-
-    #[GetMapping(path: 'office/excel/download')]
-    public function downloadExcel(): ResponseInterface
-    {
-        $lock = new RedisLock('export_excel', 3, 3, 'downloadExcel');
-        // 制作过程中因为是对对象操作，所以不应该并行操作同一对象,也减少内存使用
-        return $lock->lockAsync(function () {
-            $excelHandler = new ExportExcelHandler();
-            $excelHandler->setHeaders([
-                'ID', '姓名', '邮箱', '手机号', '性别', '密码', '年龄', '创建时间', '修改时间',
-            ]);
-
-            AppUser::query()->orderBy('id', 'DESC')
-                ->where('id', '<', 5000)
-                ->chunk(100, function ($records) use ($excelHandler) {
-                    $excelHandler->setData($records->toArray());
-                });
-            return $excelHandler->saveToLocal('测试导出百万级别');
-        });
     }
 
     #[GetMapping(path: 'office/excel/save')]
