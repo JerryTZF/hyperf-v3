@@ -35,6 +35,7 @@
         "hyperf/http-server": "~3.0.0",
         "hyperf/logger": "~3.0.0",
         "hyperf/memory": "~3.0.0",
+        "hyperf/nano": "^2.0",
         "hyperf/process": "~3.0.0",
         "hyperf/rate-limit": "^3.0",
         "hyperf/redis": "~3.0.0",

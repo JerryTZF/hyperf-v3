@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b3ffd2a4f01b7f6c33cda2e3a0c09b6",
+    "content-hash": "b3d54d1d1a6ef94a085af612201c6f71",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -3967,6 +3967,85 @@
                 "source": "https://github.com/hyperf/hyperf"
             },
             "time": "2023-09-19T01:50:18+00:00"
+        },
+        {
+            "name": "hyperf/nano",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hyperf/nano.git",
+                "reference": "d01c3424097f2ec4231f60a9eeb9eb159b2ea1ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hyperf/nano/zipball/d01c3424097f2ec4231f60a9eeb9eb159b2ea1ca",
+                "reference": "d01c3424097f2ec4231f60a9eeb9eb159b2ea1ca",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "hyperf/command": "^3.0.0",
+                "hyperf/config": "^3.0.0",
+                "hyperf/context": "^3.0.16",
+                "hyperf/contract": "^3.0.0",
+                "hyperf/di": "^3.0.0",
+                "hyperf/framework": "^3.0.0",
+                "hyperf/http-server": "^3.0.0",
+                "hyperf/stringable": "^3.0.0",
+                "hyperf/support": "^3.0.0",
+                "hyperf/tappable": "^3.0.0",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "hyperf/crontab": "^3.0.0",
+                "hyperf/db": "^3.0.0",
+                "hyperf/guzzle": "^3.0.0",
+                "hyperf/process": "^3.0.0",
+                "hyperf/testing": "^3.0.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": ">=7.0",
+                "swoole/ide-helper": "^4.5.2",
+                "symfony/finder": "^4.0|^5.0"
+            },
+            "suggest": {
+                "hyperf/crontab": "Required to use closure crontab",
+                "hyperf/process": "Required to use closure process"
+            },
+            "type": "project",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                },
+                "hyperf": {
+                    "config": "Hyperf\\Nano\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Nano\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Scale Hyperf application down to a single file",
+            "keywords": [
+                "hyperf",
+                "nano",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/hyperf/nano/issues",
+                "source": "https://github.com/hyperf/nano/tree/v2.0.1"
+            },
+            "time": "2023-10-08T08:49:13+00:00"
         },
         {
             "name": "hyperf/pipeline",
@@ -11977,5 +12056,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }
