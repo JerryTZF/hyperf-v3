@@ -46,7 +46,7 @@ $app->post('/webhook/github', function () use ($key) {
                 'msg' => '非push操作',
                 'status' => false,
                 'data' => [],
-            ], 264 | 64)));
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)));
     }
 
     // 签名错误
@@ -64,7 +64,7 @@ $app->post('/webhook/github', function () use ($key) {
                 'msg' => '签名错误',
                 'status' => false,
                 'data' => ['signSha1' => $signSha1, 'signSha256' => $signSha256],
-            ], 264 | 64)));
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)));
     }
 
     // 变更的文件如果有composer.json 则更新依赖包
