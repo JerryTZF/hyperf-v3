@@ -23,13 +23,13 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @method static void info(string $msg, array $content = [])
- * @method static void warning(string $msg, array $content = [])
+ * @method static void info(string $msg, array $content = [], string $straceString = '')
+ * @method static void warning(string $msg, array $content = [], string $straceString = '')
  * @method static void error(string $msg, array $content = [], string $straceString = '')
- * @method static void alert(string $msg, array $content = [])
- * @method static void critical(string $msg, array $content = [])
- * @method static void emergency(string $msg, array $content = [])
- * @method static void notice(string $msg, array $content = [])
+ * @method static void alert(string $msg, array $content = [], string $straceString = '')
+ * @method static void critical(string $msg, array $content = [], string $straceString = '')
+ * @method static void emergency(string $msg, array $content = [], string $straceString = '')
+ * @method static void notice(string $msg, array $content = [], string $straceString = '')
  */
 class Log
 {

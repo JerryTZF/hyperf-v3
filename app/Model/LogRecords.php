@@ -41,6 +41,7 @@ class LogRecords extends Model
 
     protected array $casts = [
         'id' => 'integer',
+        'line' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
     ];
