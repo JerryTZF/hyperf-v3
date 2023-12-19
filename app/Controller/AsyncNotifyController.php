@@ -19,4 +19,6 @@ use Hyperf\HttpServer\Annotation\Controller;
  * Class AsyncNotifyController.
  */
 #[Controller(prefix: 'async')]
-class AsyncNotifyController extends AbstractController {}
+class AsyncNotifyController extends AbstractController
+{
+}

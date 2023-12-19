@@ -146,4 +146,9 @@ class ErrorCode extends AbstractConstants
      * @Message("商品: %s 库存不足")
      */
     public const GOOD_STOCK_EMPTY = 50023;
+
+    /**
+     * @Message("购买失败, 库存不足")
+     */
+    public const STOCK_EMPTY = 50024;
 }

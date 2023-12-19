@@ -24,7 +24,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * 演示各种需要锁定的场景.
+ * 演示各种需要锁定的场景, 经压力测试均正常工作.
  * Class LockController.
  */
 #[Controller(prefix: 'lock')]
@@ -39,6 +39,7 @@ class LockController extends AbstractController
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
+     * @throws LockTimeoutException 异常
      */
     #[PostMapping(path: 'redis/sync')]
     #[Scene(scene: 'create_order')]
@@ -58,6 +59,9 @@ class LockController extends AbstractController
         $orderNo = $lock->lockSync(function () use ($gid, $num, $uid) {
             return $this->service->createOrderWithoutLock($uid, intval($gid), intval($num));
         });
+        if ($orderNo === false) {
+            throw new LockTimeoutException();
+        }
 
         return $this->result->setData(['oder_no' => $orderNo])->getResult();
     }
@@ -65,10 +69,10 @@ class LockController extends AbstractController
     /**
      * 创建订单(阻塞形式锁).
      * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      * @throws LockTimeoutException 阻塞超时异常
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
-     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
     #[PostMapping(path: 'redis/async')]
     #[Scene(scene: 'create_order')]
@@ -88,6 +92,91 @@ class LockController extends AbstractController
         $orderNo = $lock->lockAsync(function () use ($gid, $num, $uid) {
             return $this->service->createOrderWithoutLock($uid, intval($gid), intval($num));
         });
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
+     * 创建订单(条件乐观锁).
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'optimistic/condition')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByCondition(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithCondition($uid, $gid, $num);
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
+     * 创建订单(版本控制乐观锁).
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'optimistic/version')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByVersion(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithVersion($uid, $gid, $num);
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
+     * 创建订单(版本控制+自旋).
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'optimistic/spin')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByVersionSpin(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithSpin($uid, $gid, $num);
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
+     * 使用悲观锁(排它锁)创建订单.
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'pessimism/for_update')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByForUpdate(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithForUpdate($uid, $gid, $num);
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
+     * 使用悲观锁(共享锁)创建订单.
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'pessimism/share_mode')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByShareMode(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithShareMode($uid, $gid, $num);
 
         return $this->result->setData(['oder_no' => $orderNo])->getResult();
     }
