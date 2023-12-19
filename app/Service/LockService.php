@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Constants\ConstCode;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Job\CreateOrderJob;
 use App\Lib\Math\Math;
+use App\Lib\RedisQueue\RedisQueueFactory;
 use App\Model\Goods;
 use App\Model\Orders;
+use Hyperf\Coroutine\Coroutine;
 use Hyperf\DbConnection\Db;
 use Throwable;
 
@@ -43,7 +47,7 @@ class LockService extends AbstractService
         }
 
         // 创建订单
-        $orderNo = $this->createOrderNo();
+        $orderNo = Math::getUniqueId();
         (new Orders([
             'uid' => $uid,
             'gid' => $gid,
@@ -83,7 +87,7 @@ class LockService extends AbstractService
             if ($effectRows > 0) {
                 $price = Goods::query()->where(['id' => $gid])->value('price');
                 // 创建订单
-                $orderNo = $this->createOrderNo();
+                $orderNo = Math::getUniqueId();
                 (new Orders([
                     'uid' => $uid,
                     'gid' => $gid,
@@ -137,7 +141,7 @@ class LockService extends AbstractService
         if ($effectRows > 0) {
             $price = Goods::query()->where(['id' => $gid])->value('price');
             // 创建订单
-            $orderNo = $this->createOrderNo();
+            $orderNo = Math::getUniqueId();
             (new Orders([
                 'uid' => $uid,
                 'gid' => $gid,
@@ -190,7 +194,7 @@ class LockService extends AbstractService
             if ($effectRows > 0) {
                 $price = Goods::query()->where(['id' => $gid])->value('price');
                 // 创建订单
-                $orderNo = $this->createOrderNo();
+                $orderNo = Math::getUniqueId();
                 (new Orders([
                     'uid' => $uid,
                     'gid' => $gid,
@@ -234,7 +238,7 @@ class LockService extends AbstractService
                 throw new BusinessException(...self::getErrorMap(ErrorCode::GOOD_STOCK_EMPTY, [$goodInfo->name]));
             }
             // 创建订单
-            $orderNo = $this->createOrderNo();
+            $orderNo = Math::getUniqueId();
             (new Orders([
                 'uid' => $uid,
                 'gid' => $gid,
@@ -284,7 +288,7 @@ class LockService extends AbstractService
                 throw new BusinessException(...self::getErrorMap(ErrorCode::GOOD_STOCK_EMPTY, [$goodInfo->name]));
             }
             // 创建订单
-            $orderNo = $this->createOrderNo();
+            $orderNo = Math::getUniqueId();
             (new Orders([
                 'uid' => $uid,
                 'gid' => $gid,
@@ -304,6 +308,31 @@ class LockService extends AbstractService
         if ($orderNo === '') {
             throw new BusinessException(...self::getErrorMap(ErrorCode::STOCK_EMPTY));
         }
+
+        return $orderNo;
+    }
+
+    /**
+     * 使用并行消费数为1的队列创建订单(虽然会返回订单号,但是不一定购买成功).
+     * @param int $uid 用户id
+     * @param int $gid 商品id
+     * @param int $number 购买数量
+     * @return string 订单编号
+     */
+    public function createOrderWithLockQueue(int $uid, int $gid, int $number = 1): string
+    {
+        $orderNo = Math::getUniqueId();
+        Coroutine::create(function () use ($uid, $gid, $number, $orderNo) {
+            // 队列消费配置请看:
+            // config/autoload/async_queue.php 中 ConstCode::LOCK_QUEUE_NAME 队列的 concurrent.limit配置.
+            $redisQueue = RedisQueueFactory::getQueueInstance(ConstCode::LOCK_QUEUE_NAME);
+            $redisQueue->push(new CreateOrderJob(uniqid(), [
+                'uid' => $uid,
+                'gid' => $gid,
+                'num' => $number,
+                'order_no' => $orderNo,
+            ]));
+        });
 
         return $orderNo;
     }

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace App\Lib\Math;
 
+use Hyperf\Stringable\Str;
+use Ramsey\Uuid\Uuid;
+
 class Math
 {
     /**
@@ -58,5 +61,16 @@ class Math
     {
         [$v1, $v2] = [strval($v1), strval($v2)];
         return bccomp($v1, $v2, $scale);
+    }
+
+    /**
+     * 获取全局唯一码.
+     * @see https://github.com/ramsey/uuid 三方包
+     * @return string 唯一字符串
+     */
+    public static function getUniqueId(): string
+    {
+        $uuid = Uuid::uuid1()->toString();
+        return Str::of($uuid)->replace('-', '')->toString();
     }
 }

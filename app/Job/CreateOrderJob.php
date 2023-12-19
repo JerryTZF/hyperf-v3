@@ -13,39 +13,47 @@ declare(strict_types=1);
 namespace App\Job;
 
 use App\Lib\Log\Log;
+use App\Lib\Math\Math;
 use App\Model\Goods;
 use App\Model\Orders;
-use Hyperf\Stringable\Str;
-use JetBrains\PhpStorm\Pure;
 
 class CreateOrderJob extends AbstractJob
 {
-    #[Pure]
-    public function __construct(string $uniqueId, array $params)
-    {
-        parent::__construct($uniqueId, $params);
-    }
-
     /**
-     * 并行为1的队列模拟原子执行.
+     * 并行消费数为1的队列创建订单.
      */
     public function handle()
     {
-        [$gid, $num] = [$this->params['gid'], $this->params['num']];
+        [$gid, $num, $uid, $orderNo] = [
+            $this->params['gid'],
+            $this->params['num'],
+            $this->params['uid'],
+            $this->params['order_no'],
+        ];
         /** @var Goods $goodInfo */
-        $goodInfo = Goods::where(['id' => $gid])->firstOrFail();
-        if ($goodInfo->stock > 0 && $goodInfo->stock >= $num) {
-            (new Orders([
-                'gid' => $goodInfo->id,
-                'order_id' => Str::random() . uniqid(),
-                'number' => $num,
-                'money' => $goodInfo->price * $num,
-                'customer' => 'Jerry',
-            ]))->save();
-            $goodInfo->stock -= $num;
-            $goodInfo->save();
-        } else {
-            Log::warning("{$goodInfo->name} 库存不足 !!!");
+        $goodInfo = Goods::query()->where(['id' => $gid])->first();
+        // 商品不存在
+        if ($goodInfo === null) {
+            Log::warning('商品不存在', $this->params);
+            return null;
         }
+        // 库存不足
+        if ($goodInfo->stock < $num) {
+            Log::warning('库存不足', $this->params);
+            return null;
+        }
+
+        // 创建订单
+        (new Orders([
+            'uid' => $uid,
+            'gid' => $gid,
+            'order_no' => $orderNo,
+            'number' => $num,
+            'payment_money' => Math::mul($goodInfo->price, $num),
+        ]))->save();
+
+        // 扣减库存
+        $goodInfo->stock = $goodInfo->stock - $num;
+        $goodInfo->save();
     }
 }

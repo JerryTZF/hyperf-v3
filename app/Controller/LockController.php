@@ -180,4 +180,21 @@ class LockController extends AbstractController
 
         return $this->result->setData(['oder_no' => $orderNo])->getResult();
     }
+
+    /**
+     * 使用并行消费数为1的队列创建订单.
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'queue/consume')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderByLockQueue(LockRequest $request): array
+    {
+        $gid = intval($request->input('gid'));
+        $num = intval($request->input('number'));
+        $uid = $this->jwtPayload['data']['uid'];
+        $orderNo = $this->service->createOrderWithLockQueue($uid, $gid, $num);
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
 }
