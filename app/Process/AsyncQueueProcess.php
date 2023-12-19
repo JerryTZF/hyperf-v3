@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Process;
 
+use App\Constants\ConstCode;
 use Hyperf\AsyncQueue\Process\ConsumerProcess;
 use Hyperf\Process\Annotation\Process;
 
@@ -24,5 +25,5 @@ use Hyperf\Process\Annotation\Process;
 class AsyncQueueProcess extends ConsumerProcess
 {
     // 这里的队列名称请和配置文件对应的队列名称保持一致
-    protected string $queue = 'redis-queue';
+    protected string $queue = ConstCode::NORMAL_QUEUE_NAME;
 }

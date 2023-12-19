@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace App\Lib\Log;
 
-use App\Model\LogRecords;
+use App\Constants\ConstCode;
+use App\Job\ReportLogJob;
+use App\Lib\RedisQueue\RedisQueueFactory;
 use Carbon\Carbon;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Coroutine\Coroutine;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Stringable\Str;
 use Psr\Container\ContainerExceptionInterface;
@@ -55,8 +58,8 @@ class Log
         // string context
         $contextString = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        // 写入数据库(可以用其他方式替代日志上报)
-        (new LogRecords([
+        // 异步队列写入数据库(可以用其他方式替代日志上报)
+        $jobParams = [
             'level' => Str::upper($level),
             'class' => $lastTrace['class'],
             'function' => $lastTrace['function'],
@@ -65,7 +68,11 @@ class Log
             'file' => $headTrace['file'],
             'line' => $headTrace['line'],
             'trace' => $traceString,
-        ]))->save();
+        ];
+        Coroutine::create(function () use ($jobParams) {
+            $queue = RedisQueueFactory::getQueueInstance(ConstCode::NORMAL_QUEUE_NAME);
+            $queue->push(new ReportLogJob(uniqid(), $jobParams), 0);
+        });
 
         // CLI输出
         $stdoutMessage = $traceString === '' ?

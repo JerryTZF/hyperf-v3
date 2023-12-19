@@ -22,4 +22,14 @@ class ConstCode
      * OSS域名.
      */
     public const OSS_DOMAIN = 'https://img.tzf-foryou.xyz';
+
+    /**
+     * 业务普通队列名称.
+     */
+    public const NORMAL_QUEUE_NAME = 'redis-queue';
+
+    /**
+     * 并行消费为1的队列名称.
+     */
+    public const LOCK_QUEUE_NAME = 'lock-queue';
 }

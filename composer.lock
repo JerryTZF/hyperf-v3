@@ -3063,16 +3063,16 @@
         },
         {
             "name": "hyperf/engine",
-            "version": "v2.10.3",
+            "version": "v2.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/engine.git",
-                "reference": "7e7238708f29f39df643aba25485ba1c075943c1"
+                "reference": "34ba1825f5b596c677d027e60ec4e2b75c65d09e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/engine/zipball/7e7238708f29f39df643aba25485ba1c075943c1",
-                "reference": "7e7238708f29f39df643aba25485ba1c075943c1",
+                "url": "https://api.github.com/repos/hyperf/engine/zipball/34ba1825f5b596c677d027e60ec4e2b75c65d09e",
+                "reference": "34ba1825f5b596c677d027e60ec4e2b75c65d09e",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3133,22 +3133,32 @@
             ],
             "support": {
                 "issues": "https://github.com/hyperf/engine/issues",
-                "source": "https://github.com/hyperf/engine/tree/v2.10.3"
+                "source": "https://github.com/hyperf/engine/tree/v2.10.4"
             },
-            "time": "2023-09-30T14:57:09+00:00"
+            "funding": [
+                {
+                    "url": "https://hyperf.wiki/#/zh-cn/donate",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://opencollective.com/hyperf",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2023-12-15T07:47:12+00:00"
         },
         {
             "name": "hyperf/engine-contract",
-            "version": "v1.9.0",
+            "version": "v1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/engine-contract.git",
-                "reference": "45c9c49766d8b0e539975fe4c5ed6807221c4b38"
+                "reference": "fec2e45f35404b2e5b4c3eaf1b0dce67d60771eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/engine-contract/zipball/45c9c49766d8b0e539975fe4c5ed6807221c4b38",
-                "reference": "45c9c49766d8b0e539975fe4c5ed6807221c4b38",
+                "url": "https://api.github.com/repos/hyperf/engine-contract/zipball/fec2e45f35404b2e5b4c3eaf1b0dce67d60771eb",
+                "reference": "fec2e45f35404b2e5b4c3eaf1b0dce67d60771eb",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -3196,9 +3206,19 @@
             ],
             "support": {
                 "issues": "https://github.com/hyperf/engine-contract/issues",
-                "source": "https://github.com/hyperf/engine-contract/tree/v1.9.0"
+                "source": "https://github.com/hyperf/engine-contract/tree/v1.9.1"
             },
-            "time": "2023-07-14T02:21:02+00:00"
+            "funding": [
+                {
+                    "url": "https://hyperf.wiki/#/zh-cn/donate",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://opencollective.com/hyperf",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2023-12-15T07:37:14+00:00"
         },
         {
             "name": "hyperf/event",
@@ -9664,16 +9684,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.48",
+            "version": "1.10.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6"
+                "reference": "9367ba4c4f6ad53e9efb594d74a8941563caccf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6",
-                "reference": "087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9367ba4c4f6ad53e9efb594d74a8941563caccf6",
+                "reference": "9367ba4c4f6ad53e9efb594d74a8941563caccf6",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -9728,7 +9748,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-08T14:34:28+00:00"
+            "time": "2023-12-12T10:05:12+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

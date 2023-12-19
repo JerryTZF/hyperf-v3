@@ -30,7 +30,8 @@ class DemoJob extends AbstractJob
         //  $this->mockConsumeTimeout();
         //  $this->mockServerStop();
         //  $this->mockException();
-        Log::stdout()->info($this->uniqueId);
+        var_dump('sssss');
+//        Log::stdout()->info($this->uniqueId);
     }
 
     /**

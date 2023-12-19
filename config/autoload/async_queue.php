@@ -9,6 +9,9 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
+use App\Constants\ConstCode;
+
 return [
     // 默认队列
     'default' => [
@@ -26,13 +29,13 @@ return [
         ],
     ],
     // 自定义队列进程的队列名称
-    'redis-queue' => [
+    ConstCode::NORMAL_QUEUE_NAME => [
         // 使用驱动(这里我们使用Redis作为驱动。AMQP等其他自行更换)
         'driver' => Hyperf\AsyncQueue\Driver\RedisDriver::class,
         // Redis连接信息
         'redis' => ['pool' => 'default'],
         // 队列前缀
-        'channel' => 'queue',
+        'channel' => 'redis-queue',
         // pop 消息的超时时间(详见：brPop)
         'timeout' => 2,
         // 消息重试间隔(秒)
@@ -50,7 +53,7 @@ return [
         'max_messages' => 0,
     ],
     // 并行消费为1的特殊队列
-    'limit-queue' => [
+    ConstCode::LOCK_QUEUE_NAME => [
         // 使用驱动(这里我们使用Redis作为驱动。AMQP等其他自行更换)
         'driver' => Hyperf\AsyncQueue\Driver\RedisDriver::class,
         // Redis连接信息
@@ -58,7 +61,7 @@ return [
             'pool' => 'default',
         ],
         // 队列前缀
-        'channel' => 'limit',
+        'channel' => 'lock-queue',
         // pop 消息的超时时间(详见：brPop)
         'timeout' => 2,
         // 消息重试间隔(秒)
