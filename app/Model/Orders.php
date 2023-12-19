@@ -16,10 +16,10 @@ namespace App\Model;
  * Class Orders.
  * @property int $id
  * @property int $gid
- * @property string $order_id
+ * @property int $uid
+ * @property string $order_no
  * @property int $number
- * @property float $money
- * @property string $customer
+ * @property float $payment_money
  * @property string $create_time
  * @property string $update_time
  */
@@ -45,9 +45,10 @@ class Orders extends Model
     protected array $casts = [
         'id' => 'integer',
         'gid' => 'integer',
+        'uid' => 'integer',
         'create_time' => 'Y-m-d H:i:s',
         'update_time' => 'Y-m-d H:i:s',
-        'money' => 'decimal:2',
+        'payment_money' => 'decimal:2',
     ];
 
     /**

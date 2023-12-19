@@ -37,7 +37,7 @@ return [
         // 队列前缀
         'channel' => 'redis-queue',
         // pop 消息的超时时间(详见：brPop)
-        'timeout' => 2,
+        'timeout' => 3,
         // 消息重试间隔(秒)
         // [注意]: 真正的重试时间为: retry_seconds + timeout = 7；实验所得
         'retry_seconds' => 5,

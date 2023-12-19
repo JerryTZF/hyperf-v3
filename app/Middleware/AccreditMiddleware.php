@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Constants\ErrorCode;
+use App\Lib\Cache\Cache;
 use App\Lib\Jwt\Jwt;
 use App\Model\Users;
+use App\Service\LoginService;
 use Hyperf\Context\Context;
 use Hyperf\Stringable\Str;
 use Psr\Http\Message\ResponseInterface;
@@ -53,7 +55,7 @@ class AccreditMiddleware extends AbstractMiddleware
 
         // JWT是否被主动失效
         $uid = $originalData['data']['uid'] ?? 0;
-        $storageJwt = Users::query()->where(['id' => $uid, 'status' => Users::STATUS_ACTIVE])->value('jwt_token');
+        $storageJwt = Cache::get(sprintf(LoginService::JWT_CACHE_KEY, $uid));
         if ($storageJwt !== $jwt) {
             return $this->buildErrorResponse(ErrorCode::DO_JWT_FAIL);
         }

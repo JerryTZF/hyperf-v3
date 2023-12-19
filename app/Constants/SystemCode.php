@@ -65,20 +65,20 @@ class SystemCode extends AbstractConstants
     /**
      * @Message("PHPSeclib错误：%s")
      */
-    public const PHPSECLIB_ERR = 9907;
+    public const PHPSECLIB_ERR = 9909;
 
     /**
      * @Message("文件系统底层异常：%s")
      */
-    public const FILE_SYSTEM_ERR = 9908;
+    public const FILE_SYSTEM_ERR = 9910;
 
     /**
      * @Message("认证失败：%s")
      */
-    public const JWT_ERROR = 9908;
+    public const JWT_ERROR = 9911;
 
     /**
      * @Message("阿里云异常，原因：%s")
      */
-    public const ALIBABA_ERR = 9907;
+    public const ALIBABA_ERR = 9912;
 }

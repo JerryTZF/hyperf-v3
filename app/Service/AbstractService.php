@@ -13,6 +13,10 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Constants\ErrorCode;
+use App\Lib\Redis\Redis as RedisFactory;
+use Hyperf\Redis\Redis;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * 服务抽象类, 用于继承.
@@ -20,6 +24,22 @@ use App\Constants\ErrorCode;
  */
 abstract class AbstractService
 {
+    /**
+     * Redis实例.
+     * @var Redis 实例
+     */
+    protected Redis $redis;
+
+    /**
+     * 构造函数.
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     */
+    public function __construct()
+    {
+        $this->redis = RedisFactory::getRedisInstance();
+    }
+
     /**
      * 根据错误码获取对应的错误信息和错误码.
      * @param int $errorCode 错误码

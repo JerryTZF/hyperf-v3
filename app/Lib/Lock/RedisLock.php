@@ -15,6 +15,8 @@ namespace App\Lib\Lock;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Redis\Redis;
 use Lysice\HyperfRedisLock\LockTimeoutException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class RedisLock
 {
@@ -37,7 +39,8 @@ class RedisLock
     private string $owner;
 
     /**
-     * 等待获取锁的超时时间(一般小于等于$lockingSeconds).
+     * 等待获取锁的超时时间(阻塞上限秒数; 一般小于等于$lockingSeconds).
+     * @var int 阻塞秒数
      */
     private int $blockSeconds;
 
@@ -47,7 +50,16 @@ class RedisLock
      */
     private \Lysice\HyperfRedisLock\RedisLock $lock;
 
-    public function __construct(string $lockName, int $lockingSeconds, int $blockSeconds = 3, $owner = null)
+    /**
+     * 实例化.
+     * @param string $lockName 所名称
+     * @param int $lockingSeconds 锁定秒数(超过该数值,锁会自动释放)
+     * @param int $blockSeconds 阻塞秒数(超过该数值, 会抛出异常)
+     * @param string $owner 锁的持有者
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     */
+    public function __construct(string $lockName, int $lockingSeconds, int $blockSeconds = 3, string $owner = '')
     {
         $this->blockSeconds = $blockSeconds;
         $this->lockName = $lockName;
@@ -60,7 +72,7 @@ class RedisLock
             $redisInstance, // Redis实例
             $this->lockName, // 锁名称
             $this->lockingSeconds, // 该锁生效的持续时间上限
-            $this->owner ?? null // 谁持有该锁
+            $this->owner ?: null // 谁持有该锁
         );
     }
 
@@ -76,6 +88,7 @@ class RedisLock
 
     /**
      * 阻塞形式锁定.
+     * 会尝试每250ms获取一次锁, 当超过$blockSeconds秒后抛出异常.
      * @param callable $func 需锁定的闭包
      * @return mixed bool:false 获取锁失败; mixed: 闭包返回的结果
      * @throws LockTimeoutException 异常

@@ -15,9 +15,9 @@ namespace App\Service;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Lib\Alibaba\Sms;
+use App\Lib\Cache\Cache;
 use App\Lib\Jwt\Jwt;
 use App\Lib\Lock\RedisLock;
-use App\Lib\Redis\Redis;
 use App\Model\Users;
 use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
@@ -32,6 +32,11 @@ class LoginService extends AbstractService
      * 用户注册短信验证码存储KEY值(%s为手机号).
      */
     public const SMS_REGISTER_VERIFY_KEY = 'SMS_REGISTER_%s';
+
+    /**
+     * jwt存储缓存KEY(%s为UID).
+     */
+    public const JWT_CACHE_KEY = 'JWT_USER_%s';
 
     #[Inject]
     protected RoleService $roleService;
@@ -67,6 +72,10 @@ class LoginService extends AbstractService
         $userInfo->refresh_jwt_token = $refreshJwt;
         $userInfo->save();
 
+        // 为什么 jwt 和 refresh_jwt 还要写进缓存
+        // 1、jwt中间件中会大量判断是否有主动失效jwt,会大量连接数据库,会耗尽连接池
+        Cache::set(sprintf(self::JWT_CACHE_KEY, $userInfo->id), $jwt, 24 * 60 * 60);
+
         return ['jwt' => $jwt, 'refresh_jwt' => $refreshJwt];
     }
 
@@ -82,8 +91,7 @@ class LoginService extends AbstractService
     public function register(string $account, string $password, string $phone, string $code): void
     {
         $lock = new RedisLock('register', 3, 1, $account);
-        $redis = Redis::getRedisInstance();
-        $cacheCode = $redis->get(sprintf(self::SMS_REGISTER_VERIFY_KEY, $phone));
+        $cacheCode = $this->redis->get(sprintf(self::SMS_REGISTER_VERIFY_KEY, $phone));
         if ($cacheCode !== $code) {
             throw new BusinessException(...self::getErrorMap(ErrorCode::CAPTCHA_ERROR));
         }
@@ -135,6 +143,9 @@ class LoginService extends AbstractService
         $userInfo->jwt_token = '';
         $userInfo->refresh_jwt_token = '';
         $userInfo->save();
+
+        // 移除缓存中的jwt
+        Cache::delete(sprintf(self::JWT_CACHE_KEY, $userInfo->id));
     }
 
     /**
@@ -182,6 +193,9 @@ class LoginService extends AbstractService
         $userInfo->jwt_token = $jwt;
         $userInfo->save();
 
+        // 更新缓存中的jwt
+        Cache::set(sprintf(self::JWT_CACHE_KEY, $userInfo->id), $jwt, 24 * 60 * 60);
+
         return $jwt;
     }
 
@@ -189,14 +203,12 @@ class LoginService extends AbstractService
      * 注册发送短信.
      * @param string $phoneNumber 手机号码
      * @return string 验证码
-     * @throws ContainerExceptionInterface 异常
-     * @throws NotFoundExceptionInterface 异常
      */
     public function sendRegisterSms(string $phoneNumber): string
     {
         $random = mt_rand(100000, 999999);
         $key = sprintf(self::SMS_REGISTER_VERIFY_KEY, $phoneNumber);
-        $isOk = Redis::getRedisInstance()->set($key, $random, ['NX', 'EX' => 300]);
+        $isOk = $this->redis->set($key, $random, ['NX', 'EX' => 300]);
         if (! $isOk) {
             throw new BusinessException(ErrorCode::SMS_NOT_EXPIRED, ErrorCode::getMessage(ErrorCode::SMS_NOT_EXPIRED));
         }

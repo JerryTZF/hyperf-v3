@@ -16,8 +16,6 @@ return [
             App\Exception\Handler\JwtExceptionHandler::class,
             // 业务逻辑异常
             App\Exception\Handler\BusinessExceptionHandler::class,
-            // 阿里云包底层异常捕获器
-            App\Exception\Handler\AlibabaExceptionHandler::class,
             // 验证器类型错误处理
             App\Exception\Handler\ValidationExceptionHandler::class,
             // 文件系统异常捕获
@@ -28,6 +26,8 @@ return [
             App\Exception\Handler\RateLimitExceptionHandler::class,
             // redis锁组件异常处理器
             App\Exception\Handler\LockTimeoutExceptionHandler::class,
+            // 阿里云包底层异常捕获器
+            App\Exception\Handler\AlibabaExceptionHandler::class,
             // phpoffice 包异常捕获
             App\Exception\Handler\OfficeExceptionHandler::class,
             // PHPSeclib 包异常捕获

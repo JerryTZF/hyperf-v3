@@ -21,6 +21,8 @@ use Hyperf\AsyncQueue\Event\FailedHandle;
 use Hyperf\AsyncQueue\Event\RetryHandle;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 #[Listener]
 class QueueHandleListener implements ListenerInterface
@@ -41,6 +43,12 @@ class QueueHandleListener implements ListenerInterface
         ];
     }
 
+    /**
+     * 队列监听器逻辑.
+     * @param object $event 消息体
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     */
     public function process(object $event): void
     {
         if ($event instanceof Event && $event->getMessage()->job()) {

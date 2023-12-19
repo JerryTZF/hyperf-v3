@@ -40,8 +40,6 @@ class LoginController extends AbstractController
      * 发送验证码.
      * @param LoginRequest $request 请求验证类
      * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
-     * @throws ContainerExceptionInterface 异常
-     * @throws NotFoundExceptionInterface 异常
      */
     #[PostMapping(path: 'send/sms')]
     #[Scene(scene: 'send_sms')]

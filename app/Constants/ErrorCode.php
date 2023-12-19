@@ -136,4 +136,14 @@ class ErrorCode extends AbstractConstants
      * @Message("未知的短链")
      */
     public const UNKNOWN_SHORT_CHAIN = 50021;
+
+    /**
+     * @Message("商品不存在")
+     */
+    public const GOOD_NOT_FOUND = 50022;
+
+    /**
+     * @Message("商品: %s 库存不足")
+     */
+    public const GOOD_STOCK_EMPTY = 50023;
 }
