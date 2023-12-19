@@ -38,6 +38,11 @@ class LoginService extends AbstractService
      */
     public const JWT_CACHE_KEY = 'JWT_USER_%s';
 
+    /**
+     * refresh_jwt存储缓存KEY(%s为UID).
+     */
+    public const REFRESH_JWT_CACHE_KEY = 'REFRESH_JWT_USER_%s';
+
     #[Inject]
     protected RoleService $roleService;
 
@@ -75,6 +80,7 @@ class LoginService extends AbstractService
         // 为什么 jwt 和 refresh_jwt 还要写进缓存
         // 1、jwt中间件中会大量判断是否有主动失效jwt,会大量连接数据库,会耗尽连接池
         Cache::set(sprintf(self::JWT_CACHE_KEY, $userInfo->id), $jwt, 24 * 60 * 60);
+        Cache::set(sprintf(self::REFRESH_JWT_CACHE_KEY, $userInfo->id), $refreshJwt, 7 * 24 * 60 * 60);
 
         return ['jwt' => $jwt, 'refresh_jwt' => $refreshJwt];
     }
@@ -146,6 +152,7 @@ class LoginService extends AbstractService
 
         // 移除缓存中的jwt
         Cache::delete(sprintf(self::JWT_CACHE_KEY, $userInfo->id));
+        Cache::delete(sprintf(self::REFRESH_JWT_CACHE_KEY, $userInfo->id));
     }
 
     /**

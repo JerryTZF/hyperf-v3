@@ -34,11 +34,41 @@ class LockController extends AbstractController
     protected LockService $service;
 
     /**
+     * 创建订单(非阻塞形式锁).
+     * @param LockRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     */
+    #[PostMapping(path: 'redis/sync')]
+    #[Scene(scene: 'create_order')]
+    public function createOrderBySyncRedisLock(LockRequest $request): array
+    {
+        $gid = $request->input('gid');
+        $num = $request->input('number');
+        $uid = $this->jwtPayload['data']['uid'];
+
+        [$lockName, $lockingSeconds, $blockSeconds, $owner] = [
+            'create_order_async_lock', // 锁名称
+            3, // 闭包内方法应在3秒内完成, 超过3秒后自动释放该锁
+            1, // 非阻塞该字段无效. 获取不到锁不会阻塞着尝试继续获取, 会直接返回false.
+            sprintf('%s_%s_create_order_scene_sync', $uid, $gid),
+        ];
+        $lock = new RedisLock($lockName, $lockingSeconds, $blockSeconds, $owner);
+        $orderNo = $lock->lockSync(function () use ($gid, $num, $uid) {
+            return $this->service->createOrderWithoutLock($uid, intval($gid), intval($num));
+        });
+
+        return $this->result->setData(['oder_no' => $orderNo])->getResult();
+    }
+
+    /**
      * 创建订单(阻塞形式锁).
      * @param LockRequest $request 请求验证器
      * @throws LockTimeoutException 阻塞超时异常
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
      */
     #[PostMapping(path: 'redis/async')]
     #[Scene(scene: 'create_order')]
@@ -52,7 +82,7 @@ class LockController extends AbstractController
             'create_order_async_lock', // 锁名称
             3, // 闭包内方法应在3秒内完成, 超过3秒后自动释放该锁
             1, // 1秒内获取不到锁, 会抛出LockTimeoutException异常(每250ms尝试获取一次)
-            sprintf('%s_%s_create_order_scene', $uid, $gid),
+            sprintf('%s_%s_create_order_scene_async', $uid, $gid),
         ];
         $lock = new RedisLock($lockName, $lockingSeconds, $blockSeconds, $owner);
         $orderNo = $lock->lockAsync(function () use ($gid, $num, $uid) {

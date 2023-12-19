@@ -20,6 +20,13 @@ use App\Model\Orders;
 
 class LockService extends AbstractService
 {
+    /**
+     * 不加锁的创建订单并扣减库存(外部请加锁!!!).
+     * @param int $uid 用户id
+     * @param int $gid 商品id
+     * @param int $number 购买数量
+     * @return string 订单编号
+     */
     public function createOrderWithoutLock(int $uid, int $gid, int $number = 1): string
     {
         /** @var Goods $goodInfo */

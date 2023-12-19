@@ -53,7 +53,7 @@ class AccreditMiddleware extends AbstractMiddleware
         $jwt = Str::startsWith($authorization, 'Bearer') ? Str::after($authorization, 'Bearer ') : $authorization;
         $originalData = Jwt::explainJwt($jwt); // 解析过程中的异常, 会被 JwtExceptionHandler 捕获, 这里无需处理
 
-        // JWT是否被主动失效
+        // JWT是否被主动失效 || JWT是否正确
         $uid = $originalData['data']['uid'] ?? 0;
         $storageJwt = Cache::get(sprintf(LoginService::JWT_CACHE_KEY, $uid));
         if ($storageJwt !== $jwt) {

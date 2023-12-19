@@ -14,6 +14,7 @@ namespace App\Service;
 
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Lib\Cache\Cache;
 use App\Model\Auths;
 use App\Model\Roles;
 use App\Model\Users;
@@ -57,6 +58,10 @@ class UserService extends AbstractService
                     throw new BusinessException(...self::getErrorMap(errorCode: ErrorCode::SUPER_ADMIN, message: '超级管理不能禁用或暂停'));
                 }
             }
+
+            // 如果禁用用户, 那么登录获取的jwt和refresh_jwt缓存应当失效
+            Cache::delete(sprintf(LoginService::JWT_CACHE_KEY, $userInfo->id));
+            Cache::delete(sprintf(LoginService::REFRESH_JWT_CACHE_KEY, $userInfo->id));
         }
 
         isset($infos['phone']) && $userInfo->phone = $infos['phone'];
