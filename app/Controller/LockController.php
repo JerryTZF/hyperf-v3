@@ -25,7 +25,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * 演示各种需要锁定的场景, 经压力测试均正常工作.
- * Class LockController.
+ * 场景: 扣减库存(库存充足的话), 并且创建订单.
  */
 #[Controller(prefix: 'lock')]
 class LockController extends AbstractController

@@ -336,13 +336,4 @@ class LockService extends AbstractService
 
         return $orderNo;
     }
-
-    /**
-     * 创建唯一订单号.
-     * @return string 订单号
-     */
-    private function createOrderNo(): string
-    {
-        return bcmul((string) microtime(true), (string) 1000) . mt_rand(10000, 99999);
-    }
 }
