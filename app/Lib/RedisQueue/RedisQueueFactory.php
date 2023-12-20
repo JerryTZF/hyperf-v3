@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace App\Lib\RedisQueue;
 
 use App\Job\AbstractJob;
-use App\Lib\Redis\Redis;
 use Hyperf\AsyncQueue\Driver\DriverFactory;
 use Hyperf\AsyncQueue\Driver\DriverInterface;
 use Hyperf\Context\ApplicationContext;
@@ -46,7 +45,7 @@ class RedisQueueFactory
     {
         // 动态读取外部变量, 判断是否投递
         $key = sprintf(static::IS_PUSH_KEY, $queueName);
-        $isPush = Redis::getRedisInstance()->get($key);
+        $isPush = ApplicationContext::getContainer()->get(\Hyperf\Redis\Redis::class)->get($key);
         if ($isPush) {
             return self::getQueueInstance($queueName)->push($job, $delay);
         }

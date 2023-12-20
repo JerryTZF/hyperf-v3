@@ -133,7 +133,7 @@ class LockService extends AbstractService
         }
 
         $effectRows = Goods::query()
-            ->where(['id' => $gid, 'version' => $goodInfo->version]) // 旧版本
+            ->where(['id' => $gid, 'version' => $goodInfo->version]) // 如果该版本已经被修改,那么更新条件无法命中
             ->update([
                 'stock' => $goodInfo->stock - $number,
                 'version' => $goodInfo->version + 1, // 新版本
@@ -186,7 +186,7 @@ class LockService extends AbstractService
             }
 
             $effectRows = Goods::query()
-                ->where(['id' => $gid, 'version' => $goodInfo->version]) // 旧版本
+                ->where(['id' => $gid, 'version' => $goodInfo->version]) // 如果该版本已经被修改,那么更新条件无法命中
                 ->update([
                     'stock' => $goodInfo->stock - $number,
                     'version' => $goodInfo->version + 1, // 新版本
@@ -216,7 +216,7 @@ class LockService extends AbstractService
     }
 
     /**
-     * * 悲观锁创建订单(共享锁).
+     * 悲观锁创建订单(共享锁).
      * @param int $uid 用户id
      * @param int $gid 商品id
      * @param int $number 购买数量
