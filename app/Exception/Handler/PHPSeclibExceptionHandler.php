@@ -15,19 +15,9 @@ namespace App\Exception\Handler;
 use App\Constants\SystemCode;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
-use phpseclib3\Exception\BadConfigurationException;
-use phpseclib3\Exception\BadDecryptionException;
-use phpseclib3\Exception\BadModeException;
-use phpseclib3\Exception\ConnectionClosedException;
-use phpseclib3\Exception\FileNotFoundException;
-use phpseclib3\Exception\InconsistentSetupException;
-use phpseclib3\Exception\InsufficientSetupException;
-use phpseclib3\Exception\NoSupportedAlgorithmsException;
-use phpseclib3\Exception\UnableToConnectException;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\Exception\UnsupportedCurveException;
-use phpseclib3\Exception\UnsupportedOperationException;
+use LogicException;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -63,20 +53,6 @@ class PHPSeclibExceptionHandler extends ExceptionHandler
      */
     public function isValid(Throwable $throwable): bool
     {
-        return match ($throwable) {
-            $throwable instanceof BadConfigurationException => true,
-            $throwable instanceof BadDecryptionException => true,
-            $throwable instanceof BadModeException => true,
-            $throwable instanceof ConnectionClosedException => true,
-            $throwable instanceof FileNotFoundException => true,
-            $throwable instanceof InconsistentSetupException => true,
-            $throwable instanceof InsufficientSetupException => true,
-            $throwable instanceof NoSupportedAlgorithmsException => true,
-            $throwable instanceof UnableToConnectException => true,
-            $throwable instanceof UnsupportedAlgorithmException => true,
-            $throwable instanceof UnsupportedCurveException => true,
-            $throwable instanceof UnsupportedOperationException => true,
-            default => false,
-        };
+        return $throwable instanceof LogicException || $throwable instanceof RuntimeException;
     }
 }
