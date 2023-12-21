@@ -81,4 +81,9 @@ class SystemCode extends AbstractConstants
      * @Message("阿里云异常，原因：%s")
      */
     public const ALIBABA_ERR = 9912;
+
+    /**
+     * @Message("zip错误")
+     */
+    public const ZIP_ERR = 9913;
 }

@@ -87,6 +87,13 @@ class RsaWithPHPSeclib
 
     /**
      * 构造函数.
+     * @param null|string $password 证书密码
+     * @param int $length 秘钥长度
+     * @param string $keyFormat 秘钥格式 PKCS8 || PKCS1
+     * @param int $encryptPadding 填充模式 (RSA::ENCRYPTION_OAEP, RSA::ENCRYPTION_PKCS1, RSA::ENCRYPTION_NONE)
+     * @param string $encryptHash HASH算法
+     * @param string $encryptMgfHash MGF HASH算法
+     * @param int $signaturePadding 签名填充模式 (RSA::SIGNATURE_PKCS1, RSA::SIGNATURE_PSS)
      */
     public function __construct(
         string $password = null,
@@ -116,6 +123,24 @@ class RsaWithPHPSeclib
 
         // 初步创建并保存秘钥
         $this->createKeys();
+    }
+
+    /**
+     * 获取私钥字符串.
+     * @return string 私钥证书字符串
+     */
+    public function getPrivateKeyString(): string
+    {
+        return $this->privateKey->toString($this->keyFormat);
+    }
+
+    /**
+     * 获取公钥字符串.
+     * @return string 公钥证书字符串
+     */
+    public function getPublicKeyString(): string
+    {
+        return $this->privateKey->getPublicKey()->toString($this->keyFormat);
     }
 
     /**

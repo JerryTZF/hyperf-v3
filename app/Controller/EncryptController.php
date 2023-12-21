@@ -19,6 +19,8 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Validation\Annotation\Scene;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * 加解密相关.
@@ -74,5 +76,22 @@ class EncryptController extends AbstractController
         $seclib = new AesWithPHPSeclib($cipherType, $cipherLength, $key, $option);
         $result = $type === 'base64' ? $seclib->decryptBase64($encryptText) : $seclib->decryptHex($encryptText);
         return $this->result->setData(['decrypt_result' => $result])->getResult();
+    }
+
+    #[PostMapping(path: 'rsa/create')]
+    #[Scene(scene: 'rsa_create')]
+    public function createRsa(EncryptRequest $request): MessageInterface|array|ResponseInterface
+    {
+        $keyFormat = $request->input('key_format');
+        $keyLength = $request->input('key_length');
+        $isDownload = $request->input('is_download', false);
+        $certificatePassword = $request->input('certificate_password');
+
+        $result = $this->service->createRSA($keyFormat, $keyLength, $certificatePassword, $isDownload);
+        if (is_array($result)) {
+            return $this->result->setData($result)->getResult();
+        }
+
+        return $result;
     }
 }

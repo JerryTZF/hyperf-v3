@@ -12,29 +12,50 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Lib\Encrypt\AesWithPHPSeclib;
+use App\Lib\Encrypt\RsaWithPHPSeclib;
+use App\Lib\File\Zip;
+use Carbon\Carbon;
+use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\HttpServer\Response;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class EncryptService extends AbstractService
 {
     /**
-     * AES加密.
-     * @param string $key 秘钥
-     * @param array|string $data 待加密数据
-     * @param string $cipherType 密码类型
-     * @param int $cipherLength 密码类型长度
-     * @param string $type 输出类型
-     * @param array $option 辅助参数
-     * @return string 加密后数据
+     * 获取RSA公私钥秘钥对.
+     * @param string $keyFormat 秘钥格式
+     * @param int $keyLen 密钥长度
+     * @param null|string $certificatePassword 证书密码
+     * @param bool $isDownload 是否下载公私钥
+     * @return array|MessageInterface|ResponseInterface 响应
      */
-    public function aesEncrypt(
-        string $key,
-        string $cipherType = 'ecb',
-        int $cipherLength = 256,
-        string $type = 'base64',
-        array $option = [],
-        string|array $data = '',
-    ): string {
-        $aesInstance = new AesWithPHPSeclib($cipherType, $cipherLength, $key, $option);
-        return $type === 'base64' ? $aesInstance->encryptBase64($data) : $aesInstance->encryptHex($data);
+    public function createRSA(
+        string $keyFormat,
+        int $keyLen = 2048,
+        string $certificatePassword = null,
+        bool $isDownload = false,
+    ): MessageInterface|array|ResponseInterface {
+        $rsaInstance = new RsaWithPHPSeclib($certificatePassword, $keyLen, $keyFormat);
+        if ($isDownload) {
+            $certificateList = [
+                BASE_PATH . '/runtime/openssl/private.pem',
+                BASE_PATH . '/runtime/openssl/public.pem',
+            ];
+            $zipName = 'rsa-' . Carbon::now()->timestamp . '.zip';
+            $zipPath = BASE_PATH . '/runtime/openssl/' . $zipName;
+            Zip::compress($zipPath, $certificateList);
+
+            $response = new Response();
+            return $response->withHeader('content-description', 'File Transfer')
+                ->withHeader('content-type', 'application/zip')
+                ->withHeader('content-disposition', 'attachment; filename="' . $zipName . '"')
+                ->withHeader('content-transfer-encoding', 'binary')
+                ->withBody(new SwooleStream((string) file_get_contents($zipPath)));
+        }
+        return [
+            'public_key' => $rsaInstance->getPublicKeyString(),
+            'private_key' => $rsaInstance->getPrivateKeyString(),
+        ];
     }
 }
