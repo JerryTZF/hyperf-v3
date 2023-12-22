@@ -86,4 +86,9 @@ class SystemCode extends AbstractConstants
      * @Message("zip错误")
      */
     public const ZIP_ERR = 9913;
+
+    /**
+     * @Message("网站处于维护模式")
+     */
+    public const FIX_MODE = 9914;
 }

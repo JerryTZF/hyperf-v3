@@ -24,6 +24,11 @@ class ConstCode
     public const OSS_DOMAIN = 'https://img.tzf-foryou.xyz';
 
     /**
+     * 网站维护模式缓存配置KEY.
+     */
+    public const FIX_MODE = 'WEBSITE_FIX_MODE';
+
+    /**
      * 业务普通队列名称.
      */
     public const NORMAL_QUEUE_NAME = 'redis-queue';

@@ -15,6 +15,8 @@ return [
         App\Middleware\CorsMiddleware::class,
         // 验证器中间件(官方)
         Hyperf\Validation\Middleware\ValidationMiddleware::class,
+        // 维护模式中间件
+        App\Middleware\MaintenanceMiddleware::class => 100,
         // 短链中间件(顺序请在jwt验证中间件前面)
         App\Middleware\ShortChainMiddleware::class => 99,
         // jwt验证中间件
