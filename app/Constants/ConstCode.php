@@ -32,4 +32,9 @@ class ConstCode
      * 并行消费为1的队列名称.
      */
     public const LOCK_QUEUE_NAME = 'lock-queue';
+
+    /**
+     * 默认队列名称.
+     */
+    public const DEFAULT_QUEUE_NAME = 'default';
 }

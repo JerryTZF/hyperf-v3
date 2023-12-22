@@ -13,7 +13,7 @@ use App\Constants\ConstCode;
 
 return [
     // 默认队列
-    'default' => [
+    ConstCode::DEFAULT_QUEUE_NAME => [
         'driver' => Hyperf\AsyncQueue\Driver\RedisDriver::class,
         'redis' => [
             'pool' => 'default',

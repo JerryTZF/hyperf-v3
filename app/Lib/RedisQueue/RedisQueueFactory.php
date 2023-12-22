@@ -16,6 +16,7 @@ use App\Job\AbstractJob;
 use Hyperf\AsyncQueue\Driver\DriverFactory;
 use Hyperf\AsyncQueue\Driver\DriverInterface;
 use Hyperf\Context\ApplicationContext;
+use Hyperf\Redis\Redis;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -24,10 +25,10 @@ class RedisQueueFactory
     /**
      * 根据队列名称判断是否投递消息.
      */
-    private const IS_PUSH_KEY = 'IS_PUSH_%s';
+    public const IS_PUSH_KEY = 'IS_PUSH_%s';
 
     /**
-     * 获取队列实例.
+     * 获取队列实例(后续准备废弃, 请使用safePush投递).
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -38,16 +39,18 @@ class RedisQueueFactory
 
     /**
      * 根据外部变量控制是否投递消息.
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface 异常
+     * @throws NotFoundExceptionInterface 异常
+     * @return mixed 是否投递成功
      */
     public static function safePush(AbstractJob $job, string $queueName = 'default', int $delay = 0): bool
     {
         // 动态读取外部变量, 判断是否投递
         $key = sprintf(static::IS_PUSH_KEY, $queueName);
-        $isPush = ApplicationContext::getContainer()->get(\Hyperf\Redis\Redis::class)->get($key);
-        if ($isPush) {
-            return self::getQueueInstance($queueName)->push($job, $delay);
+        $isPush = ApplicationContext::getContainer()->get(Redis::class)->get($key);
+        if ($isPush !== false) {
+            $queueInstance = ApplicationContext::getContainer()->get(DriverFactory::class)->get($queueName);
+            return $queueInstance->push($job, $delay);
         }
         return false;
     }

@@ -70,8 +70,11 @@ class Log
             'trace' => $traceString,
         ];
         Coroutine::create(function () use ($jobParams) {
-            $queue = RedisQueueFactory::getQueueInstance(ConstCode::LOCK_QUEUE_NAME);
-            $queue->push(new ReportLogJob(uniqid(), $jobParams), 0);
+            RedisQueueFactory::safePush(
+                new ReportLogJob(uniqid(), $jobParams),
+                ConstCode::LOCK_QUEUE_NAME,
+                0
+            );
         });
 
         // CLI输出
