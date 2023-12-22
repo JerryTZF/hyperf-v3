@@ -15,7 +15,6 @@ namespace App\Middleware;
 use App\Constants\ErrorCode;
 use App\Lib\Cache\Cache;
 use App\Lib\Jwt\Jwt;
-use App\Model\Users;
 use App\Service\LoginService;
 use Hyperf\Context\Context;
 use Hyperf\Stringable\Str;

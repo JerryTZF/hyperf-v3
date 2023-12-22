@@ -14,10 +14,7 @@ namespace App\Controller;
 
 use App\Job\DemoJob;
 use App\Lib\Cache\Cache;
-use App\Lib\Encrypt\Aes;
-use App\Lib\Encrypt\AesWithPHPSeclib;
 use App\Lib\Encrypt\Rc4WithPHPSecLib;
-use App\Lib\Encrypt\RsaWithPHPSeclib;
 use App\Lib\File\FileSystem;
 use App\Lib\GuzzleHttp\GuzzleFactory;
 use App\Lib\Lock\RedisLock;
@@ -35,7 +32,6 @@ use Throwable;
 
 class TestListController extends AbstractController
 {
-
     #[GetMapping(path: 'office/excel/save')]
     public function saveExcel(): array
     {
@@ -90,75 +86,6 @@ class TestListController extends AbstractController
         return $this->result->setData(['file_path' => $file])->getResult();
     }
 
-    #[GetMapping(path: 'aes')]
-    public function aes(): array
-    {
-        // ecb 加密解密
-        $data = ['key' => 'Aes', 'msg' => '待加密数据'];
-        $key = 'KOQ19sd3_1kaseq/';
-        $iv = 'hello world';
-        $ecbEncryptHex = Aes::ecbEncryptHex($data, $key, 'Aes-128-ECB');
-        $ecbDecryptHex = Aes::ecbDecryptHex($ecbEncryptHex, $key, 'Aes-128-ECB');
-        var_dump($ecbEncryptHex, $ecbDecryptHex);
-        $ecbEncryptBase64 = Aes::ecbEncryptBase64($data, $key, 'Aes-128-ECB');
-        $ecbDecryptBase64 = Aes::ecbDecryptBase64($ecbEncryptBase64, $key, 'Aes-128-ECB');
-        var_dump($ecbEncryptBase64, $ecbDecryptBase64);
-
-        // cbc 加解密
-        $cbcEncryptHex = Aes::cbcEncryptHex($data, $key, $iv, 'Aes-128-CBC');
-        $cbcDecryptHex = Aes::cbcDecryptHex($cbcEncryptHex, $key, $iv, 'Aes-128-CBC');
-        var_dump($cbcEncryptHex, $cbcDecryptHex);
-        $cbcEncryptBase64 = Aes::cbcEncryptBase64($data, $key, $iv, 'Aes-128-CBC');
-        $cbcDecryptBase64 = Aes::cbcDecryptBase64($cbcEncryptBase64, $key, $iv, 'Aes-128-CBC');
-        var_dump($cbcEncryptBase64, $cbcDecryptBase64);
-
-        return $this->result->getResult();
-    }
-
-    #[GetMapping(path: 'seclib/aes')]
-    public function seclibAes(): array
-    {
-        $constructEcb = [
-            'ecb', 128, 'KOQ19sd3_1kaseq/', [],
-        ];
-        $constructCbc = [
-            'cbc', 128, 'KOQ19sd3_1kaseq/', ['iv' => 'hello world'],
-        ];
-        $data = ['key' => 'Aes', 'msg' => '待加密数据'];
-        $aesInstance = new AesWithPHPSeclib(...$constructCbc);
-        $ecbEncryptHex = $aesInstance->encryptHex($data);
-        $ecbDecryptHex = $aesInstance->decryptHex($ecbEncryptHex);
-        var_dump($ecbEncryptHex, $ecbDecryptHex);
-        $ecbEncryptBase64 = $aesInstance->encryptBase64($data);
-        $ecbDecryptBase64 = $aesInstance->decryptBase64($ecbEncryptBase64);
-        var_dump($ecbEncryptBase64, $ecbDecryptBase64);
-
-        return $this->result->getResult();
-    }
-
-    #[GetMapping(path: 'seclib/rsa')]
-    public function seclibRsa(): array
-    {
-        // 默认属性, 具体参考封装类
-        $rsaInstance = new RsaWithPHPSeclib();
-
-        // 公钥加密
-        $encryptData = $rsaInstance->publicKeyEncrypt('hello world');
-        // 私钥解密
-        $decryptData = $rsaInstance->privateKeyDecrypt($encryptData);
-
-        // 私钥加签
-        $signature = $rsaInstance->privateKeySign('hello world');
-        // 公钥验签
-        $verifyResult = $rsaInstance->publicKeyVerifySign('hello world', $signature);
-
-        return $this->result->setData([
-            'public_key_to_encrypt_data' => $encryptData,
-            'private_key_to_decrypt_data' => $decryptData,
-            'private_key_to_sign_data' => $signature,
-            'public_key_to_verify_sign' => $verifyResult,
-        ])->getResult();
-    }
 
     #[GetMapping(path: 'rc4')]
     public function rc4(): array
