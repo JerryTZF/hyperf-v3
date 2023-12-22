@@ -68,11 +68,10 @@ class QueuePushCommand extends HyperfCommand
         $key = sprintf(RedisQueueFactory::IS_PUSH_KEY, $argumentQueueName);
         if ($argumentAction === self::START) {
             $redis->set($key, "{$argumentQueueName}:{$argumentAction}");
-            $this->line("{$argumentQueueName} 已允许投递消息 :)", 'info');
+            $this->line("{$argumentQueueName} 队列已允许投递消息 !!!", 'info');
         } else {
             $redis->del($key);
-            $this->line("{$argumentQueueName} 已禁止投递消息 :)", 'info');
+            $this->line("{$argumentQueueName} 队列已禁止投递消息 !!!", 'info');
         }
-
     }
 }

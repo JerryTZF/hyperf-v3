@@ -161,16 +161,6 @@ class TestListController extends AbstractController
         return $this->result->getResult();
     }
 
-    #[GetMapping(path: 'queue/run')]
-    public function queueStop(): array
-    {
-        $factory = RedisQueueFactory::getQueueInstance('redis-queue');
-        Coroutine::create(function () use ($factory) {
-            $factory->push(new DemoJob(microtime() . uniqid(), []));
-        });
-        return $this->result->getResult();
-    }
-
     #[GetMapping(path: 'queue/safe_push')]
     public function safePushMessage(): array
     {
