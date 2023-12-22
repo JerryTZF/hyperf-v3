@@ -24,21 +24,25 @@ class ExportExcelHandler
 {
     /**
      * 表格制作实例.
+     * @var Spreadsheet 实例
      */
     private Spreadsheet $spreadsheet;
 
     /**
      * 表格实例.
+     * @var Worksheet 实例
      */
     private Worksheet $sheet;
 
     /**
      * 行数.
+     * @var int 整型
      */
     private int $row;
 
     /**
      * 保存路径.
+     * @var string 路径
      */
     private string $dir;
 
@@ -62,7 +66,7 @@ class ExportExcelHandler
 
         $this->dir = BASE_PATH . '/runtime/excel/';
         if (! is_dir($this->dir)) {
-            mkdir($this->dir, 0777, true);
+            mkdir($this->dir, 0755, true);
         }
     }
 
