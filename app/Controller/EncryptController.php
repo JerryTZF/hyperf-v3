@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Lib\Encrypt\AesWithPHPSeclib;
+use App\Lib\Encrypt\Rc4WithPHPSecLib;
 use App\Request\EncryptRequest;
 use App\Service\EncryptService;
 use Hyperf\Di\Annotation\Inject;
@@ -31,6 +32,38 @@ class EncryptController extends AbstractController
 {
     #[Inject]
     protected EncryptService $service;
+
+    /**
+     * RC4加密.
+     * @param EncryptRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'rc4/encrypt')]
+    #[Scene(scene: 'rc4')]
+    public function rc4Encrypt(EncryptRequest $request): array
+    {
+        $key = $request->input('key');
+        $data = $request->input('data');
+        $rc4 = new Rc4WithPHPSecLib($key);
+        $result = $rc4->encrypt($data);
+        return $this->result->setData(['encrypt_result' => $result])->getResult();
+    }
+
+    /**
+     * RC4解密.
+     * @param EncryptRequest $request 请求验证器
+     * @return array ['code' => '200', 'msg' => 'ok', 'status' => true, 'data' => []]
+     */
+    #[PostMapping(path: 'rc4/decrypt')]
+    #[Scene(scene: 'rc4')]
+    public function rc4Decrypt(EncryptRequest $request): array
+    {
+        $key = $request->input('key');
+        $data = $request->input('data');
+        $rc4 = new Rc4WithPHPSecLib($key);
+        $result = $rc4->decrypt($data);
+        return $this->result->setData(['decrypt_result' => $result])->getResult();
+    }
 
     /**
      * AES加密数据.

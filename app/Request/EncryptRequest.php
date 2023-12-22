@@ -22,6 +22,7 @@ class EncryptRequest extends FormRequest
         'rsa_create' => ['key_format', 'key_length', 'is_download'],
         'encrypt_decrypt' => ['key', 'padding', 'hash', 'mgf_hash'],
         'sign' => ['key', 'padding', 'hash', 'mgf_hash'],
+        'rc4' => ['key', 'data'],
     ];
 
     public function authorize(): bool
