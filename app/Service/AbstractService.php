@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Constants\ErrorCode;
+use App\Lib\Cache\Cache;
 use App\Lib\Redis\Redis as RedisFactory;
 use Hyperf\Redis\Redis;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * 服务抽象类, 用于继承.
@@ -31,6 +33,12 @@ abstract class AbstractService
     protected Redis $redis;
 
     /**
+     * Cache实例.
+     * @var CacheInterface 缓存实例
+     */
+    protected CacheInterface $cache;
+
+    /**
      * 构造函数.
      * @throws ContainerExceptionInterface 异常
      * @throws NotFoundExceptionInterface 异常
@@ -38,6 +46,7 @@ abstract class AbstractService
     public function __construct()
     {
         $this->redis = RedisFactory::getRedisInstance();
+        $this->cache = Cache::getInstance();
     }
 
     /**

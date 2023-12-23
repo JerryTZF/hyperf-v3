@@ -87,26 +87,6 @@ class TestListController extends AbstractController
     }
 
 
-    #[GetMapping(path: 'rc4')]
-    public function rc4(): array
-    {
-        $rc4Instance = new Rc4WithPHPSecLib('hello world');
-        $body = ['a' => 'A'];
-
-        $encrypt = $rc4Instance->encrypt($body);
-        $decrypt = $rc4Instance->decrypt($encrypt);
-
-        $encrypt_ = $rc4Instance->encryptNative($body);
-        $decrypt_ = $rc4Instance->decryptNative($encrypt_);
-
-        return $this->result->setData([
-            'encrypt' => $encrypt,
-            'decrypt' => $decrypt,
-            'encrypt_' => $encrypt_,
-            'decrypt_' => $decrypt_,
-        ])->getResult();
-    }
-
     #[GetMapping(path: 'file')]
     public function file(): ResponseInterface
     {

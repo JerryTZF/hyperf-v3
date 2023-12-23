@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Lib\RedisQueue\RedisQueueFactory;
+use Hyperf\Cache\Cache;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Redis\Redis;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Throwable;
 
 /**
  * 是否允许业务向redis异步队列投递消息.
@@ -47,31 +48,35 @@ class QueuePushCommand extends HyperfCommand
 
     public function handle()
     {
-        [$config, $redis] = [
-            $this->container->get(ConfigInterface::class),
-            $this->container->get(Redis::class),
-        ];
         [$argumentQueueName, $argumentAction] = [
             $this->input->getArgument('queue_name'),
             $this->input->getArgument('action'),
         ];
-        $allRedisQueueName = array_keys($config->get('async_queue'));
-        if (! in_array($argumentQueueName, $allRedisQueueName)) {
-            $this->line($argumentQueueName . ' 队列未配置, 请检查', 'error');
-            return null;
-        }
-        if (! in_array($argumentAction, ['stop', 'start'])) {
-            $this->line('action 只允许 start 或 stop', 'error');
-            return null;
-        }
+        try {
+            [$config, $cache] = [
+                $this->container->get(ConfigInterface::class),
+                $this->container->get(Cache::class),
+            ];
+            $allRedisQueueName = array_keys($config->get('async_queue'));
+            if (! in_array($argumentQueueName, $allRedisQueueName)) {
+                $this->line($argumentQueueName . ' 队列未配置, 请检查', 'error');
+                return null;
+            }
+            if (! in_array($argumentAction, ['stop', 'start'])) {
+                $this->line('action 只允许 start 或 stop', 'error');
+                return null;
+            }
 
-        $key = sprintf(RedisQueueFactory::IS_PUSH_KEY, $argumentQueueName);
-        if ($argumentAction === self::START) {
-            $redis->set($key, "{$argumentQueueName}:{$argumentAction}");
-            $this->line("{$argumentQueueName} 队列已允许投递消息 !!!", 'info');
-        } else {
-            $redis->del($key);
-            $this->line("{$argumentQueueName} 队列已禁止投递消息 !!!", 'info');
+            $key = sprintf(RedisQueueFactory::IS_PUSH_KEY, $argumentQueueName);
+            if ($argumentAction === self::START) {
+                $cache->set($key, "{$argumentQueueName}:{$argumentAction}");
+                $this->line("{$argumentQueueName} 队列已允许投递消息 !!!", 'info');
+            } else {
+                $cache->delete($key);
+                $this->line("{$argumentQueueName} 队列已禁止投递消息 !!!", 'info');
+            }
+        } catch (Throwable $e) {
+            $this->line('发生异常: ' . $e->getMessage(), 'error');
         }
     }
 }

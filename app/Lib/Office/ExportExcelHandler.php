@@ -113,6 +113,7 @@ class ExportExcelHandler
         $this->spreadsheet->setActiveSheetIndex(0);
 
         $filename .= '.xlsx';
+        $filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
         $outFileName = $this->dir . $filename;
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
         $writer->save($outFileName);
@@ -130,6 +131,7 @@ class ExportExcelHandler
     public function saveToBrowser(string $filename): ResponseInterface
     {
         $filename .= '.xlsx';
+        $filename = mb_convert_encoding($filename, 'UTF-8', 'auto');
         $unique = $this->dir . uniqid() . microtime() . '.xlsx';
         $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
         $writer->save($unique);
@@ -145,7 +147,7 @@ class ExportExcelHandler
 
         return $response->withHeader('content-description', 'File Transfer')
             ->withHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            ->withHeader('content-disposition', "attachment; filename={$filename}")
+            ->withHeader('content-disposition', 'attachment; filename="' . urlencode($filename) . '"')
             ->withHeader('content-transfer-encoding', 'binary')
             ->withBody(new SwooleStream((string) $content));
     }
