@@ -14,85 +14,17 @@ namespace App\Controller;
 
 use App\Job\DemoJob;
 use App\Lib\Cache\Cache;
-use App\Lib\Encrypt\Rc4WithPHPSecLib;
-use App\Lib\File\FileSystem;
 use App\Lib\GuzzleHttp\GuzzleFactory;
-use App\Lib\Lock\RedisLock;
 use App\Lib\Log\Log;
-use App\Lib\Office\ExportCsvHandler;
-use App\Lib\Office\ExportExcelHandler;
 use App\Lib\RedisQueue\RedisQueueFactory;
-use App\Model\Orders;
 use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Coroutine\Coroutine;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\RateLimit\Annotation\RateLimit;
-use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 class TestListController extends AbstractController
 {
-    #[GetMapping(path: 'office/excel/save')]
-    public function saveExcel(): array
-    {
-        $lock = new RedisLock('save_excel', 3, 3, 'saveExcel');
-        // 制作过程中因为是对对象操作，所以不应该并行操作同一对象,也减少内存使用
-        $file = $lock->lockAsync(function () {
-            $excelHandler = new ExportExcelHandler();
-            $excelHandler->setHeaders([
-                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
-            ]);
-            Orders::query()->orderBy('id', 'DESC')
-                ->chunk(20, function ($records) use ($excelHandler) {
-                    $excelHandler->setData($records->toArray());
-                });
-            return $excelHandler->saveToLocal('测试导出');
-        });
-        return $this->result->setData(['file_path' => $file])->getResult();
-    }
-
-    #[GetMapping(path: 'office/csv/download')]
-    public function downloadCsv()
-    {
-        $lock = new RedisLock('export_csv', 3, 3, 'downloadCsv');
-        return $lock->lockAsync(function () {
-            $csvHandler = new ExportCsvHandler();
-            $csvHandler->setHeaders([
-                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
-            ]);
-            Orders::query()->orderBy('id', 'DESC')
-                ->chunk(20, function ($records) use ($csvHandler) {
-                    $csvHandler->setData($records->toArray());
-                });
-            return $csvHandler->saveToBrowser('CSV测试导出');
-        });
-    }
-
-    #[GetMapping(path: 'office/csv/save')]
-    public function saveCsv(): array
-    {
-        $lock = new RedisLock('save_csv', 3, 3, 'saveCsv');
-        $file = $lock->lockAsync(function () {
-            $csvHandler = new ExportCsvHandler();
-            $csvHandler->setHeaders([
-                'ID', '商品ID', '订单号', '购买数量', '金额', '客户', '创建时间', '修改时间',
-            ]);
-            Orders::query()->orderBy('id', 'DESC')
-                ->chunk(20, function ($records) use ($csvHandler) {
-                    $csvHandler->setData($records->toArray());
-                });
-            return $csvHandler->saveToLocal('Csv测试导出');
-        });
-        return $this->result->setData(['file_path' => $file])->getResult();
-    }
-
-
-    #[GetMapping(path: 'file')]
-    public function file(): ResponseInterface
-    {
-        return (new FileSystem())->download('/img/20210430171345.png');
-    }
-
     #[GetMapping(path: 'simple/cache')]
     public function simpleCache(): array
     {

@@ -41,6 +41,7 @@
         "hyperf/process": "~3.0.0",
         "hyperf/rate-limit": "^3.0",
         "hyperf/redis": "~3.0.0",
+        "hyperf/session": "~3.0.0",
         "hyperf/signal": "^3.0",
         "hyperf/validation": "^3.0",
         "jetbrains/phpstorm-attributes": "^1.0",

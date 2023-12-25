@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "632695ecd7086383dc848ba7fd518222",
+    "content-hash": "8f2062e01e6926d71276ed16fd09feaa",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -4579,6 +4579,69 @@
                 "source": "https://github.com/hyperf/hyperf"
             },
             "time": "2023-10-08T15:14:41+00:00"
+        },
+        {
+            "name": "hyperf/session",
+            "version": "v3.0.37",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hyperf/session.git",
+                "reference": "74bc509593a2fdd942c591ce84f7a97ff5bc21ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hyperf/session/zipball/74bc509593a2fdd942c591ce84f7a97ff5bc21ab",
+                "reference": "74bc509593a2fdd942c591ce84f7a97ff5bc21ab",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "hyperf/collection": "~3.0.0",
+                "hyperf/support": "~3.0.0",
+                "hyperf/utils": "~3.0.0",
+                "php": ">=8.0",
+                "psr/http-server-middleware": "^1.0"
+            },
+            "suggest": {
+                "hyperf/config": "Required to load session config.",
+                "psr/container": "Required to use SessionFactory."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                },
+                "hyperf": {
+                    "config": "Hyperf\\Session\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hyperf\\Session\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A session library",
+            "homepage": "https://hyperf.io",
+            "keywords": [
+                "php",
+                "session"
+            ],
+            "support": {
+                "docs": "https://hyperf.wiki",
+                "issues": "https://github.com/hyperf/hyperf/issues",
+                "pull-request": "https://github.com/hyperf/hyperf/pulls",
+                "source": "https://github.com/hyperf/hyperf"
+            },
+            "time": "2023-09-19T01:50:18+00:00"
         },
         {
             "name": "hyperf/signal",

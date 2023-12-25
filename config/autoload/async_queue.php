@@ -41,7 +41,7 @@ return [
         // [注意]: 真正的重试时间为: retry_seconds + timeout = 7；实验所得
         'retry_seconds' => 5,
         // 消费消息超时时间
-        'handle_timeout' => 3,
+        'handle_timeout' => 5,
         // 消费者进程数
         'processes' => 10,
         // 并行消费消息数目
