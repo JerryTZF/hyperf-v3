@@ -22,12 +22,12 @@ use Throwable;
 
 #[Process(
     nums: 1, // 进程数目
-    name: 'ConsumerProcess',
+    name: 'DemoProcess',
     redirectStdinStdout: false,
     pipeType: 2,
     enableCoroutine: true // 进程内是否启用协程
 )]
-class ConsumerProcess extends AbstractProcess
+class DemoProcess extends AbstractProcess
 {
     public function handle(): void
     {
@@ -41,9 +41,9 @@ class ConsumerProcess extends AbstractProcess
                 }
             }
         } catch (Throwable $e) {
-            Log::stdout()->error("ConsumerProcess 异常被捕获: {$e->getMessage()}");
+            Log::stdout()->error("DemoProcess 异常被捕获: {$e->getMessage()}");
         } finally {
-            Log::stdout()->warning('ConsumerProcess 进程将被拉起 !!!');
+            Log::stdout()->warning('DemoProcess 进程将被拉起 !!!');
         }
     }
 

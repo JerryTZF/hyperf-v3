@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Process\RedisQueueProcess;
+namespace App\Process\OverloadProcess;
 
 use App\Constants\ConstCode;
 use Hyperf\AsyncQueue\Process\ConsumerProcess;

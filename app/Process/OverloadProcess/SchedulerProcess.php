@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Process;
+namespace App\Process\OverloadProcess;
 
 use Hyperf\Crontab\Process\CrontabDispatcherProcess;
 use Hyperf\Process\Annotation\Process;
