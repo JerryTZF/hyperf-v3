@@ -23,7 +23,7 @@ class SchedulerErrorListener implements ListenerInterface
     public function listen(): array
     {
         return [
-            FailToExecute::class,
+            FailToExecute::class, // 系统事件, 底层有相应的触发器触发(抛出异常会触发该事件)
         ];
     }
 

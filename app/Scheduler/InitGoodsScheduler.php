@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Scheduler;
 
+use App\Lib\Log\Log;
 use App\Model\Goods;
 use Carbon\Carbon;
 use Hyperf\Crontab\Annotation\Crontab;
@@ -19,15 +20,20 @@ use Hyperf\Crontab\Annotation\Crontab;
 #[Crontab(
     rule: '*\/5 * * * *',
     name: 'InitGoodsScheduler',
-    onOneServer: true,
+    singleton: true,
+    onOneServer: true, // 并发执行只有一个被执行,例如: 很多个任务都是10:00AM执行时
     callback: 'execute',
     memo: '每5分钟初始化商品(商品库存为零时自动增加100库存)',
     enable: 'isEnable'
 )]
-class InitGoodsScheduler
+class InitGoodsScheduler extends AbstractScheduler
 {
     public function execute(): void
     {
+        if (! $this->isRunning) {
+            Log::stdout()->warning('InitGoodsScheduler 消费逻辑已跳出');
+            return;
+        }
         $goods = Goods::query()->limit(10)->get();
         if (empty($goods->toArray())) {
             $this->initGoods();

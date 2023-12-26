@@ -10,6 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    // 定时任务调度器进程
-    Hyperf\Crontab\Process\CrontabDispatcherProcess::class,
+    // 定时任务调度器进程(已经使用注解, 无需再次注册)
+    // Hyperf\Crontab\Process\CrontabDispatcherProcess::class,
 ];

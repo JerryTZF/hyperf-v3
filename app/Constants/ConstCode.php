@@ -29,6 +29,12 @@ class ConstCode
     public const FIX_MODE = 'WEBSITE_FIX_MODE';
 
     /**
+     * 定时任务是否执行.
+     * 执行逻辑中判断变量是否执行.
+     */
+    public const SCHEDULER_IS_RUNNING_KEY = 'SCHEDULER_IS_RUNNING_MODE';
+
+    /**
      * 业务普通队列名称.
      */
     public const NORMAL_QUEUE_NAME = 'redis-queue';

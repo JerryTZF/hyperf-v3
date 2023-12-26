@@ -24,7 +24,7 @@ class DbQueryExecutedListener implements ListenerInterface
     public function listen(): array
     {
         return [
-            QueryExecuted::class,
+            QueryExecuted::class, // 系统事件, 底层有相应的触发器触发
         ];
     }
 
@@ -45,8 +45,8 @@ class DbQueryExecutedListener implements ListenerInterface
                 }
             }
 
-            // 大于500毫秒记录日志
-            if ($event->time > 500) {
+            // 大于2000毫秒记录日志
+            if ($event->time > 2000) {
                 $logMessage = sprintf('[%s毫秒] %s', $event->time, $sql);
                 Log::warning($logMessage);
             }
