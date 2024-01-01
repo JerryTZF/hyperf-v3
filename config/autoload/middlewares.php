@@ -26,4 +26,9 @@ return [
         // 权限校验中间件
         App\Middleware\AuthMiddleware::class,
     ],
+    // websocket 中间件
+    'ws' => [
+        // 验证中间件
+        App\Middleware\WebSocketAuthMiddleware::class,
+    ],
 ];

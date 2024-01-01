@@ -154,16 +154,20 @@ class RoleService extends AbstractService
 
     /**
      * 角色中是否是超级管理员.
-     * @param int $rid 角色ID
+     * @param array|int $rid 角色ID
      * @return bool 是否是超管
      */
-    public function isSuperAdmin(int $rid): bool
+    public function isSuperAdmin(int|array $rid): bool
     {
-        /** @var Roles $roleInfo */
-        $roleInfo = Roles::query()->select(['super_admin'])->where(['id' => $rid])->first();
-        if ($roleInfo === null) {
+        $roleInfo = Roles::query()->select(['super_admin'])
+            ->when(is_array($rid), function ($query) use ($rid) {
+                $query->whereIn('id', $rid);
+            })->when(is_numeric($rid), function ($query) use ($rid) {
+                $query->where(['id' => $rid]);
+            })->where(['super_admin' => Roles::IS_SUPER_ADMIN])->get();
+        if ($roleInfo->count() === 0) {
             return false;
         }
-        return $roleInfo->super_admin === Roles::IS_SUPER_ADMIN;
+        return true;
     }
 }

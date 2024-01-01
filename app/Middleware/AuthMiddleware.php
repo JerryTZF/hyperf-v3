@@ -39,13 +39,14 @@ class AuthMiddleware extends AbstractMiddleware
         }
 
         $payload = $this->request->getAttribute('jwt');
-        $uid = $payload['data']['uid'];
-        $rid = $payload['data']['rid'];
+        $uid = $payload['data']['uid'] ?? 0;
+        $rid = $payload['data']['rid'] ?? 0;
         $auths = $this->service->getAuthsByRoleIds($rid);
         [$authInfos, $nodeInfos] = [$auths['auth_list'], $auths['node_list']];
 
         $routes = array_column($authInfos, 'route');
-        if (! in_array($this->request->getPathInfo(), $routes)) {
+        // 不是超管 && 没有权限
+        if (! $this->service->isSuperAdmin($rid) && ! in_array($this->request->getPathInfo(), $routes)) {
             return $this->buildErrorResponse(ErrorCode::NO_AUTH);
         }
 

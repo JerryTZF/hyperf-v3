@@ -37,5 +37,9 @@ return [
             // 全局HTTP异常处理
             Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
         ],
+        // websocket exception handler
+        'ws' => [
+            App\Exception\Handler\WebsocketExceptionHandler::class,
+        ],
     ],
 ];
