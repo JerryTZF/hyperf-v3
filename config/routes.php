@@ -14,5 +14,5 @@ use Hyperf\HttpServer\Router\Router;
 
 // WebSocket 暂时不支持注解。
 Router::addServer('ws', function () {
-    Router::get('/s', App\Controller\WebSocket\WebSocketController::class);
+    Router::get('/wss/demo', App\Controller\WebSocket\WebSocketController::class);
 });
