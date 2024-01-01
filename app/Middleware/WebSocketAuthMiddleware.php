@@ -34,7 +34,7 @@ class WebSocketAuthMiddleware extends AbstractMiddleware
         $authorization = $request->hasHeader('authorization') ? $request->getHeaderLine('authorization') : '';
         $route = $request->getUri()->getPath();
         $whiteRouteList = [
-            '/s',
+            '/wss/demo',
         ];
 
         // 不在白名单 || jwt为空
