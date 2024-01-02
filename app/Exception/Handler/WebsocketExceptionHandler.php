@@ -32,14 +32,12 @@ class WebsocketExceptionHandler extends ExceptionHandler
         if ($throwable instanceof HttpException) {
             $response = $response->withStatus($throwable->getStatusCode());
         }
-        var_dump($throwable->getMessage());
         $stream = new SwooleStream($throwable->getMessage());
         return $response->withBody($stream);
     }
 
     public function isValid(Throwable $throwable): bool
     {
-        return true;
         return $throwable instanceof WebSocketHandeShakeException
             || $throwable instanceof InvalidMethodException
             || $throwable instanceof WebSocketMessageException;

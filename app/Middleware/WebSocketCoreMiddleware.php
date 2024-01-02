@@ -28,6 +28,7 @@ class WebSocketCoreMiddleware extends \Hyperf\HttpServer\CoreMiddleware
     public const HANDLER_NAME = 'class';
 
     /**
+     * 如果路由正确, 则协议升级处理.
      * Handle the response when found.
      */
     protected function handleFound(Dispatched $dispatched, ServerRequestInterface $request): ResponseInterface
@@ -52,6 +53,7 @@ class WebSocketCoreMiddleware extends \Hyperf\HttpServer\CoreMiddleware
     }
 
     /**
+     * 路由错误, 直接在握手回调中断开连接.
      * Handle the response when NOT found.
      */
     public function handleNotFound(ServerRequestInterface $request): MessageInterface

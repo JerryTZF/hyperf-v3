@@ -22,6 +22,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
 // websocket auth check middleware
+// handshake 前就进行判断是否允许连接
 class WebSocketAuthMiddleware extends AbstractMiddleware
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -37,7 +38,7 @@ class WebSocketAuthMiddleware extends AbstractMiddleware
             '/wss/demo',
         ];
 
-        // 不在白名单 || jwt为空
+        // 不在白名单(这里只是简单的示例) || jwt为空
         if (! in_array($route, $whiteRouteList) || $authorization === '') {
             return $this->buildErrorResponse(ErrorCode::JWT_EMPTY_ERR);
         }
@@ -50,6 +51,7 @@ class WebSocketAuthMiddleware extends AbstractMiddleware
             return $this->buildErrorResponse(ErrorCode::DO_JWT_FAIL);
         }
 
+        // 写入上下文, 以便在回调中可以获取
         Context::set('jwt', $explainJwt);
         return $handler->handle($request);
     }

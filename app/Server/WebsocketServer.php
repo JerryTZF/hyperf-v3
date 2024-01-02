@@ -39,13 +39,16 @@ use Throwable;
  * 覆写 websocket server. 原因:
  * 1. 自定义回调事件异常处理器.
  * 2. 自定义CoreMiddleware中间件(handleFound() && handleNotFound()).
+ * 3. 根据自己需求可以修改各个回调事件的逻辑.
  * Class WebsocketServer.
  */
 class WebsocketServer extends Server
 {
+    // 初始化协议升级中间件 && 加载异常处理器
     public function initCoreMiddleware(string $serverName): void
     {
         $this->serverName = $serverName;
+        // 注册自定义Core中间件
         $this->coreMiddleware = new WebSocketCoreMiddleware($this->container, $serverName);
 
         $config = $this->container->get(ConfigInterface::class);
@@ -57,6 +60,7 @@ class WebsocketServer extends Server
         ]);
     }
 
+    // 握手回调函数
     public function onHandShake($request, $response): void
     {
         try {
@@ -88,6 +92,7 @@ class WebsocketServer extends Server
             $psr7Response = $this->dispatcher->dispatch($psr7Request, $middlewares, $this->coreMiddleware);
             // 中间件返回的状态码
             $httpCode = $psr7Response->getStatusCode();
+            // 协议升级失败(业务中间件不通过: 鉴权等操作在握手回调中就做处理判断,不用在onOpen()中再做处理)
             if ($httpCode !== 101) {
                 $middlewareResponseBody = $psr7Response->getBody()->getContents();
                 $middlewareResponseBody = json_decode($middlewareResponseBody, true) ?? [];

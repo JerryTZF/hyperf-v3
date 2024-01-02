@@ -77,3 +77,4 @@
 - 支持阿里云OSS、SMS。
 - 封装协程GuzzleHttp客户端。
 - 支持维护模式。
+- WebSocket支持。

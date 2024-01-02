@@ -43,6 +43,7 @@ class WebSocketController extends AbstractWebSocketController implements OnMessa
 
     public function onOpen($server, $request): void
     {
+        // 判断鉴权中间件写入上下文的 JWT 信息, 没有 $isOk = false;
         $isOk = $this->authorization($server, $request);
         if ($isOk) {
             $server->push($request->fd, 'Authorization Success');
