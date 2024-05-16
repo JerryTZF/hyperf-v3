@@ -101,6 +101,7 @@ class ExportExcelHandler
             ++$this->row;
         }
         return $this;
+
     }
 
     /**
