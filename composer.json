@@ -60,6 +60,7 @@
         "hyperf/devtool": "~3.0.0",
         "hyperf/testing": "~3.0.0",
         "mockery/mockery": "^1.0",
+        "overtrue/phplint": "^9.3",
         "phpstan/phpstan": "^1.0",
         "swoole/ide-helper": "^5.0"
     },
