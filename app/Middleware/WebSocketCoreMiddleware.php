@@ -15,6 +15,7 @@ namespace App\Middleware;
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Base\Response;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\HttpServer\CoreMiddleware;
 use Hyperf\HttpServer\Router\Dispatched;
 use Hyperf\WebSocketServer\Exception\WebSocketHandeShakeException;
 use Hyperf\WebSocketServer\Security;
@@ -23,9 +24,21 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 // 详情参见: vendor/hyperf/websocket-server/src/CoreMiddleware.php
-class WebSocketCoreMiddleware extends \Hyperf\HttpServer\CoreMiddleware
+class WebSocketCoreMiddleware extends CoreMiddleware
 {
     public const HANDLER_NAME = 'class';
+
+    /**
+     * 路由错误, 直接在握手回调中断开连接.
+     * Handle the response when NOT found.
+     */
+    public function handleNotFound(ServerRequestInterface $request): MessageInterface
+    {
+        return $this->response()
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Description', 'Route Error')
+            ->withStatus(404)->withBody(new SwooleStream(''));
+    }
 
     /**
      * 如果路由正确, 则协议升级处理.
@@ -50,17 +63,5 @@ class WebSocketCoreMiddleware extends \Hyperf\HttpServer\CoreMiddleware
         }
 
         return $response->withAttribute(self::HANDLER_NAME, $controller);
-    }
-
-    /**
-     * 路由错误, 直接在握手回调中断开连接.
-     * Handle the response when NOT found.
-     */
-    public function handleNotFound(ServerRequestInterface $request): MessageInterface
-    {
-        return $this->response()
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Description', 'Route Error')
-            ->withStatus(404)->withBody(new SwooleStream(''));
     }
 }
