@@ -9,37 +9,59 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use App\Exception\Handler\AlibabaExceptionHandler;
+use App\Exception\Handler\AppExceptionHandler;
+use App\Exception\Handler\BusinessExceptionHandler;
+use App\Exception\Handler\FileSystemExceptionHandler;
+use App\Exception\Handler\JwtExceptionHandler;
+use App\Exception\Handler\LockTimeoutExceptionHandler;
+use App\Exception\Handler\ModelNotFoundExceptionHandler;
+use App\Exception\Handler\OfficeExceptionHandler;
+use App\Exception\Handler\PHPSeclibExceptionHandler;
+use App\Exception\Handler\RateLimitExceptionHandler;
+use App\Exception\Handler\ValidationExceptionHandler;
+use App\Exception\Handler\WebsocketExceptionHandler;
+use Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler;
+
+/**
+ * This file is part of Hyperf.
+ *
+ * @see     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 return [
     'handler' => [
         'http' => [
             // JWT认证失败
-            App\Exception\Handler\JwtExceptionHandler::class,
+            JwtExceptionHandler::class,
             // 业务逻辑异常
-            App\Exception\Handler\BusinessExceptionHandler::class,
+            BusinessExceptionHandler::class,
             // 验证器类型错误处理
-            App\Exception\Handler\ValidationExceptionHandler::class,
+            ValidationExceptionHandler::class,
             // 文件系统异常捕获
-            App\Exception\Handler\FileSystemExceptionHandler::class,
+            FileSystemExceptionHandler::class,
             // 数据库未找到数据异常处理
-            App\Exception\Handler\ModelNotFoundExceptionHandler::class,
+            ModelNotFoundExceptionHandler::class,
             // 限流异常处理器
-            App\Exception\Handler\RateLimitExceptionHandler::class,
+            RateLimitExceptionHandler::class,
             // redis锁组件异常处理器
-            App\Exception\Handler\LockTimeoutExceptionHandler::class,
+            LockTimeoutExceptionHandler::class,
             // 阿里云包底层异常捕获器
-            App\Exception\Handler\AlibabaExceptionHandler::class,
+            AlibabaExceptionHandler::class,
             // phpoffice 包异常捕获
-            App\Exception\Handler\OfficeExceptionHandler::class,
+            OfficeExceptionHandler::class,
             // PHPSeclib 包异常捕获
-            App\Exception\Handler\PHPSeclibExceptionHandler::class,
+            PHPSeclibExceptionHandler::class,
             // 全局(框架)异常处理
-            App\Exception\Handler\AppExceptionHandler::class,
+            AppExceptionHandler::class,
             // 全局HTTP异常处理
-            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
+            HttpExceptionHandler::class,
         ],
         // websocket exception handler
         'ws' => [
-            App\Exception\Handler\WebsocketExceptionHandler::class,
+            WebsocketExceptionHandler::class,
         ],
     ],
 ];

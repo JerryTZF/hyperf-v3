@@ -9,26 +9,42 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use App\Middleware\AccreditMiddleware;
+use App\Middleware\AuthMiddleware;
+use App\Middleware\CorsMiddleware;
+use App\Middleware\MaintenanceMiddleware;
+use App\Middleware\ShortChainMiddleware;
+use App\Middleware\WebSocketAuthMiddleware;
+use Hyperf\Validation\Middleware\ValidationMiddleware;
+
+/*
+ * This file is part of Hyperf.
+ *
+ * @see     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 return [
     'http' => [
         // 跨域中间件
-        App\Middleware\CorsMiddleware::class,
+        CorsMiddleware::class,
         // 验证器中间件(官方)
-        Hyperf\Validation\Middleware\ValidationMiddleware::class,
+        ValidationMiddleware::class,
         // Session中间件(官方)
         //        Hyperf\Session\Middleware\SessionMiddleware::class,
         // 维护模式中间件
-        App\Middleware\MaintenanceMiddleware::class => 100,
+        MaintenanceMiddleware::class => 100,
         // 短链中间件(顺序请在jwt验证中间件前面)
-        App\Middleware\ShortChainMiddleware::class => 99,
+        ShortChainMiddleware::class => 99,
         // jwt验证中间件
-        App\Middleware\AccreditMiddleware::class,
+        AccreditMiddleware::class,
         // 权限校验中间件
-        App\Middleware\AuthMiddleware::class,
+        AuthMiddleware::class,
     ],
     // websocket 中间件
     'ws' => [
         // 验证中间件
-        App\Middleware\WebSocketAuthMiddleware::class,
+        WebSocketAuthMiddleware::class,
     ],
 ];

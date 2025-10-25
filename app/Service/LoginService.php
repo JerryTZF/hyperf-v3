@@ -222,8 +222,8 @@ class LoginService extends AbstractService
 
         $sendResult = (new Sms())->sendSms(
             $phoneNumber,
-            sms::SMS_TEMPLATE_REGISTER,
-            sms::SMS_SIGN_LIST['ZFY'],
+            Sms::SMS_TEMPLATE_REGISTER,
+            Sms::SMS_SIGN_LIST['ZFY'],
             ['code' => $random],
         );
         // 注意: 停机、欠费等依旧会发送成功, 但是用户收不到

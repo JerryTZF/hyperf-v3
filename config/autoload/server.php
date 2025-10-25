@@ -9,6 +9,11 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use App\Server\WebsocketServer;
+use Hyperf\Framework\Bootstrap\PipeMessageCallback;
+use Hyperf\Framework\Bootstrap\WorkerExitCallback;
+use Hyperf\Framework\Bootstrap\WorkerStartCallback;
+use Hyperf\HttpServer\Server;
 use Hyperf\Server\Event;
 use Hyperf\Server\ServerInterface;
 use Swoole\Constant;
@@ -23,7 +28,7 @@ return [
             'port' => 9501,
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
-                Event::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+                Event::ON_REQUEST => [Server::class, 'onRequest'],
             ],
         ],
         [
@@ -33,9 +38,9 @@ return [
             'port' => 9502,
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
-                Event::ON_HAND_SHAKE => [App\Server\WebsocketServer::class, 'onHandShake'],
-                Event::ON_MESSAGE => [App\Server\WebsocketServer::class, 'onMessage'],
-                Event::ON_CLOSE => [App\Server\WebsocketServer::class, 'onClose'],
+                Event::ON_HAND_SHAKE => [WebsocketServer::class, 'onHandShake'],
+                Event::ON_MESSAGE => [WebsocketServer::class, 'onMessage'],
+                Event::ON_CLOSE => [WebsocketServer::class, 'onClose'],
             ],
         ],
     ],
@@ -51,8 +56,8 @@ return [
         Constant::OPTION_BUFFER_OUTPUT_SIZE => 2 * 1024 * 1024,
     ],
     'callbacks' => [
-        Event::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],
-        Event::ON_PIPE_MESSAGE => [Hyperf\Framework\Bootstrap\PipeMessageCallback::class, 'onPipeMessage'],
-        Event::ON_WORKER_EXIT => [Hyperf\Framework\Bootstrap\WorkerExitCallback::class, 'onWorkerExit'],
+        Event::ON_WORKER_START => [WorkerStartCallback::class, 'onWorkerStart'],
+        Event::ON_PIPE_MESSAGE => [PipeMessageCallback::class, 'onPipeMessage'],
+        Event::ON_WORKER_EXIT => [WorkerExitCallback::class, 'onWorkerExit'],
     ],
 ];
