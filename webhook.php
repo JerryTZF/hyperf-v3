@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 require_once './vendor/autoload.php';
 
+use Hyperf\Coroutine\Coroutine;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Response;
 use Hyperf\Nano\Factory\AppFactory;
@@ -76,7 +77,7 @@ $app->post('/webhook/github', function () use ($key) {
     }
 
     // 执行脚本命令(异步处理)
-    Hyperf\Coroutine\Coroutine::create(function () use ($isUpdateComposer) {
+    Coroutine::create(function () use ($isUpdateComposer) {
         $command = $isUpdateComposer ?
             'cd /your-hyperf-path/hyperf-v3 && rm -rf ./runtime/container/ && git checkout . && git pull && echo yes | composer update && supervisorctl restart hyperf' :
             'cd /your-hyperf-path/hyperf-v3 && rm -rf ./runtime/container/ && git checkout . && git pull && supervisorctl restart hyperf';
