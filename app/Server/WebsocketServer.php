@@ -63,24 +63,37 @@ class WebsocketServer extends Server
     // 握手回调函数
     public function onHandShake($request, $response): void
     {
+        $fd = null;
+        $psr7Response = null;
+
         try {
+            // 等待工作进程启动完成
             CoordinatorManager::until(Constants::WORKER_START)->yield();
+
+            // 获取连接标识符
             $fd = $this->getFd($response);
             Context::set(WsContext::FD, $fd);
-            $security = $this->container->get(Security::class);
-
-            $psr7Response = $this->initResponse();
-            $psr7Request = $this->initRequest($request);
 
             $this->logger->debug(sprintf('WebSocket: fd[%d] start a handshake request.', $fd));
 
+            // 初始化安全检查组件
+            $security = $this->container->get(Security::class);
+
+            // 初始化 PSR-7 请求和响应对象
+            $psr7Response = $this->initResponse();
+            $psr7Request = $this->initRequest($request);
+
+            // 验证 WebSocket 密钥
             $key = $psr7Request->getHeaderLine(Security::SEC_WEBSOCKET_KEY);
             if ($security->isInvalidSecurityKey($key)) {
+                $this->logger->warning(sprintf('WebSocket handshake failed: invalid sec-websocket-key for fd[%d]', $fd));
                 throw new WebSocketHandeShakeException('sec-websocket-key is invalid!');
             }
 
+            // 路由分发
             $psr7Request = $this->coreMiddleware->dispatch($psr7Request);
             $middlewares = $this->middlewares;
+
             /** @var Dispatched $dispatched */
             $dispatched = $psr7Request->getAttribute(Dispatched::class);
             if ($dispatched->isFound()) {
@@ -88,55 +101,108 @@ class WebsocketServer extends Server
                 $middlewares = array_merge($middlewares, $registeredMiddlewares);
             }
 
+            // 执行中间件链
             /** @var Response $psr7Response */
             $psr7Response = $this->dispatcher->dispatch($psr7Request, $middlewares, $this->coreMiddleware);
-            // 中间件返回的状态码
+
+            // 检查协议升级结果
             $httpCode = $psr7Response->getStatusCode();
-            // 协议升级失败(业务中间件不通过: 鉴权等操作在握手回调中就做处理判断,不用在onOpen()中再做处理)
             if ($httpCode !== 101) {
+                // 协议升级失败，记录详细信息
                 $middlewareResponseBody = $psr7Response->getBody()->getContents();
                 $middlewareResponseBody = json_decode($middlewareResponseBody, true) ?? [];
-                $this->logger->debug($middlewareResponseBody['msg']);
-                return;
-            }
-            $class = $psr7Response->getAttribute(CoreMiddleware::HANDLER_NAME);
-            // 未找到路由会得不到该Attr, 原因是路由错误.
-            // 参见: app/Middleware/WebSocketCoreMiddleware.php
-            if (empty($class)) {
-                $this->logger->warning('WebSocket hande shake failed, because the class does not exists (Maybe route error).');
+                $errorMsg = $middlewareResponseBody['msg'] ?? 'Unknown middleware error';
+                $this->logger->info(sprintf('WebSocket handshake rejected for fd[%d]: %s', $fd, $errorMsg));
                 return;
             }
 
+            // 获取处理器类名
+            $class = $psr7Response->getAttribute(CoreMiddleware::HANDLER_NAME);
+            if (empty($class)) {
+                $this->logger->warning(sprintf('WebSocket handshake failed for fd[%d]: handler class not found (route error)', $fd));
+                return;
+            }
+
+            // 注册连接信息
             FdCollector::set($fd, $class);
+
+            // 获取服务器实例并建立连接
             $server = $this->getServer();
             if (Constant::isCoroutineServer($server)) {
+                // 协程服务器模式
                 $upgrade = new WebSocket($response, $request);
-
                 $this->getSender()->setResponse($fd, $response);
+
+                // 延迟执行 onOpen 回调
                 $this->deferOnOpen($request, $class, $response, $fd);
 
+                // 注册消息和关闭回调
                 $upgrade->on(WebSocketInterface::ON_MESSAGE, $this->getOnMessageCallback());
                 $upgrade->on(WebSocketInterface::ON_CLOSE, $this->getOnCloseCallback());
+
+                // 启动 WebSocket 连接
                 $upgrade->start();
             } else {
+                // 传统服务器模式
                 $this->deferOnOpen($request, $class, $server, $fd);
             }
-        } catch (Throwable $throwable) {
-            // Delegate the exception to exception handler.
-            $psr7Response = $this->container->get(SafeCaller::class)->call(function () use ($throwable) {
-                return $this->exceptionHandlerDispatcher->dispatch($throwable, $this->exceptionHandlers);
-            }, static function () {
-                return (new Psr7Response())->withStatus(400);
-            });
 
-            isset($fd) && FdCollector::del($fd);
-            isset($fd) && WsContext::release($fd);
+            $this->logger->info(sprintf('WebSocket handshake successful for fd[%d], handler: %s', $fd, $class));
+        } catch (Throwable $throwable) {
+            // 异常处理
+            $this->logger->error(sprintf(
+                'WebSocket handshake error for fd[%s]: %s in %s:%d',
+                $fd ?? 'unknown',
+                $throwable->getMessage(),
+                $throwable->getFile(),
+                $throwable->getLine()
+            ));
+
+            // 清理资源
+            $this->cleanupConnection($fd);
+
+            // 使用安全调用处理异常
+            $psr7Response = $this->container->get(SafeCaller::class)->call(
+                function () use ($throwable) {
+                    return $this->exceptionHandlerDispatcher->dispatch($throwable, $this->exceptionHandlers);
+                },
+                static function () {
+                    return (new Psr7Response())->withStatus(400);
+                }
+            );
         } finally {
-            isset($fd) && $this->getSender()->setResponse($fd, null);
-            // Send the Response to client.
-            if (isset($psr7Response) && $psr7Response instanceof ResponseInterface) {
+            // 清理响应关联
+            if ($fd !== null) {
+                $this->getSender()->setResponse($fd, null);
+            }
+
+            // 发送响应给客户端
+            if ($psr7Response instanceof ResponseInterface) {
                 $this->responseEmitter->emit($psr7Response, $response, true);
             }
+        }
+    }
+
+    /**
+     * 清理 WebSocket 连接资源.
+     * @param null|int $fd 连接标识符
+     */
+    private function cleanupConnection(?int $fd): void
+    {
+        if ($fd === null) {
+            return;
+        }
+
+        try {
+            FdCollector::del($fd);
+            WsContext::release($fd);
+            $this->logger->debug(sprintf('WebSocket connection resources cleaned for fd[%d]', $fd));
+        } catch (Throwable $e) {
+            $this->logger->error(sprintf(
+                'Error cleaning WebSocket connection resources for fd[%d]: %s',
+                $fd,
+                $e->getMessage()
+            ));
         }
     }
 }

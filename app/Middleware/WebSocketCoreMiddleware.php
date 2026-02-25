@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Hyperf\Context\Context;
+use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Base\Response;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\CoreMiddleware;
@@ -28,16 +30,30 @@ class WebSocketCoreMiddleware extends CoreMiddleware
 {
     public const HANDLER_NAME = 'class';
 
+    #[Inject]
+    protected StdoutLoggerInterface $logger;
+
     /**
      * 路由错误, 直接在握手回调中断开连接.
      * Handle the response when NOT found.
      */
     public function handleNotFound(ServerRequestInterface $request): MessageInterface
     {
+        $this->logger->warning(sprintf(
+            'WebSocket route not found: %s %s',
+            $request->getMethod(),
+            $request->getUri()->getPath()
+        ));
+
         return $this->response()
             ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Description', 'Route Error')
-            ->withStatus(404)->withBody(new SwooleStream(''));
+            ->withHeader('Description', 'WebSocket Route Not Found')
+            ->withStatus(404)
+            ->withBody(new SwooleStream(json_encode([
+                'code' => 404,
+                'msg' => 'WebSocket route not found',
+                'timestamp' => time(),
+            ], JSON_UNESCAPED_UNICODE)));
     }
 
     /**
