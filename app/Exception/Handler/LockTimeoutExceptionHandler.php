@@ -56,6 +56,6 @@ class LockTimeoutExceptionHandler extends ExceptionHandler
 
     public function test()
     {
-        return 'test111112222233333333';
+        return 'test11111222223333333344444444';
     }
 }
