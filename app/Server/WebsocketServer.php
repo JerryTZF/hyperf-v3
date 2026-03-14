@@ -32,6 +32,8 @@ use Hyperf\WebSocketServer\Exception\Handler\WebSocketExceptionHandler;
 use Hyperf\WebSocketServer\Exception\WebSocketHandeShakeException;
 use Hyperf\WebSocketServer\Security;
 use Hyperf\WebSocketServer\Server;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -44,7 +46,11 @@ use Throwable;
  */
 class WebsocketServer extends Server
 {
-    // 初始化协议升级中间件 && 加载异常处理器
+    /**
+     * 初始化协议升级中间件 && 加载异常处理器.
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function initCoreMiddleware(string $serverName): void
     {
         $this->serverName = $serverName;

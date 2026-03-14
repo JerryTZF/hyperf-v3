@@ -9,11 +9,15 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use Hyperf\AsyncQueue\Listener\QueueLengthListener;
+use Hyperf\Command\Listener\FailToHandleListener;
+use Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler;
+
 return [
     // 框架提供了 error_reporting() 错误级别的监听器
-    Hyperf\ExceptionHandler\Listener\ErrorExceptionHandler::class,
+    ErrorExceptionHandler::class,
     // 命令行执行异常监听器
-    Hyperf\Command\Listener\FailToHandleListener::class,
+    FailToHandleListener::class,
     // 队列长度信息监听器
-    Hyperf\AsyncQueue\Listener\QueueLengthListener::class,
+    QueueLengthListener::class,
 ];

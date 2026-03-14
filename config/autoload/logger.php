@@ -9,6 +9,8 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
 
 return [
@@ -16,13 +18,13 @@ return [
         'handlers' => [
             // 记录INFO级别及以上等级日志
             [
-                'class' => Monolog\Handler\RotatingFileHandler::class,
+                'class' => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/info.log',
                     'level' => Level::Info,
                 ],
                 'formatter' => [
-                    'class' => Monolog\Formatter\LineFormatter::class,
+                    'class' => LineFormatter::class,
                     'constructor' => [
                         'format' => "[%datetime%]|[%channel%]|[%level_name%]|[%message%]|[%context%]\n",
                         'dateFormat' => 'Y-m-d H:i:s',
@@ -32,13 +34,13 @@ return [
             ],
             // 记录ERROR及以上日志
             [
-                'class' => Monolog\Handler\RotatingFileHandler::class,
+                'class' => RotatingFileHandler::class,
                 'constructor' => [
                     'filename' => BASE_PATH . '/runtime/logs/error.log',
                     'level' => Level::Error,
                 ],
                 'formatter' => [
-                    'class' => Monolog\Formatter\LineFormatter::class,
+                    'class' => LineFormatter::class,
                     'constructor' => [
                         'format' => "[%datetime%]|[%channel%]|[%level_name%]|[%message%]|[%context%]\n",
                         'dateFormat' => 'Y-m-d H:i:s',

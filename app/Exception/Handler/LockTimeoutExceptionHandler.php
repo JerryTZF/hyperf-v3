@@ -53,4 +53,9 @@ class LockTimeoutExceptionHandler extends ExceptionHandler
     {
         return $throwable instanceof LockTimeoutException;
     }
+
+    public function test()
+    {
+        return 'test';
+    }
 }
